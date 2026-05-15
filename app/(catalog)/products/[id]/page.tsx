@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
@@ -7,6 +8,20 @@ import { getCategories, getProduct } from '@/lib/api/storeClient';
 
 interface Props {
   params: { id: string };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const product = await getProduct(params.id);
+  const mainImage = product.images.find((img) => img.isMain) ?? product.images[0];
+  return {
+    title: product.name,
+    description: product.description || undefined,
+    openGraph: {
+      title: product.name,
+      description: product.description || undefined,
+      ...(mainImage ? { images: [mainImage.url] } : {}),
+    },
+  };
 }
 
 export default async function ProductDetailPage({ params }: Props) {
