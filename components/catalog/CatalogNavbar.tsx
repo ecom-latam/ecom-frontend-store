@@ -1,11 +1,23 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/context/CartContext';
 
-export function CatalogNavbar() {
+interface Props {
+  isLoggedIn: boolean;
+  userEmail?: string;
+}
+
+export function CatalogNavbar({ isLoggedIn, userEmail }: Props) {
   const { itemCount, openDrawer } = useCart();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.refresh();
+  }
 
   return (
     <header className="navbar navbar--bordered" style={{ position: 'sticky', top: 0, zIndex: 40 }}>
@@ -17,6 +29,22 @@ export function CatalogNavbar() {
         <div className="navbar__links" />
 
         <div className="navbar__actions">
+          {isLoggedIn ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{ fontSize: '14px', color: '#6b7280' }}>{userEmail}</span>
+              <button
+                onClick={handleLogout}
+                className="btn btn--ghost btn--rounded btn--sm"
+              >
+                Salir
+              </button>
+            </div>
+          ) : (
+            <Link href="/login" className="btn btn--outlined btn--rounded btn--sm">
+              Iniciar sesión
+            </Link>
+          )}
+
           <button
             onClick={openDrawer}
             className="navbar__cart"
