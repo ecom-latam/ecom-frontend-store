@@ -117,3 +117,23 @@ export async function getCategories(): Promise<Category[]> {
     headers: { 'X-Tenant-Slug': slug },
   });
 }
+
+export interface StoreInfo {
+  name: string;
+  description?: string;
+  logo_url?: string | null;
+}
+
+export async function getStoreInfo(): Promise<StoreInfo | null> {
+  const slug = await getSlug();
+  try {
+    const res = await fetch(`${BFF_BASE_URL}/api/store/public`, {
+      headers: { 'X-Tenant-Slug': slug },
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as StoreInfo;
+  } catch {
+    return null;
+  }
+}
