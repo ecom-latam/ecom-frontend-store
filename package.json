@@ -1,0 +1,32 @@
+{
+  "name": "ecom-front-store",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build:zoui": "sass C:/Users/Milton/Documents/GitHub/zoui/src/zoui.scss app/zoui.css --no-source-map",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prepare": "husky || true"
+  },
+  "dependencies": {
+    "next": "14.2.35",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.2",
+    "@commitlint/core": "^20.5.2",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
+    "husky": "^9.1.7",
+    "postcss": "^8",
+    "sass": "^1.99.0",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
