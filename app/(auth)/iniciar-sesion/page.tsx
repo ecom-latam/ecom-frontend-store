@@ -5,8 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { isAxiosError } from 'axios';
 import { auth, startSession } from '@/utils/api';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Button, Input } from 'zoui';
 
 const ERRORS: Record<string, string> = {
   INVALID_CREDENTIALS: 'Email o contraseña incorrectos.',
@@ -80,7 +79,7 @@ function LoginForm() {
         <Input id="email" name="email" type="email" required autoComplete="email" autoFocus label="Email" fullWidth />
         <Input id="password" name="password" type="password" required autoComplete="current-password" label="Contraseña" fullWidth />
 
-        {error && <p className="field__hint field__hint--error">{error}</p>}
+        {error && <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-error-600)' }}>{error}</p>}
 
         <Button type="submit" loading={loading} variant="filled" shape="rounded" size="md" style={{ width: '100%' }}>
           {loading ? 'Ingresando...' : 'Ingresar'}

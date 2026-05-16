@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import "./globals.css";
-import "./zoui.css";
+import { ToastProvider } from "zoui";
+import "zoui/styles";
 import { CartProvider } from "@/context/CartContext";
 
 export const metadata: Metadata = {
@@ -20,9 +21,11 @@ export default async function RootLayout({
   return (
     <html lang="es">
       <body className="antialiased">
-        <CartProvider hasSession={hasSession}>
-          {children}
-        </CartProvider>
+        <ToastProvider>
+          <CartProvider hasSession={hasSession}>
+            {children}
+          </CartProvider>
+        </ToastProvider>
       </body>
     </html>
   );

@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import type { Product } from '@/lib/api/storeClient';
-import { Button } from '@/components/ui/Button';
+import { Button } from 'zoui';
 import { AddToCartModal } from './AddToCartModal';
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function AddToCartButton({ product, hasSession, availableStock }: Props) {
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
 
   const isOutOfStock = availableStock !== undefined && availableStock === 0;
@@ -23,8 +25,7 @@ export function AddToCartButton({ product, hasSession, availableStock }: Props) 
         variant="outlined"
         shape="pill"
         size="md"
-        className="mt-6"
-        style={{ width: '100%' }}
+        style={{ marginTop: '24px', width: '100%' }}
         disabled
       >
         Sin stock
@@ -34,13 +35,15 @@ export function AddToCartButton({ product, hasSession, availableStock }: Props) 
 
   if (!hasSession) {
     return (
-      <a
-        href={`/iniciar-sesion?next=/producto?id=${product._id}`}
-        className="btn btn--filled btn--pill btn--md mt-6"
-        style={{ width: '100%', justifyContent: 'center' }}
+      <Button
+        variant="filled"
+        shape="pill"
+        size="md"
+        style={{ marginTop: '24px', width: '100%', justifyContent: 'center' }}
+        onClick={() => router.push(`/iniciar-sesion?next=/producto?id=${product._id}`)}
       >
         Iniciar sesión para comprar
-      </a>
+      </Button>
     );
   }
 
@@ -51,8 +54,7 @@ export function AddToCartButton({ product, hasSession, availableStock }: Props) 
         variant="filled"
         shape="pill"
         size="md"
-        className="mt-6"
-        style={{ width: '100%' }}
+        style={{ marginTop: '24px', width: '100%' }}
       >
         Agregar al carrito
       </Button>

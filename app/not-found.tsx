@@ -1,6 +1,10 @@
-import Link from 'next/link';
+'use client';
+
+import { Button } from 'zoui';
+import { useRouter } from 'next/navigation';
 
 export default function NotFound() {
+  const router = useRouter();
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
       <p className="text-6xl font-bold text-gray-200 mb-4">404</p>
@@ -8,12 +12,9 @@ export default function NotFound() {
       <p className="text-gray-600 mb-8 max-w-sm">
         La página que buscás no existe o fue movida.
       </p>
-      <Link
-        href="/productos"
-        className="bg-gray-900 text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-700"
-      >
+      <Button variant="filled" shape="rounded" size="md" onClick={() => router.push('/productos')}>
         Ver productos
-      </Link>
+      </Button>
     </main>
   );
 }
