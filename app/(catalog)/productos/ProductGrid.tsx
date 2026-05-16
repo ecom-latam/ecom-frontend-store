@@ -80,34 +80,35 @@ export function ProductGrid({
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <form onSubmit={handleSearch} className="flex gap-2 flex-1">
-          <input
-            name="q"
-            defaultValue={currentQ ?? ''}
-            placeholder="Buscar productos..."
-            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-          />
-          <button
-            type="submit"
-            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-700"
-          >
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
+        <form onSubmit={handleSearch} style={{ display: 'flex', gap: '8px', flex: 1, minWidth: '200px' }}>
+          <div className="field field--outlined" style={{ flex: 1 }}>
+            <input
+              name="q"
+              defaultValue={currentQ ?? ''}
+              placeholder="Buscar productos..."
+              className="field__input"
+            />
+          </div>
+          <button type="submit" className="btn btn--filled btn--rounded btn--sm">
             Buscar
           </button>
         </form>
 
-        <select
-          value={currentCategoryId ?? ''}
-          onChange={(e) => navigate({ categoryId: e.target.value || undefined, page: undefined })}
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-        >
-          <option value="">Todas las categorías</option>
-          {categories.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+        <div className="field field--outlined" style={{ minWidth: '180px' }}>
+          <select
+            className="field__input"
+            value={currentCategoryId ?? ''}
+            onChange={(e) => navigate({ categoryId: e.target.value || undefined, page: undefined })}
+          >
+            <option value="">Todas las categorías</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <ViewToggle
           value={currentView}
@@ -116,7 +117,7 @@ export function ProductGrid({
         />
       </div>
 
-      <p className="text-sm text-gray-500 mb-4">
+      <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-fg-secondary)', marginBottom: '16px' }}>
         {total === 0 ? 'Sin resultados' : `${total} producto${total !== 1 ? 's' : ''}`}
       </p>
 
@@ -150,7 +151,7 @@ export function ProductGrid({
           })}
         </ProductGridUI>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {products.map((p) => (
             <ProductListItem key={p._id} product={p} />
           ))}
@@ -158,7 +159,7 @@ export function ProductGrid({
       )}
 
       {totalPages > 1 && (
-        <div className="flex justify-center mt-8">
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '32px' }}>
           <Pagination
             page={page}
             totalPages={totalPages}
@@ -179,36 +180,44 @@ function ProductListItem({ product }: { product: Product }) {
   return (
     <Link
       href={`/producto?id=${product._id}`}
-      className="flex gap-4 border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
+      style={{
+        display: 'flex',
+        gap: '16px',
+        border: '1px solid var(--color-border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '16px',
+        textDecoration: 'none',
+        transition: 'box-shadow 0.15s',
+      }}
     >
-      <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+      <div style={{ width: 80, height: 80, background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)', overflow: 'hidden', flexShrink: 0 }}>
         {mainImage ? (
           <Image
             src={mainImage.url}
             alt={product.name}
             width={80}
             height={80}
-            className="object-cover w-full h-full"
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-300 text-2xl">
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-fg-disabled)', fontSize: '24px' }}>
             □
           </div>
         )}
       </div>
-      <div className="flex flex-col justify-center">
-        <p className="font-medium text-gray-900 text-sm">{product.name}</p>
-        <div className="mt-1 flex items-center gap-2">
-          <span className="font-semibold text-gray-900">${displayPrice.toLocaleString('es-AR')}</span>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <p style={{ fontSize: 'var(--font-size-sm)', fontWeight: 500, color: 'var(--color-fg-primary)' }}>{product.name}</p>
+        <div style={{ marginTop: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontWeight: 600, color: 'var(--color-fg-primary)' }}>
+            ${displayPrice.toLocaleString('es-AR')}
+          </span>
           {hasDiscount && (
-            <span className="text-xs text-gray-400 line-through">
+            <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-fg-muted)', textDecoration: 'line-through' }}>
               ${product.price.toLocaleString('es-AR')}
             </span>
           )}
           {outOfStock && (
-            <span className="text-xs font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full">
-              Sin stock
-            </span>
+            <span className="badge badge--pill badge--error">Sin stock</span>
           )}
         </div>
       </div>

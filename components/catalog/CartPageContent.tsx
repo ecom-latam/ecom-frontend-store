@@ -29,10 +29,7 @@ export function CartPageContent() {
       <main className="min-h-screen bg-white">
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <p className="text-gray-400 text-lg mb-4">Tu carrito está vacío.</p>
-          <Link
-            href="/productos"
-            className="inline-block bg-gray-900 text-white px-6 py-3 rounded-xl text-sm font-medium hover:bg-gray-700"
-          >
+          <Link href="/productos" className="btn btn--md btn--rounded btn--filled">
             Ver productos
           </Link>
         </div>
@@ -101,7 +98,7 @@ export function CartPageContent() {
                     <button
                       onClick={() => updateItem(item._id, item.quantity - 1)}
                       disabled={item.quantity <= 1 || isLoading}
-                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-40 flex items-center justify-center"
+                      className="btn btn--outlined btn--square btn--sm"
                     >
                       −
                     </button>
@@ -109,7 +106,7 @@ export function CartPageContent() {
                     <button
                       onClick={() => updateItem(item._id, item.quantity + 1)}
                       disabled={isLoading}
-                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-40 flex items-center justify-center"
+                      className="btn btn--outlined btn--square btn--sm"
                     >
                       +
                     </button>
@@ -149,8 +146,9 @@ export function CartPageContent() {
 
               <button
                 disabled
-                className="w-full bg-gray-200 text-gray-400 py-3 rounded-xl text-sm font-medium cursor-not-allowed"
+                className="btn btn--filled btn--pill btn--md"
                 title="Disponible próximamente"
+                style={{ width: '100%', justifyContent: 'center' }}
               >
                 Ir al checkout
               </button>

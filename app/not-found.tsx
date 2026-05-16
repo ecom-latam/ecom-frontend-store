@@ -8,10 +8,7 @@ export default function NotFound() {
       <p className="text-gray-600 mb-8 max-w-sm">
         La página que buscás no existe o fue movida.
       </p>
-      <Link
-        href="/productos"
-        className="bg-gray-900 text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-700"
-      >
+      <Link href="/productos" className="btn btn--md btn--rounded btn--filled">
         Ver productos
       </Link>
     </main>

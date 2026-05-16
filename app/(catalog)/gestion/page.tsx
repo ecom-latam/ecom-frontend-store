@@ -1,5 +1,3 @@
-import type React from 'react';
-
 const STATS_MOCK = [
   { label: 'Pedidos hoy', value: '24', change: '+12%' },
   { label: 'Ingresos del mes', value: '$148.320', change: '+8%' },
@@ -15,73 +13,66 @@ const ORDERS_MOCK = [
   { id: '#0037', customer: 'Valentina López', total: '$2.100', status: 'Cancelado' },
 ];
 
-const STATUS_STYLES: Record<string, React.CSSProperties> = {
-  Pendiente: { background: '#fef9c3', color: '#854d0e' },
-  Enviado:   { background: '#dbeafe', color: '#1e40af' },
-  Entregado: { background: '#dcfce7', color: '#166534' },
-  Cancelado: { background: '#fee2e2', color: '#991b1b' },
+const STATUS_BADGE: Record<string, string> = {
+  Pendiente: 'warning',
+  Enviado:   'info',
+  Entregado: 'success',
+  Cancelado: 'error',
 };
 
 export default function GestionPage() {
   return (
     <main style={{ padding: '32px', overflowY: 'auto' }}>
-      <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#111827', marginBottom: '24px' }}>
+      <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--color-fg-primary)', marginBottom: '24px' }}>
         Resumen
       </h1>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '32px' }}>
         {STATS_MOCK.map((stat) => (
           <div key={stat.label} style={{
-            background: '#fff',
-            border: '1px solid #e5e7eb',
-            borderRadius: '12px',
+            background: 'var(--color-bg-surface)',
+            border: '1px solid var(--color-border-default)',
+            borderRadius: 'var(--radius-lg)',
             padding: '20px',
           }}>
-            <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '6px' }}>{stat.label}</p>
-            <p style={{ fontSize: '24px', fontWeight: 700, color: '#111827', marginBottom: '4px' }}>{stat.value}</p>
-            <p style={{ fontSize: '12px', color: stat.change.startsWith('+') ? '#16a34a' : '#6b7280' }}>
+            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-fg-secondary)', marginBottom: '6px' }}>{stat.label}</p>
+            <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--color-fg-primary)', marginBottom: '4px' }}>{stat.value}</p>
+            <p style={{ fontSize: 'var(--font-size-xs)', color: stat.change.startsWith('+') ? 'var(--color-success-700)' : 'var(--color-fg-muted)' }}>
               {stat.change} vs mes anterior
             </p>
           </div>
         ))}
       </div>
 
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden' }}>
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid #e5e7eb' }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#111827' }}>Últimos pedidos</h2>
+      <div style={{ background: 'var(--color-bg-surface)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--color-border-default)' }}>
+          <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600, color: 'var(--color-fg-primary)' }}>Últimos pedidos</h2>
         </div>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ background: '#f9fafb' }}>
-              {['Pedido', 'Cliente', 'Total', 'Estado'].map((col) => (
-                <th key={col} style={{ padding: '10px 24px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                  {col}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {ORDERS_MOCK.map((order, i) => (
-              <tr key={order.id} style={{ borderTop: i === 0 ? 'none' : '1px solid #f3f4f6' }}>
-                <td style={{ padding: '14px 24px', fontSize: '14px', color: '#111827', fontWeight: 500 }}>{order.id}</td>
-                <td style={{ padding: '14px 24px', fontSize: '14px', color: '#374151' }}>{order.customer}</td>
-                <td style={{ padding: '14px 24px', fontSize: '14px', color: '#374151' }}>{order.total}</td>
-                <td style={{ padding: '14px 24px' }}>
-                  <span style={{
-                    display: 'inline-block',
-                    padding: '3px 10px',
-                    borderRadius: '999px',
-                    fontSize: '12px',
-                    fontWeight: 500,
-                    ...STATUS_STYLES[order.status],
-                  }}>
-                    {order.status}
-                  </span>
-                </td>
+        <div className="table-wrapper" style={{ border: 'none', borderRadius: 0 }}>
+          <table className="table">
+            <thead className="table__head">
+              <tr>
+                {['Pedido', 'Cliente', 'Total', 'Estado'].map((col) => (
+                  <th key={col} className="table__th">{col}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="table__body">
+              {ORDERS_MOCK.map((order) => (
+                <tr key={order.id} className="table__row">
+                  <td className="table__td" style={{ fontWeight: 500 }}>{order.id}</td>
+                  <td className="table__td">{order.customer}</td>
+                  <td className="table__td">{order.total}</td>
+                  <td className="table__td">
+                    <span className={`badge badge--pill badge--${STATUS_BADGE[order.status]}`}>
+                      {order.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );

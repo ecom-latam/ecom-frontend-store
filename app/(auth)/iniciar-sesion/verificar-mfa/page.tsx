@@ -52,15 +52,24 @@ function MfaVerifyForm() {
   }
 
   return (
-    <div className="w-full max-w-sm bg-white rounded-lg shadow-sm border border-gray-200 px-8 py-10">
-      <h1 className="text-xl font-semibold text-gray-900 mb-2">Verificación en dos pasos</h1>
-      <p className="text-sm text-gray-600 mb-6">Ingresá el código de 6 dígitos de tu app de autenticación.</p>
+    <div style={{
+      width: '100%',
+      maxWidth: '380px',
+      background: 'var(--color-bg-surface)',
+      borderRadius: 'var(--radius-lg)',
+      border: '1px solid var(--color-border-default)',
+      padding: '40px 32px',
+    }}>
+      <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 600, color: 'var(--color-fg-primary)', marginBottom: '8px' }}>
+        Verificación en dos pasos
+      </h1>
+      <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-fg-secondary)', marginBottom: '24px' }}>
+        Ingresá el código de 6 dígitos de tu app de autenticación.
+      </p>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
-            Código
-          </label>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="field field--outlined">
+          <label htmlFor="code" className="field__label">Código</label>
           <input
             id="code"
             name="code"
@@ -71,16 +80,18 @@ function MfaVerifyForm() {
             required
             autoComplete="one-time-code"
             autoFocus
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-gray-900"
+            className="field__input"
+            style={{ textAlign: 'center', letterSpacing: '0.2em', fontFamily: 'monospace' }}
           />
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="field__hint field__hint--error">{error}</p>}
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-gray-900 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-700 disabled:opacity-50"
+          className="btn btn--filled btn--rounded btn--md"
+          style={{ width: '100%', justifyContent: 'center' }}
         >
           {loading ? 'Verificando...' : 'Verificar'}
         </button>

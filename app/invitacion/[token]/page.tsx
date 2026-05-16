@@ -82,20 +82,33 @@ export default function InvitacionPage() {
     }
   }
 
+  const centeredLayout: React.CSSProperties = {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--color-bg-subtle)',
+    padding: '16px',
+  };
+
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-sm text-gray-500">Validando invitación...</p>
+      <main style={centeredLayout}>
+        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-fg-secondary)' }}>
+          Validando invitación...
+        </p>
       </main>
     );
   }
 
   if (tokenError) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-sm text-red-600">{tokenError}</p>
-          <p className="text-sm text-gray-400 mt-2">El link puede haber expirado o ya fue utilizado.</p>
+      <main style={centeredLayout}>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-error-600)' }}>{tokenError}</p>
+          <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-fg-muted)', marginTop: '8px' }}>
+            El link puede haber expirado o ya fue utilizado.
+          </p>
         </div>
       </main>
     );
@@ -103,14 +116,16 @@ export default function InvitacionPage() {
 
   if (success) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-sm font-medium text-gray-900">¡Listo! Tu cuenta fue creada.</p>
-          <p className="text-sm text-gray-500 mt-1">
+      <main style={centeredLayout}>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: 'var(--font-size-sm)', fontWeight: 500, color: 'var(--color-fg-primary)' }}>
+            ¡Listo! Tu cuenta fue creada.
+          </p>
+          <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-fg-secondary)', marginTop: '4px' }}>
             Podés{' '}
             <button
               onClick={() => router.push('/iniciar-sesion')}
-              className="text-gray-900 font-medium hover:underline"
+              style={{ color: 'var(--color-fg-primary)', fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
             >
               iniciar sesión
             </button>
@@ -122,32 +137,37 @@ export default function InvitacionPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="bg-white border border-gray-200 rounded-lg p-8 w-full max-w-sm">
-        <h1 className="text-xl font-semibold text-gray-900 mb-1">Aceptar invitación</h1>
-        <p className="text-sm text-gray-500 mb-6">
+    <main style={centeredLayout}>
+      <div style={{
+        background: 'var(--color-bg-surface)',
+        border: '1px solid var(--color-border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '32px',
+        width: '100%',
+        maxWidth: '380px',
+      }}>
+        <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 600, color: 'var(--color-fg-primary)', marginBottom: '4px' }}>
+          Aceptar invitación
+        </h1>
+        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-fg-secondary)', marginBottom: '24px' }}>
           Vas a unirte como <strong>{ROLE_LABELS[info!.role] ?? info!.role}</strong>.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="field field--outlined">
+            <label htmlFor="email" className="field__label">Email</label>
             <input
               id="email"
               name="email"
               type="email"
               required
               autoComplete="email"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+              className="field__input"
             />
           </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Contraseña
-            </label>
+          <div className="field field--outlined">
+            <label htmlFor="password" className="field__label">Contraseña</label>
             <input
               id="password"
               name="password"
@@ -155,17 +175,18 @@ export default function InvitacionPage() {
               required
               minLength={8}
               autoComplete="new-password"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+              className="field__input"
             />
-            <p className="text-xs text-gray-400 mt-1">Mínimo 8 caracteres.</p>
+            <p className="field__hint">Mínimo 8 caracteres.</p>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="field__hint field__hint--error">{error}</p>}
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-gray-900 text-white text-sm font-medium py-2 rounded-md hover:bg-gray-700 disabled:opacity-50 transition-colors"
+            className="btn btn--filled btn--rounded btn--md"
+            style={{ width: '100%', justifyContent: 'center' }}
           >
             {submitting ? 'Creando cuenta...' : 'Aceptar invitación'}
           </button>

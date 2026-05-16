@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react';
 
 import { useCart } from '@/context/CartContext';
 import type { Product, ProductVariant } from '@/lib/api/storeClient';
-import { Button } from '@/components/ui/Button';
 
 interface Props {
   product: Product;
@@ -133,22 +132,22 @@ export function AddToCartModal({ product, onClose }: Props) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-6 shadow-xl">
-        <div className="flex items-start justify-between mb-4">
+    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="modal modal--md">
+        <div className="modal__header">
           <div>
-            <h2 className="font-semibold text-gray-900 text-base">{product.name}</h2>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <h2 className="modal__title">{product.name}</h2>
+            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-fg-secondary)', marginTop: '2px' }}>
               ${(product.salePrice ?? product.price).toLocaleString('es-AR')}
             </p>
           </div>
-          <button onClick={onClose} className="btn btn--ghost btn--square btn--sm" style={{ marginTop: -4 }}>
-            ✕
+          <button onClick={onClose} className="btn btn--ghost btn--square btn--sm modal__close" aria-label="Cerrar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
           </button>
         </div>
+        <div className="modal__body">
 
         {product.hasVariants && optionNames.length > 0 && (
           <div className="space-y-4 mb-6">
@@ -182,21 +181,20 @@ export function AddToCartModal({ product, onClose }: Props) {
           <p className="text-sm text-gray-500 mb-6">¿Confirmás que querés agregar este producto?</p>
         )}
 
-        {error && (
-          <p className="field__hint field__hint--error mb-4">{error}</p>
-        )}
-
-        <Button
-          onClick={handleConfirm}
-          disabled={!canAddToCart}
-          loading={isSubmitting}
-          variant="filled"
-          shape="pill"
-          size="md"
-          style={{ width: '100%' }}
-        >
-          {isSubmitting ? 'Agregando...' : 'Agregar al carrito'}
-        </Button>
+          {error && (
+            <p className="field__hint field__hint--error" style={{ marginTop: '8px' }}>{error}</p>
+          )}
+        </div>
+        <div className="modal__footer">
+          <button
+            onClick={handleConfirm}
+            disabled={!canAddToCart || isSubmitting}
+            className="btn btn--filled btn--pill btn--md"
+            style={{ width: '100%', justifyContent: 'center' }}
+          >
+            {isSubmitting ? 'Agregando...' : 'Agregar al carrito'}
+          </button>
+        </div>
       </div>
     </div>
   );

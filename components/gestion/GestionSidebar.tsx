@@ -85,48 +85,21 @@ export function GestionSidebar({ role }: Props) {
   const visibleItems = NAV_ITEMS.filter(item => !item.elevated || isElevated);
 
   return (
-    <aside style={{
-      width: '220px',
-      flexShrink: 0,
-      borderRight: '1px solid #e5e7eb',
-      padding: '24px 12px',
-      background: '#fafafa',
-      minHeight: 'calc(100vh - 64px)',
-    }}>
-      <p style={{
-        fontSize: '11px',
-        fontWeight: 600,
-        color: '#9ca3af',
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        marginBottom: '8px',
-        paddingLeft: '12px',
-      }}>
-        Panel
-      </p>
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+    <aside className="sidebar">
+      <div className="sidebar__header">
+        <p className="sidebar__section-label">Panel</p>
+      </div>
+      <nav className="sidebar__nav">
         {visibleItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}
               href={item.href}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '9px 12px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                color: isActive ? '#111827' : '#374151',
-                textDecoration: 'none',
-                fontWeight: isActive ? 600 : 500,
-                background: isActive ? '#f3f4f6' : 'transparent',
-                transition: 'background 0.15s',
-              }}
+              className={`sidebar__item${isActive ? ' sidebar__item--active' : ''}`}
             >
-              <span style={{ color: isActive ? '#374151' : '#9ca3af' }}>{item.icon}</span>
-              {item.label}
+              <span className="sidebar__item-icon">{item.icon}</span>
+              <span className="sidebar__item-label">{item.label}</span>
             </Link>
           );
         })}
