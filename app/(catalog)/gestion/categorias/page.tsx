@@ -133,6 +133,7 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
             onChange={e => setName(e.target.value)}
             placeholder="Ej: Ropa de hombre"
             fullWidth
+            testId="cat-name-input"
           />
 
           <Select
@@ -141,6 +142,7 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
             onChange={e => setParentId(e.target.value)}
             hint="Solo se muestran categorías que pueden recibir subcategorías (máximo 4 niveles)."
             fullWidth
+            testId="cat-parent-select"
           >
             <option value="">Sin categoría padre (raíz)</option>
             {candidates.map(c => (
@@ -165,7 +167,7 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
 
         <Drawer.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <Button type="button" variant="outlined" shape="rounded" size="sm" onClick={onClose}>Cancelar</Button>
-          <Button type="submit" variant="filled" shape="rounded" size="sm" disabled={loading}>
+          <Button type="submit" variant="filled" shape="rounded" size="sm" disabled={loading} testId="cat-submit-btn">
             {loading ? 'Guardando...' : category ? 'Guardar cambios' : 'Crear categoría'}
           </Button>
         </Drawer.Footer>
@@ -361,7 +363,7 @@ export default function GestionCategoriasPage() {
     <main style={{ padding: '32px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--color-fg-primary)' }}>Categorías</h1>
-        <Button variant="filled" shape="rounded" size="md" onClick={openCreate}>
+        <Button variant="filled" shape="rounded" size="md" onClick={openCreate} testId="cat-new-btn">
           + Nueva categoría
         </Button>
       </div>

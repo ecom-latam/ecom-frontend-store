@@ -76,12 +76,12 @@ function LoginForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input id="email" name="email" type="email" required autoComplete="email" autoFocus label="Email" fullWidth />
-        <Input id="password" name="password" type="password" required autoComplete="current-password" label="Contraseña" fullWidth />
+        <Input id="email" name="email" type="email" required autoComplete="email" autoFocus label="Email" fullWidth testId="store-login-email" />
+        <Input id="password" name="password" type="password" required autoComplete="current-password" label="Contraseña" fullWidth testId="store-login-password" />
 
-        {error && <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-error-600)' }}>{error}</p>}
+        {error && <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-error-600)' }} data-testid="store-login-error">{error}</p>}
 
-        <Button type="submit" loading={loading} variant="filled" shape="rounded" size="md" style={{ width: '100%' }}>
+        <Button type="submit" loading={loading} variant="filled" shape="rounded" size="md" style={{ width: '100%' }} testId="store-login-submit">
           {loading ? 'Ingresando...' : 'Ingresar'}
         </Button>
       </form>
