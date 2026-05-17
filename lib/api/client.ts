@@ -9,6 +9,7 @@ export const BFF_BASE_URL = process.env.NEXT_PUBLIC_BFF_URL ?? 'http://localhost
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BFF_BASE_URL}${path}`, {
+    cache: 'no-store',
     ...init,
     headers: {
       'Content-Type': 'application/json',

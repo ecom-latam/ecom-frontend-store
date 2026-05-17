@@ -422,6 +422,7 @@ export default function GestionProductosPage() {
                       shape="rounded"
                       size="sm"
                       onClick={() => handleToggleStatus(product)}
+                      testId="prod-toggle-btn"
                     >
                       {product.status === 'active' ? 'Desactivar' : 'Activar'}
                     </Button>
