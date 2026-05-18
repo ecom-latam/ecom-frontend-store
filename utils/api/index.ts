@@ -5,4 +5,4 @@ export { categories } from './categories';
 export { orders } from './orders';
 export type { Product, ProductListResponse, ProductListParams, ProductPayload, ProductStatus, ProductImage } from './products';
 export type { Category, CategoryPayload } from './categories';
-export type { Order, OrderItem, OrderListResponse, CreateOrderPayload, ShippingAddress, PaymentMethod, PaymentStatus, OrderStatus } from './orders';
+export type { Order, OrderItem, OrderListResponse, CreateOrderPayload, ShippingAddress, PaymentMethod, PaymentStatus, OrderStatus, AdminOrderListParams } from './orders';

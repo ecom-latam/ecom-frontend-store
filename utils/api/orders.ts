@@ -55,6 +55,15 @@ export interface CreateOrderPayload {
 }
 
 const BASE = '/api/order/orders';
+const ADMIN_BASE = '/api/order/admin/orders';
+
+export interface AdminOrderListParams {
+  page?: number;
+  limit?: number;
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  paymentMethod?: PaymentMethod;
+}
 
 export const orders = {
   create: (payload: CreateOrderPayload) =>
@@ -71,4 +80,28 @@ export const orders = {
 
   cancel: (id: string) =>
     apiClient.patch<Order>(`${BASE}/${id}/cancel`, {}),
+
+  admin: {
+    list: (params: AdminOrderListParams = {}) => {
+      const q = new URLSearchParams();
+      if (params.page)          q.set('page', String(params.page));
+      if (params.limit)         q.set('limit', String(params.limit));
+      if (params.status)        q.set('status', params.status);
+      if (params.paymentStatus) q.set('paymentStatus', params.paymentStatus);
+      if (params.paymentMethod) q.set('paymentMethod', params.paymentMethod);
+      return apiClient.get<OrderListResponse>(`${ADMIN_BASE}?${q}`);
+    },
+
+    getById: (id: string) =>
+      apiClient.get<Order>(`${ADMIN_BASE}/${id}`),
+
+    confirmPayment: (id: string) =>
+      apiClient.patch<Order>(`${ADMIN_BASE}/${id}/confirm-payment`, {}),
+
+    updateStatus: (id: string, status: OrderStatus) =>
+      apiClient.patch<Order>(`${ADMIN_BASE}/${id}/status`, { status }),
+
+    cancel: (id: string) =>
+      apiClient.patch<Order>(`${ADMIN_BASE}/${id}/cancel`, {}),
+  },
 };

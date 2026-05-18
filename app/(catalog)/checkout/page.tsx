@@ -158,6 +158,7 @@ export default function CheckoutPage() {
                       required
                       size="md"
                       variant="outlined"
+                      testId="checkout-fullname"
                     />
                   </div>
                   <div style={{ gridColumn: '1 / -1' }}>
@@ -168,6 +169,7 @@ export default function CheckoutPage() {
                       required
                       size="md"
                       variant="outlined"
+                      testId="checkout-phone"
                     />
                   </div>
                   <div style={{ gridColumn: '1 / -1' }}>
@@ -178,6 +180,7 @@ export default function CheckoutPage() {
                       required
                       size="md"
                       variant="outlined"
+                      testId="checkout-address"
                     />
                   </div>
                   <div>
@@ -188,6 +191,7 @@ export default function CheckoutPage() {
                       required
                       size="md"
                       variant="outlined"
+                      testId="checkout-city"
                     />
                   </div>
                   <div>
@@ -197,6 +201,7 @@ export default function CheckoutPage() {
                       onChange={(e) => set('zip', e.target.value)}
                       size="md"
                       variant="outlined"
+                      testId="checkout-zip"
                     />
                   </div>
                   <div style={{ gridColumn: '1 / -1' }}>
@@ -207,6 +212,7 @@ export default function CheckoutPage() {
                       required
                       size="md"
                       variant="outlined"
+                      testId="checkout-province"
                     >
                       <option value="">Seleccioná una provincia</option>
                       {PROVINCES.map((p) => (
@@ -225,6 +231,7 @@ export default function CheckoutPage() {
                   {(['transfer', 'cash'] as const).map((method) => (
                     <label
                       key={method}
+                      data-testid={`checkout-payment-${method}`}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -330,6 +337,7 @@ export default function CheckoutPage() {
                   size="md"
                   disabled={submitting}
                   style={{ marginTop: '20px', width: '100%', justifyContent: 'center' }}
+                  data-testid="checkout-submit-btn"
                 >
                   {submitting ? 'Procesando...' : 'Confirmar pedido'}
                 </Button>
