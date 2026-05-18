@@ -61,6 +61,9 @@ export function CatalogNavbar() {
       <Navbar.Logo as={Link} href="/productos">Tienda</Navbar.Logo>
 
       <Navbar.Links>
+        {isLoggedIn && (
+          <Navbar.Link as={Link} href="/mis-pedidos">Mis pedidos</Navbar.Link>
+        )}
         {canManage && (
           <Navbar.Link as={Link} href="/gestion">Gestión</Navbar.Link>
         )}

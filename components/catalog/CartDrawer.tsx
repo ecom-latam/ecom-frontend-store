@@ -109,9 +109,8 @@ export function CartDrawer() {
               variant="filled"
               shape="pill"
               size="md"
-              disabled
-              title="Disponible próximamente"
-              style={{ justifyContent: 'center', cursor: 'not-allowed' }}
+              style={{ justifyContent: 'center' }}
+              onClick={() => { closeDrawer(); router.push('/checkout'); }}
             >
               Ir al checkout
             </Button>

@@ -144,9 +144,8 @@ export function CartPageContent() {
                 variant="filled"
                 shape="pill"
                 size="md"
-                disabled
-                title="Disponible próximamente"
-                style={{ width: '100%', justifyContent: 'center', cursor: 'not-allowed' }}
+                onClick={() => router.push('/checkout')}
+                style={{ width: '100%', justifyContent: 'center' }}
               >
                 Ir al checkout
               </Button>
