@@ -38,10 +38,8 @@ export default async function RootLayout({
 
   return (
     <html lang="es" data-theme={theme}>
-      <head>
-        <style dangerouslySetInnerHTML={{ __html: brandStyles }} />
-      </head>
       <body className="antialiased">
+        <style dangerouslySetInnerHTML={{ __html: brandStyles }} />
         <ToastProvider>
           <CartProvider hasSession={hasSession}>
             {children}
