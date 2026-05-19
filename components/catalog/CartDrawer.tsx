@@ -1,20 +1,24 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/context/CartContext';
-import { Drawer, Button, Text } from 'zoui';
+import { Drawer, Button, Text, Modal } from 'zoui';
 
 export function CartDrawer() {
   const router = useRouter();
   const { items, isLoading, drawerOpen, closeDrawer, updateItem, removeItem } = useCart();
+  const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  const [stockLimits, setStockLimits] = useState<Record<string, number>>({});
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   if (!drawerOpen) return null;
 
   return (
+    <>
     <Drawer side="right" size="sm" onClose={closeDrawer} label="Carrito de compras">
       <Drawer.Header onClose={closeDrawer}>Carrito</Drawer.Header>
 
@@ -57,8 +61,8 @@ export function CartDrawer() {
                         variant="outlined"
                         shape="square"
                         size="md"
-                        onClick={() => updateItem(item._id, item.quantity - 1)}
-                        disabled={item.quantity <= 1 || isLoading}
+                        onClick={() => item.quantity <= 1 ? setItemToRemove(item._id) : updateItem(item._id, item.quantity - 1)}
+                        disabled={isLoading}
                         style={{ width: 24, height: 24 }}
                       >
                         −
@@ -68,8 +72,17 @@ export function CartDrawer() {
                         variant="outlined"
                         shape="square"
                         size="md"
-                        onClick={() => updateItem(item._id, item.quantity + 1)}
-                        disabled={isLoading}
+                        onClick={async () => {
+                          const result = await updateItem(item._id, item.quantity + 1);
+                          if (!result.ok && result.error === 'INSUFFICIENT_STOCK') {
+                            setStockLimits((prev) => ({ ...prev, [item._id]: result.available ?? item.quantity }));
+                          }
+                        }}
+                        disabled={isLoading || (
+                          item.stock !== undefined
+                            ? item.quantity >= item.stock
+                            : stockLimits[item._id] !== undefined && item.quantity >= stockLimits[item._id]
+                        )}
                         style={{ width: 24, height: 24 }}
                       >
                         +
@@ -78,7 +91,7 @@ export function CartDrawer() {
                         variant="ghost"
                         shape="rounded"
                         size="md"
-                        onClick={() => removeItem(item._id)}
+                        onClick={() => setItemToRemove(item._id)}
                         disabled={isLoading}
                         style={{ marginLeft: 'auto', fontSize: 'var(--font-size-xs)', color: 'var(--color-fg-muted)' }}
                       >
@@ -118,5 +131,23 @@ export function CartDrawer() {
         </>
       )}
     </Drawer>
+
+    {itemToRemove && (
+      <Modal size="sm" onClose={() => setItemToRemove(null)}>
+        <Modal.Header onClose={() => setItemToRemove(null)}>Eliminar producto</Modal.Header>
+        <Modal.Body>
+          <Text variant="body-sm">¿Querés eliminar este producto del carrito?</Text>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="ghost" shape="rounded" size="md" onClick={() => setItemToRemove(null)}>
+            Cancelar
+          </Button>
+          <Button variant="filled" shape="rounded" size="md" onClick={() => { removeItem(itemToRemove); setItemToRemove(null); }}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )}
+    </>
   );
 }

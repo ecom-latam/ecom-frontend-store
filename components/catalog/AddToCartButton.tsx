@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import type { Product } from '@/lib/api/storeClient';
+import { isBuyer } from '@/utils/helpers';
 import { Button } from 'zoui';
 import { AddToCartModal } from './AddToCartModal';
 
@@ -16,8 +17,17 @@ interface Props {
 export function AddToCartButton({ product, hasSession, availableStock }: Props) {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const [canBuy, setCanBuy] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setCanBuy(isBuyer());
+  }, []);
 
   const isOutOfStock = availableStock !== undefined && availableStock === 0;
+
+  if (canBuy === null) return null;
+
+  if (hasSession && !canBuy) return null;
 
   if (isOutOfStock) {
     return (

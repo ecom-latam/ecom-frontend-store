@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { getAccessTokenRole } from '@/utils/helpers';
 import { orders } from '@/utils/api/orders';
 import type { Order } from '@/utils/api/orders';
 import { Badge, Button, Text } from 'zoui';
@@ -27,22 +26,12 @@ const STATUS_TONE: Record<string, BadgeType> = {
   cancelled: 'error',
 };
 
-export default function MisPedidosPage() {
+export default function MiCuentaPedidosPage() {
   const router = useRouter();
   const [orderList, setOrderList] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const role = getAccessTokenRole();
-    if (!role) {
-      router.replace('/iniciar-sesion');
-      return;
-    }
-    if (role !== 'Customer') {
-      router.replace('/productos');
-      return;
-    }
-
     orders.getMy().then(({ data }) => {
       setOrderList(data.data ?? []);
     }).catch(() => {
@@ -50,7 +39,7 @@ export default function MisPedidosPage() {
     }).finally(() => {
       setLoading(false);
     });
-  }, [router]);
+  }, []);
 
   if (loading) {
     return (

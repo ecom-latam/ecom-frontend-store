@@ -22,3 +22,7 @@ export function getAccessTokenRole(): string | null {
   if (!token) return null;
   return decodeToken(token)?.role ?? null;
 }
+
+export function isBuyer(): boolean {
+  return getAccessTokenRole() === 'Customer';
+}

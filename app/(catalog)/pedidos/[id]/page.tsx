@@ -70,6 +70,10 @@ export default function OrderDetailPage() {
       router.replace('/iniciar-sesion');
       return;
     }
+    if (role !== 'Customer') {
+      router.replace('/productos');
+      return;
+    }
 
     async function load() {
       setLoading(true);

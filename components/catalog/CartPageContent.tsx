@@ -1,14 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/context/CartContext';
-import { Button, Text } from 'zoui';
+import { Button, Text, Modal } from 'zoui';
 
 export function CartPageContent() {
   const router = useRouter();
   const { items, isLoading, updateItem, removeItem, clearCart } = useCart();
+  const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  const [stockLimits, setStockLimits] = useState<Record<string, number>>({});
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -40,6 +43,7 @@ export function CartPageContent() {
   }
 
   return (
+    <>
     <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
@@ -95,8 +99,8 @@ export function CartPageContent() {
                       variant="outlined"
                       shape="square"
                       size="md"
-                      onClick={() => updateItem(item._id, item.quantity - 1)}
-                      disabled={item.quantity <= 1 || isLoading}
+                      onClick={() => item.quantity <= 1 ? setItemToRemove(item._id) : updateItem(item._id, item.quantity - 1)}
+                      disabled={isLoading}
                     >
                       −
                     </Button>
@@ -105,8 +109,17 @@ export function CartPageContent() {
                       variant="outlined"
                       shape="square"
                       size="md"
-                      onClick={() => updateItem(item._id, item.quantity + 1)}
-                      disabled={isLoading}
+                      onClick={async () => {
+                        const result = await updateItem(item._id, item.quantity + 1);
+                        if (!result.ok && result.error === 'INSUFFICIENT_STOCK') {
+                          setStockLimits((prev) => ({ ...prev, [item._id]: result.available ?? item.quantity }));
+                        }
+                      }}
+                      disabled={isLoading || (
+                        item.stock !== undefined
+                          ? item.quantity >= item.stock
+                          : stockLimits[item._id] !== undefined && item.quantity >= stockLimits[item._id]
+                      )}
                     >
                       +
                     </Button>
@@ -115,7 +128,7 @@ export function CartPageContent() {
                       Total: ${(item.price * item.quantity).toLocaleString('es-AR')}
                     </Text>
 
-                    <Button variant="ghost" shape="rounded" size="md" onClick={() => removeItem(item._id)} disabled={isLoading} style={{ marginLeft: 'auto', color: 'var(--color-fg-muted)' }}>
+                    <Button variant="ghost" shape="rounded" size="md" onClick={() => setItemToRemove(item._id)} disabled={isLoading} style={{ marginLeft: 'auto', color: 'var(--color-fg-muted)' }}>
                       Eliminar
                     </Button>
                   </div>
@@ -158,5 +171,23 @@ export function CartPageContent() {
         </div>
       </div>
     </main>
+
+    {itemToRemove && (
+      <Modal size="sm" onClose={() => setItemToRemove(null)}>
+        <Modal.Header onClose={() => setItemToRemove(null)}>Eliminar producto</Modal.Header>
+        <Modal.Body>
+          <Text variant="body-sm">¿Querés eliminar este producto del carrito?</Text>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="ghost" shape="rounded" size="md" onClick={() => setItemToRemove(null)}>
+            Cancelar
+          </Button>
+          <Button variant="filled" shape="rounded" size="md" onClick={() => { removeItem(itemToRemove); setItemToRemove(null); }}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )}
+    </>
   );
 }

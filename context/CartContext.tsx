@@ -18,7 +18,7 @@ interface CartContextValue {
     selectedOptions?: Record<string, string>;
     quantity?: number;
   }) => Promise<{ ok: boolean; error?: string; available?: number }>;
-  updateItem: (itemId: string, quantity: number) => Promise<{ ok: boolean; error?: string }>;
+  updateItem: (itemId: string, quantity: number) => Promise<{ ok: boolean; error?: string; available?: number }>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
 }
@@ -83,8 +83,8 @@ export function CartProvider({ children, hasSession }: CartProviderProps) {
       setItems(data.items ?? []);
       return { ok: true };
     } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { error?: string } } };
-      return { ok: false, error: axiosErr?.response?.data?.error };
+      const axiosErr = err as { response?: { data?: { error?: string; available?: number } } };
+      return { ok: false, error: axiosErr?.response?.data?.error, available: axiosErr?.response?.data?.available };
     } finally {
       setIsLoading(false);
     }

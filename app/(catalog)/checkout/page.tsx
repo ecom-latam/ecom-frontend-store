@@ -39,7 +39,7 @@ const PROVINCES = [
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, itemCount } = useCart();
+  const { items, itemCount, clearCart } = useCart();
 
   const [ready, setReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -61,6 +61,10 @@ export default function CheckoutPage() {
     const role = getAccessTokenRole();
     if (!role) {
       router.replace('/iniciar-sesion?redirect=/checkout');
+      return;
+    }
+    if (role !== 'Customer') {
+      router.replace('/productos');
       return;
     }
     setReady(true);
@@ -117,6 +121,7 @@ export default function CheckoutPage() {
 
     try {
       const { data: order } = await orders.create(payload);
+      await clearCart();
       router.push(`/pedidos/${order._id}`);
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { error?: string; name?: string } } };

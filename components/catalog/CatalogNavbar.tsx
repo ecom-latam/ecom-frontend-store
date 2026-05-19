@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/context/CartContext';
-import { getAccessTokenRole } from '@/utils/helpers';
+import { getAccessTokenRole, isBuyer } from '@/utils/helpers';
 import { Navbar, Button } from 'zoui';
 
 const MANAGEMENT_ROLES = ['Admin', 'Manager', 'Seller'];
@@ -31,12 +31,14 @@ export function CatalogNavbar() {
   const { itemCount, openDrawer } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [canManage, setCanManage] = useState(false);
+  const [canBuy, setCanBuy] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     const role = getAccessTokenRole();
     setIsLoggedIn(!!localStorage.getItem('access_token'));
     setCanManage(role !== null && MANAGEMENT_ROLES.includes(role));
+    setCanBuy(isBuyer());
     setTheme((document.documentElement.dataset.theme as 'light' | 'dark') ?? 'light');
   }, []);
 
@@ -61,9 +63,6 @@ export function CatalogNavbar() {
       <Navbar.Logo as={Link} href="/productos">Tienda</Navbar.Logo>
 
       <Navbar.Links>
-        {isLoggedIn && (
-          <Navbar.Link as={Link} href="/mis-pedidos">Mis pedidos</Navbar.Link>
-        )}
         {canManage && (
           <Navbar.Link as={Link} href="/gestion">Gestión</Navbar.Link>
         )}
@@ -81,9 +80,16 @@ export function CatalogNavbar() {
         </Button>
 
         {isLoggedIn ? (
-          <Button variant="ghost" shape="rounded" size="md" onClick={handleLogout}>
-            Salir
-          </Button>
+          <>
+            {canBuy && (
+              <Button variant="ghost" shape="rounded" size="md" onClick={() => router.push('/mi-cuenta/pedidos')}>
+                Mi cuenta
+              </Button>
+            )}
+            <Button variant="ghost" shape="rounded" size="md" onClick={handleLogout}>
+              Salir
+            </Button>
+          </>
         ) : (
           <>
             <Button variant="ghost" shape="rounded" size="md" onClick={() => router.push('/iniciar-sesion')}>
@@ -95,7 +101,7 @@ export function CatalogNavbar() {
           </>
         )}
 
-        <Navbar.Cart count={Math.min(itemCount, 99)} onClick={openDrawer} />
+        {canBuy && <Navbar.Cart count={Math.min(itemCount, 99)} onClick={openDrawer} />}
       </Navbar.Actions>
     </Navbar>
   );
