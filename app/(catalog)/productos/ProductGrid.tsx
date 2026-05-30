@@ -90,9 +90,11 @@ export function ProductGrid({
         onViewChange={(v) => navigate({ view: v })}
       />
 
-      <Text variant="body-sm" color="secondary" style={{ margin: '16px 0' }}>
-        {total === 0 ? 'Sin resultados' : `${total} producto${total !== 1 ? 's' : ''}`}
-      </Text>
+      {total > 0 && (
+        <Text variant="body-sm" color="secondary" style={{ margin: '16px 0' }}>
+          {`${total} producto${total !== 1 ? 's' : ''}`}
+        </Text>
+      )}
 
       {products.length === 0 ? (
         <EmptyState
