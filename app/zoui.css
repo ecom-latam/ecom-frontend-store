@@ -163,7 +163,6 @@
 .zoui-color-picker__label {
   font-family: var(--font-mono);
   font-size: 10px;
-  text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wide);
   color: var(--color-fg-muted);
 }
