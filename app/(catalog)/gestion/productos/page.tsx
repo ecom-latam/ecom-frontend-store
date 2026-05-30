@@ -7,6 +7,7 @@ import type { Product, ProductPayload, ProductStatus, Category } from '@/utils/a
 import { Modal, Drawer, Table, Badge, Pagination, Text } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { StoreInput } from '@/components/ui/StoreInput';
+import { StoreMoneyInput } from '@/components/ui/StoreMoneyInput';
 import { StoreSelect } from '@/components/ui/StoreSelect';
 import { StoreTextarea } from '@/components/ui/StoreTextarea';
 
@@ -168,24 +169,19 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
           />
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <StoreInput
+            <StoreMoneyInput
               label="Precio *"
-              required
-              type="number"
-              min={0}
-              step={0.01}
+              currency="ARS"
               value={form.price}
-              onChange={e => set('price', parseFloat(e.target.value) || 0)}
+              onValueChange={v => set('price', v ?? 0)}
               fullWidth
               data-testid="prod-price-input"
             />
-            <StoreInput
+            <StoreMoneyInput
               label="Precio de oferta"
-              type="number"
-              min={0}
-              step={0.01}
-              value={form.salePrice ?? ''}
-              onChange={e => set('salePrice', e.target.value ? parseFloat(e.target.value) : null)}
+              currency="ARS"
+              value={form.salePrice ?? null}
+              onValueChange={v => set('salePrice', v)}
               placeholder="Opcional"
               fullWidth
             />
