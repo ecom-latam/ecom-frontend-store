@@ -23,7 +23,7 @@ export default function GestionLayout({ children }: { children: React.ReactNode 
   if (!role) return null;
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', flex: 1 }}>
       <GestionSidebar role={role} />
       <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
     </div>

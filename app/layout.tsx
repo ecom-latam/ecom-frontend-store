@@ -43,7 +43,7 @@ export default async function RootLayout({
 
   return (
     <html lang="es" data-theme={theme} data-store-theme={storeTheme}>
-      <body className="antialiased">
+      <body className="antialiased flex flex-col min-h-screen">
         <style dangerouslySetInnerHTML={{ __html: brandStyles }} />
         <DynamicStoreTheme initialConfig={(storeInfo ?? {}) as Record<string, unknown>}>
           <ToastProvider>
