@@ -2666,7 +2666,6 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-fg-secondary);
   letter-spacing: var(--letter-spacing-wide);
-  text-transform: uppercase;
 }
 
 .zoui-field__label-action {
