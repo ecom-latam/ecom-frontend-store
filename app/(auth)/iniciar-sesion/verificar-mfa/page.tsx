@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { isAxiosError } from 'axios';
 import { auth, startSession } from '@/utils/api';
@@ -21,6 +21,7 @@ function MfaVerifyForm() {
   const mfaToken = searchParams.get('mfaToken') ?? '';
   const next = searchParams.get('next') ?? '/';
 
+  const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -29,13 +30,9 @@ function MfaVerifyForm() {
     return null;
   }
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit() {
     setError('');
     setLoading(true);
-
-    const form = new FormData(e.currentTarget);
-    const code = form.get('code') as string;
 
     try {
       const { data } = await auth.mfaVerify(mfaToken, code);
@@ -68,31 +65,31 @@ function MfaVerifyForm() {
         Ingresá el código de 6 dígitos de tu app de autenticación.
       </Text>
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <StoreInput
-          name="code"
           label="Código"
           type="text"
           inputMode="numeric"
-          pattern="\d{6}"
           maxLength={6}
-          required
           autoComplete="one-time-code"
           autoFocus
           error={error || undefined}
           style={{ textAlign: 'center', letterSpacing: '0.2em', fontFamily: 'monospace' }}
           fullWidth
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
         />
 
         <StoreButton
-          type="submit"
           disabled={loading}
           size="md"
           style={{ width: '100%', justifyContent: 'center' }}
+          onClick={handleSubmit}
         >
           {loading ? 'Verificando...' : 'Verificar'}
         </StoreButton>
-      </form>
+      </div>
     </div>
   );
 }

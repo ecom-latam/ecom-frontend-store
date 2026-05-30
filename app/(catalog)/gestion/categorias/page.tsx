@@ -91,8 +91,7 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
     c => c._id !== category?._id && c.status === 'active' && (depthMap.get(c._id) ?? 0) < MAX_DEPTH
   );
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit() {
     setError('');
     setLoading(true);
     try {
@@ -126,13 +125,13 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
   return (
     <Drawer side="right" size="md" onClose={onClose} label={category ? 'Editar categoría' : 'Nueva categoría'}>
       <Drawer.Header>{category ? 'Editar categoría' : 'Nueva categoría'}</Drawer.Header>
-      <form onSubmit={handleSubmit} style={{ display: 'contents' }}>
+      <>
         <Drawer.Body style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <StoreInput
             label="Nombre *"
-            required
             value={name}
             onChange={e => setName(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSubmit()}
             placeholder="Ej: Ropa de hombre"
             fullWidth
             data-testid="cat-name-input"
@@ -148,6 +147,7 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
               ...candidates.map(c => ({ value: c._id, label: c.name })),
             ]}
             fullWidth
+            data-testid="cat-parent-select"
           />
 
           <StoreSelect
@@ -168,11 +168,11 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
 
         <Drawer.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <StoreButton type="button" variant="secondary" size="md" onClick={onClose}>Cancelar</StoreButton>
-          <StoreButton type="submit" size="md" disabled={loading} data-testid="cat-submit-btn">
+          <StoreButton size="md" disabled={loading} onClick={handleSubmit} data-testid="cat-submit-btn">
             {loading ? 'Guardando...' : category ? 'Guardar cambios' : 'Crear categoría'}
           </StoreButton>
         </Drawer.Footer>
-      </form>
+      </>
     </Drawer>
   );
 }

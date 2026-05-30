@@ -124,8 +124,7 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
     setForm(f => ({ ...f, [key]: value }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit() {
     setError('');
     setLoading(true);
     try {
@@ -149,11 +148,10 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
   return (
     <Drawer side="right" size="lg" onClose={onClose} label={product ? 'Editar producto' : 'Nuevo producto'}>
       <Drawer.Header>{product ? 'Editar producto' : 'Nuevo producto'}</Drawer.Header>
-      <form onSubmit={handleSubmit} style={{ display: 'contents' }}>
+      <>
         <Drawer.Body style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <StoreInput
             label="Nombre *"
-            required
             value={form.name}
             onChange={e => set('name', e.target.value)}
             placeholder="Ej: Remera de algodón"
@@ -212,6 +210,7 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
                 ...categories.map(c => ({ value: c._id, label: c.name })),
               ]}
               fullWidth
+              data-testid="prod-category-select"
             />
           </div>
 
@@ -232,11 +231,11 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
 
         <Drawer.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <StoreButton type="button" variant="secondary" size="md" onClick={onClose}>Cancelar</StoreButton>
-          <StoreButton type="submit" size="md" disabled={loading} data-testid="prod-submit-btn">
+          <StoreButton size="md" disabled={loading} onClick={handleSubmit} data-testid="prod-submit-btn">
             {loading ? 'Guardando...' : product ? 'Guardar cambios' : 'Crear producto'}
           </StoreButton>
         </Drawer.Footer>
-      </form>
+      </>
     </Drawer>
   );
 }

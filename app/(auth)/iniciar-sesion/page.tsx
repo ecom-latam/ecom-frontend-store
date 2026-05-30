@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { isAxiosError } from 'axios';
@@ -22,17 +22,14 @@ function LoginForm() {
   const next = searchParams.get('next') ?? '/';
   const registered = searchParams.get('registered') === '1';
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit() {
     setError('');
     setLoading(true);
-
-    const form = new FormData(e.currentTarget);
-    const email = form.get('email') as string;
-    const password = form.get('password') as string;
 
     try {
       const { data } = await auth.login(email, password, { _skipModal: true });
@@ -77,18 +74,18 @@ function LoginForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <StoreInput id="email" name="email" type="email" required autoComplete="email" autoFocus label="Email" fullWidth />
-        <StoreInput id="password" name="password" type="password" required autoComplete="current-password" label="Contraseña" fullWidth />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <StoreInput id="email" type="email" autoComplete="email" autoFocus label="Email" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} data-testid="store-login-email" />
+        <StoreInput id="password" type="password" autoComplete="current-password" label="Contraseña" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} data-testid="store-login-password" />
 
         {error && (
           <Text variant="body-sm" as="p" style={{ color: 'var(--color-error-500)' }} data-testid="store-login-error">{error}</Text>
         )}
 
-        <StoreButton type="submit" loading={loading} size="md" style={{ width: '100%' }} data-testid="store-login-submit">
+        <StoreButton loading={loading} size="md" style={{ width: '100%' }} onClick={handleSubmit} data-testid="store-login-submit">
           {loading ? 'Ingresando...' : 'Ingresar'}
         </StoreButton>
-      </form>
+      </div>
 
       <Text variant="body-sm" color="muted" as="p" style={{ textAlign: 'center', marginTop: '24px' }}>
         ¿No tenés cuenta?{' '}

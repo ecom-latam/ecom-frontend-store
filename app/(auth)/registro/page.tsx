@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { isAxiosError } from 'axios';
@@ -20,17 +20,14 @@ const ERRORS: Record<string, string> = {
 
 export default function RegistroPage() {
   const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit() {
     setError('');
     setLoading(true);
-
-    const form = new FormData(e.currentTarget);
-    const email = form.get('email') as string;
-    const password = form.get('password') as string;
 
     try {
       await auth.registerCustomer(email, password, { _skipModal: true });
@@ -59,27 +56,28 @@ export default function RegistroPage() {
       <Text variant="heading-2" as="h1" style={{ marginBottom: '4px' }}>Crear cuenta</Text>
       <Text variant="body-sm" color="muted" style={{ marginBottom: '24px' }}>Registrate para comprar en esta tienda.</Text>
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <StoreInput id="email" name="email" type="email" required autoComplete="email" autoFocus label="Email" fullWidth />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <StoreInput id="email" type="email" autoComplete="email" autoFocus label="Email" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} />
         <StoreInput
           id="password"
-          name="password"
           type="password"
-          required
           autoComplete="new-password"
           label="Contraseña"
           hint="Mínimo 8 caracteres"
           fullWidth
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
         />
 
         {error && (
           <Text variant="body-sm" as="p" style={{ color: 'var(--color-error-500)' }}>{error}</Text>
         )}
 
-        <StoreButton type="submit" loading={loading} size="md" style={{ width: '100%' }}>
+        <StoreButton loading={loading} size="md" style={{ width: '100%' }} onClick={handleSubmit}>
           {loading ? 'Creando cuenta...' : 'Crear cuenta'}
         </StoreButton>
-      </form>
+      </div>
 
       <Text variant="body-sm" color="muted" as="p" style={{ textAlign: 'center', marginTop: '24px' }}>
         ¿Ya tenés cuenta?{' '}

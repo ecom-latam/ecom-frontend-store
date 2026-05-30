@@ -139,8 +139,7 @@ export default function CheckoutPage() {
     setError(null);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit() {
 
     if (form.shippingMethod === 'delivery' && (!form.address || !form.city || !form.province)) {
       setError('Completá los datos de envío.');
@@ -191,7 +190,7 @@ export default function CheckoutPage() {
           Checkout
         </Text>
 
-        <form onSubmit={handleSubmit}>
+        <div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', alignItems: 'start' }}>
 
             {/* Left column — shipping + payment */}
@@ -358,9 +357,10 @@ export default function CheckoutPage() {
                           label="Provincia"
                           value={form.province || undefined}
                           onValueChange={(val) => set('province', val)}
-                          required
-                          size="md"                          placeholder="Seleccioná una provincia"
+                          size="md"
+                          placeholder="Seleccioná una provincia"
                           options={PROVINCES.map((p) => ({ value: p, label: p }))}
+                          data-testid="checkout-province"
                         />
                       </div>
                     </>
@@ -465,10 +465,10 @@ export default function CheckoutPage() {
                 )}
 
                 <StoreButton
-                  type="submit"
                   size="md"
                   disabled={submitting}
                   style={{ marginTop: '20px', width: '100%', justifyContent: 'center' }}
+                  onClick={handleSubmit}
                   data-testid="checkout-submit-btn"
                 >
                   {submitting ? 'Procesando...' : 'Confirmar pedido'}
@@ -477,7 +477,7 @@ export default function CheckoutPage() {
             </div>
 
           </div>
-        </form>
+        </div>
       </div>
     </main>
   );

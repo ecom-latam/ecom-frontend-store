@@ -36,6 +36,8 @@ export default function InvitacionPage() {
   const [info, setInfo] = useState<InviteInfo | null>(null);
   const [tokenError, setTokenError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -59,14 +61,9 @@ export default function InvitacionPage() {
     validate();
   }, [token]);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit() {
     setError('');
     setSubmitting(true);
-
-    const form = new FormData(e.currentTarget);
-    const email = form.get('email') as string;
-    const password = form.get('password') as string;
 
     try {
       const { data } = await apiClient.post(`/api/auth/invitations/${token}`, { email, password });
@@ -147,37 +144,39 @@ export default function InvitacionPage() {
           Vas a unirte como <strong>{ROLE_LABELS[info!.role] ?? info!.role}</strong>.
         </Text>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <StoreInput
-            name="email"
             label="Email"
             type="email"
-            required
             autoComplete="email"
             fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           />
           <StoreInput
-            name="password"
             label="Contraseña"
             type="password"
-            required
             minLength={8}
             autoComplete="new-password"
             hint="Mínimo 8 caracteres."
             fullWidth
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           />
 
           {error && <Text variant="body-sm" as="p" style={{ color: 'var(--color-error-500)' }}>{error}</Text>}
 
           <StoreButton
-            type="submit"
             disabled={submitting}
             size="md"
             style={{ width: '100%', justifyContent: 'center' }}
+            onClick={handleSubmit}
           >
             {submitting ? 'Creando cuenta...' : 'Aceptar invitación'}
           </StoreButton>
-        </form>
+        </div>
       </div>
     </main>
   );
