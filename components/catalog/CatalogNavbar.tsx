@@ -18,12 +18,14 @@ export function CatalogNavbar() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [canManage,  setCanManage]  = useState(false);
+  const [isCustomer, setIsCustomer] = useState(false);
   const [isDark,     setIsDark]     = useState(false);
 
   useEffect(() => {
     const role = getAccessTokenRole();
     setIsLoggedIn(!!localStorage.getItem('access_token'));
     setCanManage(role !== null && MANAGEMENT_ROLES.includes(role));
+    setIsCustomer(role === 'Customer');
     setIsDark(document.documentElement.getAttribute('data-theme') === 'dark');
   }, []);
 
@@ -35,8 +37,7 @@ export function CatalogNavbar() {
   }, [isDark]);
 
   const links = [
-    { label: 'Inicio',    onClick: () => router.push('/') },
-    { label: 'Productos', onClick: () => router.push('/productos') },
+    { label: 'Inicio', onClick: () => router.push('/') },
     ...(canManage ? [{ label: 'Gestión', onClick: () => router.push('/gestion') }] : []),
   ];
 
@@ -49,7 +50,7 @@ export function CatalogNavbar() {
       links={links}
       onLogoClick={() => router.push('/productos')}
       cartCount={Math.min(itemCount, 99)}
-      onCartClick={openDrawer}
+      onCartClick={isCustomer ? openDrawer : undefined}
       isLoggedIn={isLoggedIn}
       isDark={isDark}
       onThemeToggle={toggleTheme}
@@ -62,7 +63,7 @@ export function CatalogNavbar() {
         window.location.href = '/productos';
       }}
       onRegister={() => router.push('/registro')}
-      onMyAccount={() => router.push('/mi-cuenta')}
+      onMyAccount={isCustomer ? () => router.push('/mi-cuenta') : undefined}
     />
   );
 }
