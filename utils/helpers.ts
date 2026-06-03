@@ -26,3 +26,10 @@ export function getAccessTokenRole(): string | null {
 export function isBuyer(): boolean {
   return getAccessTokenRole() === 'Customer';
 }
+
+export function getAccessTokenUserId(): string | null {
+  if (typeof window === 'undefined') return null;
+  const token = localStorage.getItem('access_token');
+  if (!token) return null;
+  return decodeToken(token)?.userId ?? null;
+}

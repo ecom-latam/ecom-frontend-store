@@ -166,6 +166,13 @@ export default function CheckoutPage() {
 
   async function payWithMercadoPago() {
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
+
+    sessionStorage.setItem('mp_checkout_context', JSON.stringify({
+      shippingAddress,
+      shippingMethod: form.shippingMethod,
+      notes: form.notes,
+    }));
+
     const { data } = await paymentApi.createPreference({
       items: items.map((item) => ({
         title:      item.name,

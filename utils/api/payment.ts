@@ -18,7 +18,29 @@ export interface PreferenceResponse {
   preference_id: string;
 }
 
+export interface ProcessPaymentPayload {
+  payment_id: string;
+  customerId: string;
+  shippingAddress: {
+    fullName: string;
+    phone: string;
+    address?: string;
+    city?: string;
+    province?: string;
+    zip?: string;
+  };
+  shippingMethod: string;
+  notes?: string;
+}
+
+export interface ProcessPaymentResponse {
+  order_id: string;
+  payment_status: string;
+}
+
 export const payment = {
   createPreference: (payload: CreatePreferencePayload) =>
     apiClient.post<PreferenceResponse>('/api/payment/preference', payload),
+  processPayment: (payload: ProcessPaymentPayload) =>
+    apiClient.post<ProcessPaymentResponse>('/api/payment/process', payload),
 };
