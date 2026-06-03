@@ -167,20 +167,9 @@ export default function CheckoutPage() {
     setError(null);
 
     try {
-      const { data: order } = await orders.create(payload, { _skipModal: true });
+      const { data: order } = await orders.create(payload);
       await clearCart();
       router.push(`/pedidos/${order._id}`);
-    } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { error?: string; name?: string } } };
-      const code = axiosErr?.response?.data?.error;
-      if (code === 'CART_EMPTY') {
-        setError('Tu carrito está vacío.');
-      } else if (code === 'INSUFFICIENT_STOCK') {
-        const name = axiosErr?.response?.data?.name ?? 'un producto';
-        setError(`Stock insuficiente para "${name}". Actualizá tu carrito.`);
-      } else {
-        setError('Ocurrió un error al crear el pedido. Intentá de nuevo.');
-      }
     } finally {
       setSubmitting(false);
     }
