@@ -38,9 +38,38 @@ export interface ProcessPaymentResponse {
   payment_status: string;
 }
 
+export interface MpProcessPayload {
+  token: string;
+  paymentMethodId: string;
+  issuerId?: string | number;
+  installments: number;
+  paymentType: string;
+  amount: number;
+  payer: {
+    email: string;
+    identification?: { type: string; number: string };
+  };
+  shippingAddress: {
+    fullName: string;
+    phone: string;
+    address?: string;
+    city?: string;
+    province?: string;
+    zip?: string;
+  };
+  shippingMethod: string;
+}
+
+export interface MpProcessResponse {
+  orderId: string;
+  status: 'processed' | 'pending' | 'cancelled' | string;
+}
+
 export const payment = {
   createPreference: (payload: CreatePreferencePayload) =>
     apiClient.post<PreferenceResponse>('/api/payment/preference', payload),
   processPayment: (payload: ProcessPaymentPayload) =>
     apiClient.post<ProcessPaymentResponse>('/api/payment/process', payload),
+  processMp: (payload: MpProcessPayload) =>
+    apiClient.post<MpProcessResponse>('/api/mp/process', payload),
 };

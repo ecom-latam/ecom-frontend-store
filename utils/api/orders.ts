@@ -1,7 +1,7 @@
 import { apiClient } from './client';
 import type { AxiosRequestConfig } from 'axios';
 
-export type PaymentMethod = 'transfer' | 'mercadopago';
+export type PaymentMethod = 'transfer' | 'mercadopago' | 'mp';
 export type ShippingMethod = 'delivery' | 'pickup';
 export type PaymentStatus = 'pending' | 'in_progress' | 'paid' | 'failed';
 export type OrderStatus = 'new' | 'notified' | 'confirmed' | 'processing' | 'shipped' | 'ready' | 'delivered' | 'cancelled';

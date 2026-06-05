@@ -75,7 +75,7 @@ function toStoreConfig(raw: Record<string, unknown>): StoreConfig {
     cart_layout:           raw.cart_layout           as string | undefined,
     search_preset:         raw.search_preset         as string | undefined,
     currency:              raw.currency === 'USD' ? 'USD' : 'ARS',
-    mp_configured:         raw.mp_configured === true,
+    mp_public_key:         (raw.mp_public_key as string | null | undefined) ?? null,
   };
 }
 
