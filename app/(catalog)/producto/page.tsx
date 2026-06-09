@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -7,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { Text } from 'zoui';
 import { AddToCartButton } from '@/components/catalog/AddToCartButton';
 import { Price } from '@/components/catalog/Price';
+import { ProductImageGallery } from '@/components/catalog/ProductImageGallery';
 import { getCategories, getProduct } from '@/lib/api/storeClient';
 
 interface Props {
@@ -46,8 +46,6 @@ export default async function ProductoPage({ searchParams }: Props) {
   ]);
 
   const category = categories.find((c) => c._id === String(product.categoryId));
-  const mainImage = product.images.find((img) => img.isMain) ?? product.images[0];
-  const secondaryImages = product.images.filter((img) => img !== mainImage);
   const displayPrice = product.salePrice ?? product.price;
   const hasDiscount = product.salePrice !== null && product.salePrice < product.price;
 
@@ -68,44 +66,7 @@ export default async function ProductoPage({ searchParams }: Props) {
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
-          <div className="flex flex-col gap-3">
-            <div className="aspect-square rounded-lg overflow-hidden" style={{ background: 'var(--color-bg-subtle)' }}>
-              {mainImage ? (
-                <Image
-                  src={mainImage.url}
-                  alt={product.name}
-                  width={600}
-                  height={600}
-                  className="object-cover w-full h-full"
-                  priority
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-6xl" style={{ color: 'var(--color-fg-disabled)' }}>
-                  □
-                </div>
-              )}
-            </div>
-
-            {secondaryImages.length > 0 && (
-              <div className="flex gap-2 overflow-x-auto">
-                {secondaryImages.map((img, i) => (
-                  <div
-                    key={i}
-                    className="w-20 h-20 flex-shrink-0 rounded-md overflow-hidden"
-                    style={{ background: 'var(--color-bg-subtle)' }}
-                  >
-                    <Image
-                      src={img.url}
-                      alt={`${product.name} ${i + 2}`}
-                      width={80}
-                      height={80}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <ProductImageGallery images={product.images} productName={product.name} />
 
           <div className="flex flex-col">
             {category && (

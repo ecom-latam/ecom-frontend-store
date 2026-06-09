@@ -15,6 +15,11 @@ export interface ComponentsPresets {
 export type Currency = 'ARS' | 'USD';
 
 export interface StoreConfig {
+  name?: string;
+  logo_url?: string;
+  logo_dark_url?: string;
+  logo_large_url?: string;
+  logo_large_dark_url?: string;
   components_presets?: ComponentsPresets;
   product_detail_layout?: string;
   cart_layout?: string;

@@ -74,4 +74,19 @@ export const products = {
 
   delete: (id: string) =>
     apiClient.delete(`${BASE}/${id}`),
+
+  uploadImages: (id: string, files: File[]) => {
+    const form = new FormData();
+    files.forEach(f => form.append('images', f));
+    return apiClient.post<ProductImage[]>(`${BASE}/${id}/images`, form);
+  },
+
+  deleteImage: (id: string, publicId: string) =>
+    apiClient.delete<ProductImage[]>(`${BASE}/${id}/images`, { data: { publicId } }),
+
+  setMainImage: (id: string, publicId: string) =>
+    apiClient.put<ProductImage[]>(`${BASE}/${id}/images/main`, { publicId }),
+
+  reorderImages: (id: string, order: string[]) =>
+    apiClient.put<ProductImage[]>(`${BASE}/${id}/images/order`, { order }),
 };

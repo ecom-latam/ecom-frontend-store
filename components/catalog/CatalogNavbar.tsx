@@ -42,11 +42,18 @@ export function CatalogNavbar() {
   ];
 
   const variant = (components_presets?.navbar ?? 'outlined') as NavbarVariant;
+  const { name, logo_url, logo_dark_url } = useStoreConfig();
+
+  const activeLogo = isDark ? (logo_dark_url || logo_url) : (logo_url || logo_dark_url);
+  const brandContent = activeLogo ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={activeLogo} alt={name ?? 'Tienda'} style={{ height: 40, maxWidth: 180, objectFit: 'contain', display: 'block' }} />
+  ) : (name ?? 'Tienda');
 
   return (
     <Navbar
       variant={variant}
-      storeName="Tienda"
+      storeName={brandContent}
       links={links}
       onLogoClick={() => router.push('/productos')}
       cartCount={Math.min(itemCount, 99)}

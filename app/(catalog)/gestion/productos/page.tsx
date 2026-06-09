@@ -11,6 +11,7 @@ import { StoreMoneyInput } from '@/components/ui/StoreMoneyInput';
 import { StoreNumberInput } from '@/components/ui/StoreNumberInput';
 import { StoreSelect } from '@/components/ui/StoreSelect';
 import { StoreTextarea } from '@/components/ui/StoreTextarea';
+import { ImageUploader } from '@/components/ui/ImageUploader';
 import { useStoreConfig } from '@/context/StoreConfigContext';
 import { formatPrice } from '@/lib/format';
 
@@ -117,6 +118,7 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
       ? { name: product.name, description: product.description, price: product.price, salePrice: product.salePrice, stock: product.stock, categoryId: product.categoryId, status: product.status }
       : EMPTY_FORM
   );
+  const [images, setImages] = useState<Product['images']>(product?.images ?? []);
   const [loading, setLoading] = useState(false);
 
   function set<K extends keyof ProductPayload>(key: K, value: ProductPayload[K]) {
@@ -225,6 +227,21 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
               .map(s => ({ value: s, label: STATUS_LABELS[s] }))}
             fullWidth
           />
+
+          <div>
+            <Text variant="label" style={{ display: 'block', marginBottom: 8 }}>Imágenes</Text>
+            {product ? (
+              <ImageUploader
+                productId={product._id}
+                images={images}
+                onImagesChange={setImages}
+              />
+            ) : (
+              <p style={{ fontSize: 13, color: 'var(--color-fg-muted)', margin: 0 }}>
+                Guardá el producto primero para agregar imágenes.
+              </p>
+            )}
+          </div>
 
         </Drawer.Body>
 

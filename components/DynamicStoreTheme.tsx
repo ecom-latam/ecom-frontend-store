@@ -76,6 +76,11 @@ function toStoreConfig(raw: Record<string, unknown>): StoreConfig {
     search_preset:         raw.search_preset         as string | undefined,
     currency:              raw.currency === 'USD' ? 'USD' : 'ARS',
     mp_public_key:         (raw.mp_public_key as string | null | undefined) ?? null,
+    name:                  raw.name                 as string | undefined,
+    logo_url:              raw.logo_url              as string | undefined,
+    logo_dark_url:         raw.logo_dark_url         as string | undefined,
+    logo_large_url:        raw.logo_large_url        as string | undefined,
+    logo_large_dark_url:   raw.logo_large_dark_url   as string | undefined,
   };
 }
 
