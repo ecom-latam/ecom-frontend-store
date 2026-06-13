@@ -10,6 +10,7 @@ export interface ComponentsPresets {
   navbar?: string;
   product_card?: string;
   view_toggle?: string;
+  background?: string;
 }
 
 export type Currency = 'ARS' | 'USD';

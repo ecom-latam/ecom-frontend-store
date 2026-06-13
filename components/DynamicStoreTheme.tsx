@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { brandScale, BRAND_STEPS } from 'zoui';
+import type { SurfaceVariant } from 'zoui';
 import { StoreConfigContext } from '@/context/StoreConfigContext';
 import type { StoreConfig } from '@/context/StoreConfigContext';
 
@@ -70,6 +71,7 @@ function toStoreConfig(raw: Record<string, unknown>): StoreConfig {
       navbar:       presets.navbar       as string | undefined,
       product_card: presets.product_card as string | undefined,
       view_toggle:  presets.view_toggle  as string | undefined,
+      background:   presets.background   as string | undefined,
     },
     product_detail_layout: raw.product_detail_layout as string | undefined,
     cart_layout:           raw.cart_layout           as string | undefined,
@@ -113,9 +115,13 @@ export function DynamicStoreTheme({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const backgroundVariant = (config.components_presets?.background ?? 'default') as SurfaceVariant;
+
   return (
     <StoreConfigContext.Provider value={config}>
-      {children}
+      <div className="zoui-surface" data-variant={backgroundVariant}>
+        {children}
+      </div>
     </StoreConfigContext.Provider>
   );
 }
