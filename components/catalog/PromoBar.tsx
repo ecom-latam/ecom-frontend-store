@@ -33,6 +33,7 @@ export function PromoBar() {
   const messages = buildMessages(free_shipping_min_amount, installments_count, interest_free ?? false);
 
   useEffect(() => {
+    setActiveIndex(0);
     if (messages.length <= 1) return;
     const timer = setInterval(() => {
       setActiveIndex(i => (i + 1) % messages.length);
