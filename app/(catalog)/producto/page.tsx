@@ -177,6 +177,10 @@ export default async function ProductoPage({ searchParams }: Props) {
               lowStockThreshold={storeInfo?.low_stock_threshold ?? 0}
               shareEnabled={storeInfo?.share_button_enabled ?? false}
               buyNowEnabled={storeInfo?.buy_now_enabled ?? false}
+              returnsEnabled={storeInfo?.store_policies?.returns_enabled}
+              returnDays={storeInfo?.store_policies?.return_days}
+              warrantyEnabled={storeInfo?.store_policies?.warranty_enabled}
+              warrantyMonths={storeInfo?.store_policies?.warranty_months}
               chipVariant={themeVariant as ChipGroupVariant}
               categoryName={category?.name}
               categoryId={category?._id}

@@ -6,6 +6,7 @@ import { Text, Badge, QuantityStepper } from 'zoui';
 import type { ChipGroupVariant, QuantityStepperVariant } from 'zoui';
 import { Price } from './Price';
 import { AddToCartButton } from './AddToCartButton';
+import { BenefitsRow } from './BenefitsRow';
 import { BuyNowButton } from './BuyNowButton';
 import { SaveButton } from './SaveButton';
 import { ShareButton } from './ShareButton';
@@ -26,6 +27,10 @@ interface PDPInfoPanelProps {
   lowStockThreshold: number;
   shareEnabled: boolean;
   buyNowEnabled: boolean;
+  returnsEnabled?: boolean;
+  returnDays?: number;
+  warrantyEnabled?: boolean;
+  warrantyMonths?: number;
   chipVariant: ChipGroupVariant;
   categoryName?: string;
   categoryId?: string;
@@ -45,6 +50,10 @@ export function PDPInfoPanel({
   lowStockThreshold,
   shareEnabled,
   buyNowEnabled,
+  returnsEnabled,
+  returnDays,
+  warrantyEnabled,
+  warrantyMonths,
   chipVariant,
   categoryName,
   categoryId,
@@ -171,6 +180,14 @@ export function PDPInfoPanel({
           <ShareButton title={product.name} />
         </div>
       )}
+
+      <BenefitsRow
+        freeShippingMin={freeShippingMin}
+        returnsEnabled={returnsEnabled}
+        returnDays={returnDays}
+        warrantyEnabled={warrantyEnabled}
+        warrantyMonths={warrantyMonths}
+      />
     </>
   );
 }
