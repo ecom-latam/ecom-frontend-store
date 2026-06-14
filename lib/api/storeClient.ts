@@ -128,6 +128,13 @@ export interface ComponentsPresets {
   view_toggle?: string;
 }
 
+export interface StorePolicies {
+  returns_enabled?: boolean;
+  return_days?: number;
+  warranty_enabled?: boolean;
+  warranty_months?: number;
+}
+
 export interface StoreInfo {
   name: string;
   description?: string;
@@ -140,6 +147,15 @@ export interface StoreInfo {
   product_detail_layout?: string;
   cart_layout?: string;
   search_preset?: string;
+  promo_bar_enabled?: boolean;
+  free_shipping_min_amount?: number | null;
+  installments_count?: number | null;
+  interest_free?: boolean;
+  share_button_enabled?: boolean;
+  buy_now_enabled?: boolean;
+  related_products_enabled?: boolean;
+  low_stock_threshold?: number;
+  store_policies?: StorePolicies;
 }
 
 export async function getStoreInfo(): Promise<StoreInfo | null> {
