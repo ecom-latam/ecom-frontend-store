@@ -28,10 +28,12 @@ export default function CatalogLayout({
 }) {
   return (
     <>
-      <PromoBar />
+      <PromoBar position="above-navbar" />
       <CatalogNavbar />
+      <PromoBar position="below-navbar" />
       <CartDrawer />
       {children}
+      <PromoBar position="footer" />
     </>
   );
 }

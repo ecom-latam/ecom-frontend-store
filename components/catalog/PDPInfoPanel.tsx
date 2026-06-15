@@ -171,6 +171,11 @@ export function PDPInfoPanel({
           <BuyNowButton
             productId={product._id}
             quantity={quantity}
+            selectedOptions={
+              product.hasVariants && selectedVariant
+                ? Object.fromEntries(selectedVariant.combination.map(e => [e.optionName, e.value]))
+                : undefined
+            }
           />
         )}
       </div>

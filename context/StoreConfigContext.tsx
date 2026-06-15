@@ -2,27 +2,18 @@
 
 import { createContext, useContext } from 'react';
 
-export interface ComponentsPresets {
-  button?: string;
-  input?: string;
-  select?: string;
-  textarea?: string;
-  navbar?: string;
-  product_card?: string;
-  view_toggle?: string;
-  background?: string;
-}
-
 export type Currency = 'ARS' | 'USD';
 
 export interface StoreConfig {
-  components_presets?: ComponentsPresets;
+  theme?: string;
+  background?: string;
   product_detail_layout?: string;
   cart_layout?: string;
   search_preset?: string;
   currency?: Currency;
   mp_public_key?: string | null;
   promo_bar_enabled?: boolean;
+  promo_bar_position?: 'above-navbar' | 'below-navbar' | 'footer';
   free_shipping_min_amount?: number | null;
   installments_count?: number | null;
   interest_free?: boolean;

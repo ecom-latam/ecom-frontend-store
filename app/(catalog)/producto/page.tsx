@@ -14,24 +14,6 @@ interface Props {
   searchParams: { id?: string };
 }
 
-const BUTTON_TO_VARIANT: Record<string, BreadcrumbsVariant & ChipGroupVariant> = {
-  outlined:  'outlined',
-  filled:    'filled',
-  soft:      'soft',
-  ghost:     'ghost',
-  editorial: 'editorial',
-  boutique:  'boutique',
-  terminal:  'terminal',
-  brutalist: 'brutalist',
-  retro:     'retro',
-  glow:      'glow',
-  gradient:  'gradient',
-  neon:      'neon',
-  frame:     'frame',
-  pill:      'pill',
-  capsule:   'capsule',
-  glass:     'glass',
-};
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const id = searchParams.id;
@@ -87,8 +69,7 @@ export default async function ProductoPage({ searchParams }: Props) {
   const storeRatingsEnabled = storeInfo?.ratings_enabled ?? false;
   const storeReviewsEnabled = storeInfo?.reviews_enabled ?? false;
 
-  const storeVariant = storeInfo?.components_presets?.button ?? 'outlined';
-  const themeVariant = BUTTON_TO_VARIANT[storeVariant] ?? 'outlined';
+  const themeVariant = (storeInfo?.theme ?? 'outlined') as BreadcrumbsVariant & ChipGroupVariant;
 
   const discountPercent = hasDiscount && product.salePrice
     ? Math.round((1 - product.salePrice / product.price) * 100)
@@ -200,7 +181,7 @@ export default async function ProductoPage({ searchParams }: Props) {
           <RelatedProducts
             categoryId={String(category._id)}
             excludeId={id}
-            cardVariant={storeInfo.components_presets?.product_card}
+            cardVariant={storeInfo.theme}
           />
         )}
 

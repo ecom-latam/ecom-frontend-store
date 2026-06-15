@@ -8007,6 +8007,352 @@
   --_btn-hover-fg: var(--color-brand-300);
 }
 
+.zoui-option-card {
+  --_bg: var(--color-bg-surface);
+  --_border: var(--color-border-default);
+  --_radius: var(--radius-md);
+  --_fg: var(--color-fg-primary);
+  --_fg-desc: var(--color-fg-muted);
+  --_indicator-border: var(--color-border-muted);
+  --_sel-bg: var(--color-brand-50);
+  --_sel-border: var(--color-brand-500);
+  --_sel-fg: var(--color-fg-primary);
+  --_sel-fg-desc: var(--color-fg-muted);
+  --_sel-indicator-border: var(--color-brand-500);
+  --_sel-indicator-dot: var(--color-brand-500);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 16px;
+  border: 2px solid var(--_border);
+  border-radius: var(--_radius);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--easing-standard), background var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard);
+}
+.zoui-option-card:focus-within {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+.zoui-option-card[data-selected] {
+  border-color: var(--_sel-border);
+  background: var(--_sel-bg);
+}
+.zoui-option-card[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.zoui-option-card__input {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.zoui-option-card__indicator {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--_indicator-border);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--duration-fast) var(--easing-standard);
+}
+.zoui-option-card[data-selected] .zoui-option-card__indicator {
+  border-color: var(--_sel-indicator-border);
+}
+.zoui-option-card[data-selected] .zoui-option-card__indicator::after {
+  content: "";
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--_sel-indicator-dot);
+}
+
+.zoui-option-card__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--_fg);
+}
+
+.zoui-option-card__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.zoui-option-card__label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--_fg);
+  line-height: 1.4;
+  margin: 0;
+}
+.zoui-option-card[data-selected] .zoui-option-card__label {
+  color: var(--_sel-fg);
+}
+
+.zoui-option-card__desc {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--_fg-desc);
+  line-height: 1.4;
+  margin: 2px 0 0;
+}
+.zoui-option-card[data-selected] .zoui-option-card__desc {
+  color: var(--_sel-fg-desc);
+}
+
+.zoui-option-card__trailing {
+  flex-shrink: 0;
+}
+
+.zoui-option-card[data-variant=soft] {
+  --_bg: var(--color-brand-50);
+  --_border: var(--color-brand-100);
+  --_sel-bg: var(--color-brand-100);
+  --_sel-border: var(--color-brand-400);
+}
+
+.zoui-option-card[data-variant=filled] {
+  --_sel-bg: var(--color-brand-500);
+  --_sel-border: var(--color-brand-600);
+  --_sel-fg: #ffffff;
+  --_sel-fg-desc: color-mix(in srgb, #ffffff 65%, transparent);
+  --_sel-indicator-border: rgba(255, 255, 255, 0.7);
+  --_sel-indicator-dot: #ffffff;
+}
+
+.zoui-option-card[data-variant=ghost] {
+  --_bg: transparent;
+  --_border: transparent;
+  --_sel-bg: var(--color-brand-50);
+  --_sel-border: transparent;
+}
+
+.zoui-option-card[data-variant=editorial] {
+  --_bg: var(--color-bg-surface);
+  --_border: var(--color-border-default);
+  --_radius: 0;
+  --_sel-bg: var(--color-bg-surface);
+  --_sel-border: var(--color-brand-500);
+  border-top: 3px solid var(--color-brand-500);
+}
+.zoui-option-card[data-variant=editorial] .zoui-option-card__label {
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.zoui-option-card[data-variant=terminal] {
+  --_bg: #0E0E10;
+  --_border: #232327;
+  --_radius: var(--radius-sm);
+  --_fg: #E4E4E7;
+  --_fg-desc: #A1A1AA;
+  --_indicator-border: #3F3F46;
+  --_sel-bg: #1A1A22;
+  --_sel-border: var(--color-brand-400);
+  --_sel-fg: #E4E4E7;
+  --_sel-fg-desc: #A1A1AA;
+  --_sel-indicator-border: var(--color-brand-400);
+  --_sel-indicator-dot: var(--color-brand-400);
+  font-family: var(--font-mono, monospace);
+}
+
+.zoui-option-card[data-variant=boutique] {
+  --_bg: var(--color-bg-surface);
+  --_border: var(--color-fg-primary);
+  --_radius: var(--radius-xl);
+  --_sel-bg: var(--color-bg-surface);
+  --_sel-border: var(--color-brand-500);
+}
+.zoui-option-card[data-variant=boutique] .zoui-option-card__label {
+  font-style: italic;
+  font-weight: var(--font-weight-regular);
+}
+
+.zoui-option-card[data-variant=frame] {
+  --_bg: var(--color-inverse-bg);
+  --_border: var(--color-inverse-bg);
+  --_radius: 0;
+  --_fg: var(--color-inverse-fg);
+  --_fg-desc: color-mix(in srgb, var(--color-inverse-fg) 60%, transparent);
+  --_indicator-border: color-mix(in srgb, var(--color-inverse-fg) 40%, transparent);
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 15%, var(--color-inverse-bg));
+  --_sel-border: var(--color-brand-400);
+  --_sel-fg: var(--color-inverse-fg);
+  --_sel-fg-desc: color-mix(in srgb, var(--color-inverse-fg) 60%, transparent);
+  --_sel-indicator-border: var(--color-brand-400);
+  --_sel-indicator-dot: var(--color-brand-400);
+}
+
+.zoui-option-card[data-variant=capsule] {
+  --_bg: var(--color-pill-bg);
+  --_border: transparent;
+  --_radius: 20px;
+  --_fg: var(--color-pill-fg);
+  --_fg-desc: color-mix(in srgb, var(--color-pill-fg) 60%, transparent);
+  --_indicator-border: color-mix(in srgb, var(--color-pill-fg) 40%, transparent);
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 20%, var(--color-pill-bg));
+  --_sel-border: var(--color-brand-400);
+  --_sel-fg: var(--color-pill-fg);
+  --_sel-fg-desc: color-mix(in srgb, var(--color-pill-fg) 60%, transparent);
+  --_sel-indicator-border: var(--color-brand-400);
+  --_sel-indicator-dot: var(--color-brand-400);
+}
+
+.zoui-option-card[data-variant=brutalist] {
+  --_bg: #ffffff;
+  --_border: #0A0A0A;
+  --_radius: 0;
+  --_fg: #0A0A0A;
+  --_fg-desc: #525252;
+  --_indicator-border: #0A0A0A;
+  --_sel-bg: #ffffff;
+  --_sel-border: var(--color-brand-500);
+  --_sel-indicator-border: var(--color-brand-500);
+  --_sel-indicator-dot: var(--color-brand-500);
+  box-shadow: 4px 4px 0 0 #0A0A0A;
+}
+.zoui-option-card[data-variant=brutalist][data-selected] {
+  box-shadow: 4px 4px 0 0 var(--color-brand-500);
+}
+
+.zoui-option-card[data-variant=glass] {
+  --_bg: color-mix(in srgb, var(--color-bg-surface) 55%, transparent);
+  --_border: color-mix(in srgb, var(--color-fg-primary) 12%, transparent);
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 12%, var(--color-bg-surface));
+  --_sel-border: color-mix(in srgb, var(--color-brand-500) 55%, transparent);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: inset 0 1px 0 0 color-mix(in srgb, #ffffff 25%, transparent);
+}
+
+.zoui-option-card[data-variant=retro] {
+  --_bg: #FFF8EE;
+  --_border: #C4A882;
+  --_radius: var(--radius-sm);
+  --_fg: #2C2416;
+  --_fg-desc: #5A4A30;
+  --_indicator-border: #A88B5A;
+  --_sel-bg: #FFF0DC;
+  --_sel-border: var(--color-brand-500);
+  --_sel-indicator-border: var(--color-brand-500);
+  --_sel-indicator-dot: var(--color-brand-500);
+  box-shadow: 2px 2px 0 0 #C4A882;
+}
+
+.zoui-option-card[data-variant=glow] {
+  --_bg: #0A0A0F;
+  --_border: color-mix(in srgb, var(--color-brand-500) 20%, transparent);
+  --_radius: var(--radius-lg);
+  --_fg: var(--color-brand-100);
+  --_fg-desc: color-mix(in srgb, var(--color-brand-300) 60%, transparent);
+  --_indicator-border: color-mix(in srgb, var(--color-brand-400) 40%, transparent);
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 12%, #0A0A0F);
+  --_sel-border: var(--color-brand-400);
+  --_sel-fg: var(--color-brand-100);
+  --_sel-fg-desc: color-mix(in srgb, var(--color-brand-300) 60%, transparent);
+  --_sel-indicator-border: var(--color-brand-400);
+  --_sel-indicator-dot: var(--color-brand-400);
+}
+.zoui-option-card[data-variant=glow][data-selected] {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-brand-500) 20%, transparent);
+}
+
+.zoui-option-card[data-variant="3d"] {
+  --_bg: var(--color-bg-surface);
+  --_border: var(--color-brand-300);
+  --_radius: var(--radius-md);
+  --_sel-bg: var(--color-brand-50);
+  --_sel-border: var(--color-brand-500);
+  box-shadow: inset 0 -1px 0 0 color-mix(in srgb, #000 6%, transparent), 3px 3px 0 0 var(--color-brand-700), 3px 5px 10px 0 rgba(0, 0, 0, 0.1);
+  transition: transform var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard), border-color var(--duration-fast) var(--easing-standard), background var(--duration-fast) var(--easing-standard);
+}
+.zoui-option-card[data-variant="3d"][data-selected] {
+  transform: translate(-1px, -1px);
+}
+
+.zoui-option-card[data-variant=gradient] {
+  border: 2px solid transparent;
+  --_border: transparent;
+  --_sel-border: transparent;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+}
+.zoui-option-card[data-variant=gradient][data-selected] {
+  background: linear-gradient(color-mix(in srgb, var(--color-brand-500) 8%, var(--color-bg-surface)), color-mix(in srgb, var(--color-brand-500) 8%, var(--color-bg-surface))) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+}
+
+.zoui-option-card[data-variant=neon] {
+  --_bg: #050508;
+  --_border: var(--color-brand-400);
+  --_radius: 0;
+  --_fg: #ffffff;
+  --_fg-desc: color-mix(in srgb, #ffffff 55%, transparent);
+  --_indicator-border: color-mix(in srgb, var(--color-brand-400) 55%, transparent);
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 12%, #050508);
+  --_sel-border: var(--color-brand-400);
+  --_sel-fg: #ffffff;
+  --_sel-fg-desc: color-mix(in srgb, #ffffff 55%, transparent);
+  --_sel-indicator-border: var(--color-brand-400);
+  --_sel-indicator-dot: var(--color-brand-400);
+  box-shadow: 0 0 0 1px var(--color-brand-400), 0 0 12px color-mix(in srgb, var(--color-brand-400) 20%, transparent);
+}
+.zoui-option-card[data-variant=neon][data-selected] {
+  box-shadow: 0 0 0 1px var(--color-brand-400), 0 0 24px color-mix(in srgb, var(--color-brand-400) 35%, transparent);
+}
+
+[data-theme=dark] .zoui-option-card[data-variant=outlined] {
+  --_bg: var(--color-bg-surface);
+  --_border: var(--color-border-default);
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 15%, var(--color-bg-surface));
+  --_sel-border: var(--color-brand-400);
+}
+
+[data-theme=dark] .zoui-option-card[data-variant=soft] {
+  --_bg: color-mix(in srgb, var(--color-brand-500) 12%, transparent);
+  --_border: color-mix(in srgb, var(--color-brand-400) 25%, transparent);
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 20%, transparent);
+  --_sel-border: var(--color-brand-400);
+}
+
+[data-theme=dark] .zoui-option-card[data-variant=ghost] {
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 15%, transparent);
+  --_sel-border: transparent;
+}
+
+[data-theme=dark] .zoui-option-card[data-variant=brutalist] {
+  --_bg: #ffffff;
+  --_fg: #0A0A0A;
+  --_fg-desc: #525252;
+  --_sel-fg: #0A0A0A;
+  --_sel-fg-desc: #525252;
+}
+
+[data-theme=dark] .zoui-option-card[data-variant=retro] {
+  --_sel-fg: #2C2416;
+  --_sel-fg-desc: #5A4A30;
+}
+
+[data-theme=dark] .zoui-option-card[data-variant="3d"] {
+  --_sel-bg: color-mix(in srgb, var(--color-brand-500) 20%, var(--color-bg-surface));
+  --_sel-border: var(--color-brand-400);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }

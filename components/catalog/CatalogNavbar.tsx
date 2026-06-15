@@ -14,7 +14,7 @@ const MANAGEMENT_ROLES = ['Admin', 'Manager', 'Seller'];
 export function CatalogNavbar() {
   const router = useRouter();
   const { itemCount, openDrawer } = useCart();
-  const { components_presets } = useStoreConfig();
+  const { theme } = useStoreConfig();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [canManage,  setCanManage]  = useState(false);
@@ -41,7 +41,7 @@ export function CatalogNavbar() {
     ...(canManage ? [{ label: 'Gestión', onClick: () => router.push('/gestion') }] : []),
   ];
 
-  const variant = (components_presets?.navbar ?? 'outlined') as NavbarVariant;
+  const variant = (theme ?? 'outlined') as NavbarVariant;
 
   return (
     <Navbar

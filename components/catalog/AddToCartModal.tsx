@@ -49,8 +49,8 @@ function isValueAvailable(
 
 export function AddToCartModal({ product, open, onClose, initialQuantity = 1 }: Props) {
   const { addItem, openDrawer } = useCart();
-  const { components_presets, currency } = useStoreConfig();
-  const btnVariant = (components_presets?.button ?? 'primary') as ButtonVariant;
+  const { theme, currency } = useStoreConfig();
+  const btnVariant = (theme ?? 'outlined') as ButtonVariant;
 
   const optionNames = useMemo(
     () => product.linkedOptions.map((o) => o.storeOptionName),

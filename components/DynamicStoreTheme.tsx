@@ -23,8 +23,8 @@ function applyFont(fontFamily: string) {
   document.documentElement.style.setProperty('--font-ui', `'${fontFamily}', sans-serif`);
 }
 
-function applyStoreTheme(buttonVariant: string) {
-  document.documentElement.setAttribute('data-store-theme', buttonVariant);
+function applyStoreTheme(theme: string) {
+  document.documentElement.setAttribute('data-store-theme', theme);
 }
 
 function getSlug(): string {
@@ -61,24 +61,16 @@ async function fetchConfig(): Promise<Record<string, unknown> | null> {
 }
 
 function toStoreConfig(raw: Record<string, unknown>): StoreConfig {
-  const presets = (raw.components_presets ?? {}) as Record<string, unknown>;
   return {
-    components_presets: {
-      button:       presets.button       as string | undefined,
-      input:        presets.input        as string | undefined,
-      select:       presets.select       as string | undefined,
-      textarea:     presets.textarea     as string | undefined,
-      navbar:       presets.navbar       as string | undefined,
-      product_card: presets.product_card as string | undefined,
-      view_toggle:  presets.view_toggle  as string | undefined,
-      background:   presets.background   as string | undefined,
-    },
+    theme:      raw.theme      as string | undefined,
+    background: raw.background as string | undefined,
     product_detail_layout: raw.product_detail_layout as string | undefined,
     cart_layout:           raw.cart_layout           as string | undefined,
     search_preset:         raw.search_preset         as string | undefined,
     currency:              raw.currency === 'USD' ? 'USD' : 'ARS',
     mp_public_key:         (raw.mp_public_key as string | null | undefined) ?? null,
     promo_bar_enabled:     raw.promo_bar_enabled === true,
+    promo_bar_position:    (['above-navbar', 'below-navbar', 'footer'].includes(raw.promo_bar_position as string) ? raw.promo_bar_position : 'above-navbar') as 'above-navbar' | 'below-navbar' | 'footer',
     free_shipping_min_amount: typeof raw.free_shipping_min_amount === 'number' ? raw.free_shipping_min_amount : null,
     installments_count:    typeof raw.installments_count === 'number' ? raw.installments_count : null,
     interest_free:         raw.interest_free === true,
@@ -103,8 +95,7 @@ export function DynamicStoreTheme({
       applyBrandColor(raw.brand_hue, sat, lit);
     }
     if (typeof raw.font_family === 'string') applyFont(raw.font_family);
-    const presets = raw.components_presets as Record<string, unknown> | undefined;
-    if (typeof presets?.button === 'string') applyStoreTheme(presets.button);
+    if (typeof raw.theme === 'string') applyStoreTheme(raw.theme);
     setConfig(toStoreConfig(raw));
   }
 
@@ -121,7 +112,7 @@ export function DynamicStoreTheme({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const backgroundVariant = (config.components_presets?.background ?? 'default') as SurfaceVariant;
+  const backgroundVariant = (config.background ?? 'default') as SurfaceVariant;
 
   return (
     <StoreConfigContext.Provider value={config}>

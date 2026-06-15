@@ -11,13 +11,49 @@ import type { PaymentMethod, ShippingMethod } from '@/utils/api/orders';
 import { addresses as addressesApi } from '@/utils/api/addresses';
 import type { Address } from '@/utils/api/addresses';
 import { payment as paymentApi } from '@/utils/api/payment';
-import { Text } from 'zoui';
+import { Text, OptionCard } from 'zoui';
+import type { OptionCardVariant } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { StoreInput } from '@/components/ui/StoreInput';
+import { StorePhoneInput } from '@/components/ui/StorePhoneInput';
 import { StoreSelect } from '@/components/ui/StoreSelect';
 import { StoreTextarea } from '@/components/ui/StoreTextarea';
 import { useStoreConfig } from '@/context/StoreConfigContext';
 import { formatPrice } from '@/lib/format';
+
+const ALNUM = /[^a-zA-Z0-9]/g;
+
+function filterName(raw: string):         string {
+  return raw
+    .replace(/[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ ]/g, '')
+    .replace(/^ +/, '')
+    .replace(/ {2,}/g, ' ')
+    .slice(0, 50);
+}
+function filterStreet(raw: string):        string { return raw.replace(/[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ0-9\s.,\-]/g, '').slice(0, 50); }
+function filterStreetNumber(raw: string):  string { return raw.replace(ALNUM, '').slice(0, 8); }
+function filterCity(raw: string):          string { return raw.replace(/[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s.\-]/g, '').slice(0, 40); }
+function filterFloor(raw: string):         string { return raw.replace(/\D/g, '').slice(0, 2); }
+function filterApartment(raw: string):     string { return raw.replace(ALNUM, '').slice(0, 5); }
+function filterZip(raw: string):           string { return raw.replace(/\D/g, '').slice(0, 4); }
+
+function splitAddress(addr: { fullName: string; phone: string; address: string; floor?: string; city: string; province: string; zip?: string }) {
+  // Try to split "Av. Corrientes 1234" → street: "Av. Corrientes", streetNumber: "1234"
+  const lastSpace = addr.address.lastIndexOf(' ');
+  const tail = addr.address.slice(lastSpace + 1);
+  const hasNumber = lastSpace > 0 && /^\d+[a-zA-Z]?$/.test(tail);
+  return {
+    fullName: addr.fullName,
+    phone: addr.phone,
+    street: hasNumber ? addr.address.slice(0, lastSpace) : addr.address,
+    streetNumber: hasNumber ? tail : '',
+    floor: addr.floor ?? '',
+    apartment: '',
+    city: addr.city,
+    province: addr.province,
+    zip: addr.zip ?? '',
+  };
+}
 
 const PROVINCES = [
   'Buenos Aires',
@@ -49,8 +85,9 @@ const PROVINCES = [
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, itemCount, clearCart } = useCart();
-  const { currency, mp_public_key } = useStoreConfig();
+  const { currency, mp_public_key, theme } = useStoreConfig();
   const mpAvailable = !!mp_public_key && currency === 'ARS';
+  const optionCardVariant = (theme ?? 'outlined') as OptionCardVariant;
 
   const [ready, setReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -62,7 +99,10 @@ export default function CheckoutPage() {
   const [form, setForm] = useState({
     fullName: '',
     phone: '',
-    address: '',
+    street: '',
+    streetNumber: '',
+    floor: '',
+    apartment: '',
     city: '',
     province: '',
     zip: '',
@@ -87,15 +127,7 @@ export default function CheckoutPage() {
       const def = data.find((a) => a.isDefault) ?? data[0];
       if (def) {
         setSelectedAddressId(def._id);
-        setForm((prev) => ({
-          ...prev,
-          fullName: def.fullName,
-          phone: def.phone,
-          address: def.address,
-          city: def.city,
-          province: def.province,
-          zip: def.zip ?? '',
-        }));
+        setForm((prev) => ({ ...prev, ...splitAddress(def) }));
       }
     }).catch(() => {});
   }, [router]);
@@ -103,21 +135,11 @@ export default function CheckoutPage() {
   function applyAddress(id: string) {
     setSelectedAddressId(id);
     if (id === 'new') {
-      setForm((prev) => ({ ...prev, fullName: '', phone: '', address: '', city: '', province: '', zip: '' }));
+      setForm((prev) => ({ ...prev, fullName: '', phone: '', street: '', streetNumber: '', floor: '', apartment: '', city: '', province: '', zip: '' }));
       return;
     }
     const addr = savedAddresses.find((a) => a._id === id);
-    if (addr) {
-      setForm((prev) => ({
-        ...prev,
-        fullName: addr.fullName,
-        phone: addr.phone,
-        address: addr.address,
-        city: addr.city,
-        province: addr.province,
-        zip: addr.zip ?? '',
-      }));
-    }
+    if (addr) setForm((prev) => ({ ...prev, ...splitAddress(addr) }));
   }
 
   if (!ready) return null;
@@ -144,10 +166,14 @@ export default function CheckoutPage() {
     setError(null);
   }
 
+  const fullStreet = [form.street.trim(), form.streetNumber.trim()].filter(Boolean).join(' ') +
+    (form.floor.trim() ? `, Piso ${form.floor.trim()}` : '') +
+    (form.apartment.trim() ? ` Dpto ${form.apartment.trim()}` : '');
+
   const shippingAddress = {
     fullName: form.fullName,
     phone: form.phone,
-    address: form.address,
+    address: fullStreet,
     city: form.city,
     province: form.province,
     zip: form.zip,
@@ -178,28 +204,26 @@ export default function CheckoutPage() {
   }
 
   async function handleSubmit() {
-    if (!form.fullName.trim()) {
-      setError('El nombre completo es requerido.');
+    if (form.fullName.trim().length < 3) {
+      setError('El nombre completo es requerido (mínimo 3 caracteres).');
       return;
     }
-    if (/\d/.test(form.fullName)) {
-      setError('El nombre no puede contener números.');
+    const phoneDigits = form.phone.replace(/\D/g, '');
+    if (phoneDigits.length < 10) {
+      setError('El teléfono debe incluir código de área y número completo (mínimo 10 dígitos).');
       return;
     }
-    if (!form.phone.trim()) {
-      setError('El teléfono es requerido.');
-      return;
-    }
-    if (form.phone.replace(/\D/g, '').length < 7) {
-      setError('El teléfono debe tener al menos 7 dígitos.');
+    if (phoneDigits.length > 11) {
+      setError('El teléfono no puede tener más de 11 dígitos.');
       return;
     }
     if (form.shippingMethod === 'delivery') {
-      if (!form.address.trim()) { setError('La dirección es requerida.'); return; }
-      if (!form.city.trim()) { setError('La ciudad es requerida.'); return; }
+      if (form.street.trim().length < 3) { setError('Ingresá el nombre de la calle.'); return; }
+      if (!form.streetNumber.trim()) { setError('El número de calle es requerido.'); return; }
+      if (form.city.trim().length < 2) { setError('Ingresá la ciudad.'); return; }
       if (!form.province) { setError('Seleccioná una provincia.'); return; }
-      if (form.zip && !/^\d{4,8}$/.test(form.zip)) {
-        setError('El código postal debe contener entre 4 y 8 dígitos.'); return;
+      if (form.zip && !/^\d{4}$/.test(form.zip)) {
+        setError('El código postal debe tener 4 dígitos.'); return;
       }
     }
 
@@ -237,39 +261,17 @@ export default function CheckoutPage() {
                 </Text>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {(['delivery', 'pickup'] as const).map((method) => (
-                    <label
+                    <OptionCard
                       key={method}
+                      variant={optionCardVariant}
+                      name="shippingMethod"
+                      value={method}
+                      label={method === 'delivery' ? 'Envío a domicilio' : 'Retiro en tienda'}
+                      description={method === 'delivery' ? 'Recibís el pedido en tu dirección.' : 'Retirás el pedido en el local cuando esté listo.'}
+                      selected={form.shippingMethod === method}
+                      onChange={() => set('shippingMethod', method)}
                       data-testid={`checkout-shipping-${method}`}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        padding: '16px',
-                        border: `2px solid ${form.shippingMethod === method ? 'var(--color-brand-500)' : 'var(--color-border-default)'}`,
-                        borderRadius: 'var(--radius-md)',
-                        cursor: 'pointer',
-                        background: form.shippingMethod === method ? 'var(--color-brand-50)' : 'var(--color-bg-default)',
-                      }}
-                    >
-                      <input
-                        type="radio"
-                        name="shippingMethod"
-                        value={method}
-                        checked={form.shippingMethod === method}
-                        onChange={() => set('shippingMethod', method)}
-                        style={{ accentColor: 'var(--color-brand-500)' }}
-                      />
-                      <div>
-                        <Text variant="body-sm" weight="semibold" as="span">
-                          {method === 'delivery' ? 'Envío a domicilio' : 'Retiro en tienda'}
-                        </Text>
-                        <Text variant="caption" color="muted" as="p">
-                          {method === 'delivery'
-                            ? 'Recibís el pedido en tu dirección.'
-                            : 'Retirás el pedido en el local cuando esté listo.'}
-                        </Text>
-                      </div>
-                    </label>
+                    />
                   ))}
                 </div>
               </section>
@@ -282,60 +284,25 @@ export default function CheckoutPage() {
                 {savedAddresses.length > 0 && form.shippingMethod === 'delivery' && (
                   <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {savedAddresses.map((addr) => (
-                      <label
+                      <OptionCard
                         key={addr._id}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: '12px',
-                          padding: '14px',
-                          border: `2px solid ${selectedAddressId === addr._id ? 'var(--color-brand-500)' : 'var(--color-border-default)'}`,
-                          borderRadius: 'var(--radius-md)',
-                          cursor: 'pointer',
-                          background: selectedAddressId === addr._id ? 'var(--color-brand-50)' : 'var(--color-bg-default)',
-                        }}
-                      >
-                        <input
-                          type="radio"
-                          name="savedAddress"
-                          value={addr._id}
-                          checked={selectedAddressId === addr._id}
-                          onChange={() => applyAddress(addr._id)}
-                          style={{ accentColor: 'var(--color-brand-500)', marginTop: '2px', flexShrink: 0 }}
-                        />
-                        <div>
-                          <Text variant="body-sm" weight="semibold" as="span">{addr.label}</Text>
-                          {addr.isDefault && (
-                            <Text variant="caption" color="muted" as="span" style={{ marginLeft: '6px' }}>· Predeterminada</Text>
-                          )}
-                          <Text variant="caption" color="muted" as="p">
-                            {addr.address}{addr.floor ? `, ${addr.floor}` : ''} — {addr.city}, {addr.province}
-                          </Text>
-                        </div>
-                      </label>
-                    ))}
-                    <label
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        padding: '14px',
-                        border: `2px solid ${selectedAddressId === 'new' ? 'var(--color-brand-500)' : 'var(--color-border-default)'}`,
-                        borderRadius: 'var(--radius-md)',
-                        cursor: 'pointer',
-                        background: selectedAddressId === 'new' ? 'var(--color-brand-50)' : 'var(--color-bg-default)',
-                      }}
-                    >
-                      <input
-                        type="radio"
+                        variant={optionCardVariant}
                         name="savedAddress"
-                        value="new"
-                        checked={selectedAddressId === 'new'}
-                        onChange={() => applyAddress('new')}
-                        style={{ accentColor: 'var(--color-brand-500)', flexShrink: 0 }}
+                        value={addr._id}
+                        label={addr.label + (addr.isDefault ? ' · Predeterminada' : '')}
+                        description={`${addr.address}${addr.floor ? `, ${addr.floor}` : ''} — ${addr.city}, ${addr.province}`}
+                        selected={selectedAddressId === addr._id}
+                        onChange={() => applyAddress(addr._id)}
                       />
-                      <Text variant="body-sm" weight="semibold" as="span">Ingresar nueva dirección</Text>
-                    </label>
+                    ))}
+                    <OptionCard
+                      variant={optionCardVariant}
+                      name="savedAddress"
+                      value="new"
+                      label="Ingresar nueva dirección"
+                      selected={selectedAddressId === 'new'}
+                      onChange={() => applyAddress('new')}
+                    />
                   </div>
                 )}
 
@@ -345,46 +312,96 @@ export default function CheckoutPage() {
                     <StoreInput
                       label="Nombre completo"
                       value={form.fullName}
-                      onChange={(e) => set('fullName', e.target.value)}
+                      onChange={(e) => set('fullName', filterName(e.target.value))}
                       required
-                      size="md"                      data-testid="checkout-fullname"
+                      size="md"
+                      maxLength={50}
+                      data-testid="checkout-fullname"
                     />
                   </div>
                   <div style={{ gridColumn: '1 / -1' }}>
-                    <StoreInput
+                    <StorePhoneInput
                       label="Teléfono"
                       value={form.phone}
                       onChange={(e) => set('phone', e.target.value)}
                       required
-                      size="md"                      data-testid="checkout-phone"
+                      size="md"
+                      hint="Incluí el código de área"
+                      data-testid="checkout-phone"
                     />
                   </div>
                   {form.shippingMethod === 'delivery' && (
                     <>
                       <div style={{ gridColumn: '1 / -1' }}>
                         <StoreInput
-                          label="Dirección"
-                          value={form.address}
-                          onChange={(e) => set('address', e.target.value)}
+                          label="Calle"
+                          value={form.street}
+                          onChange={(e) => set('street', filterStreet(e.target.value))}
                           required
-                          size="md"                          data-testid="checkout-address"
+                          size="md"
+                          placeholder="Av. Corrientes"
+                          maxLength={50}
+                          data-testid="checkout-street"
                         />
                       </div>
                       <div>
                         <StoreInput
-                          label="Ciudad"
-                          value={form.city}
-                          onChange={(e) => set('city', e.target.value)}
+                          label="Número"
+                          value={form.streetNumber}
+                          onChange={(e) => set('streetNumber', filterStreetNumber(e.target.value))}
                           required
-                          size="md"                          data-testid="checkout-city"
+                          size="md"
+                          inputMode="numeric"
+                          placeholder="1234"
+                          maxLength={8}
+                          data-testid="checkout-street-number"
                         />
                       </div>
                       <div>
                         <StoreInput
                           label="Código postal"
                           value={form.zip}
-                          onChange={(e) => set('zip', e.target.value)}
-                          size="md"                          data-testid="checkout-zip"
+                          onChange={(e) => set('zip', filterZip(e.target.value))}
+                          size="md"
+                          inputMode="numeric"
+                          placeholder="1043"
+                          maxLength={4}
+                          data-testid="checkout-zip"
+                        />
+                      </div>
+                      <div>
+                        <StoreInput
+                          label="Piso (opcional)"
+                          value={form.floor}
+                          onChange={(e) => set('floor', filterFloor(e.target.value))}
+                          size="md"
+                          inputMode="numeric"
+                          placeholder="3"
+                          maxLength={2}
+                          data-testid="checkout-floor"
+                        />
+                      </div>
+                      <div>
+                        <StoreInput
+                          label="Dpto (opcional)"
+                          value={form.apartment}
+                          onChange={(e) => set('apartment', filterApartment(e.target.value))}
+                          size="md"
+                          placeholder="A"
+                          maxLength={5}
+                          data-testid="checkout-apartment"
+                        />
+                      </div>
+                      <div style={{ gridColumn: '1 / -1' }}>
+                        <StoreInput
+                          label="Ciudad"
+                          value={form.city}
+                          onChange={(e) => set('city', filterCity(e.target.value))}
+                          required
+                          size="md"
+                          placeholder="Buenos Aires"
+                          maxLength={40}
+                          data-testid="checkout-city"
                         />
                       </div>
                       <div style={{ gridColumn: '1 / -1' }}>
@@ -409,42 +426,33 @@ export default function CheckoutPage() {
                   Método de pago
                 </Text>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <label
+                  <OptionCard
+                    variant={optionCardVariant}
+                    name="paymentMethod"
+                    value="transfer"
+                    label="Transferencia bancaria"
+                    description="Recibirás los datos para transferir al confirmar el pedido."
+                    selected={form.paymentMethod === 'transfer'}
+                    onChange={() => set('paymentMethod', 'transfer')}
                     data-testid="checkout-payment-transfer"
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: '12px', padding: '16px', cursor: 'pointer',
-                      border: `2px solid ${form.paymentMethod === 'transfer' ? 'var(--color-brand-500)' : 'var(--color-border-default)'}`,
-                      borderRadius: 'var(--radius-md)',
-                      background: form.paymentMethod === 'transfer' ? 'var(--color-brand-50)' : 'var(--color-bg-default)',
-                    }}
-                  >
-                    <input type="radio" name="paymentMethod" value="transfer" checked={form.paymentMethod === 'transfer'} onChange={() => set('paymentMethod', 'transfer')} style={{ accentColor: 'var(--color-brand-500)' }} />
-                    <div>
-                      <Text variant="body-sm" weight="semibold" as="span">Transferencia bancaria</Text>
-                      <Text variant="caption" color="muted" as="p">Recibirás los datos para transferir al confirmar el pedido.</Text>
-                    </div>
-                  </label>
-
+                  />
                   {mpAvailable && (
-                    <label
+                    <OptionCard
+                      variant={optionCardVariant}
+                      name="paymentMethod"
+                      value="mp"
+                      label="Mercado Pago"
+                      description="Vas a completar el pago en Mercado Pago (tarjeta, dinero en cuenta y más). Después volvés a la tienda."
+                      selected={form.paymentMethod === 'mp'}
+                      onChange={() => set('paymentMethod', 'mp')}
                       data-testid="checkout-payment-mp"
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '12px', padding: '16px', cursor: 'pointer',
-                        border: `2px solid ${form.paymentMethod === 'mp' ? 'var(--color-brand-500)' : 'var(--color-border-default)'}`,
-                        borderRadius: 'var(--radius-md)',
-                        background: form.paymentMethod === 'mp' ? 'var(--color-brand-50)' : 'var(--color-bg-default)',
-                      }}
-                    >
-                      <input type="radio" name="paymentMethod" value="mp" checked={form.paymentMethod === 'mp'} onChange={() => set('paymentMethod', 'mp')} style={{ accentColor: 'var(--color-brand-500)' }} />
-                      <div style={{ flex: 1 }}>
-                        <Text variant="body-sm" weight="semibold" as="span">Mercado Pago</Text>
-                        <Text variant="caption" color="muted" as="p">Vas a completar el pago en Mercado Pago (tarjeta, dinero en cuenta y más). Después volvés a la tienda.</Text>
-                      </div>
-                      <svg width="32" height="20" viewBox="0 0 32 20" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="10" cy="10" r="10" fill="#009EE3" />
-                        <circle cx="22" cy="10" r="10" fill="#009EE3" fillOpacity="0.5" />
-                      </svg>
-                    </label>
+                      trailing={
+                        <svg width="32" height="20" viewBox="0 0 32 20" fill="none">
+                          <circle cx="10" cy="10" r="10" fill="#009EE3" />
+                          <circle cx="22" cy="10" r="10" fill="#009EE3" fillOpacity="0.5" />
+                        </svg>
+                      }
+                    />
                   )}
                 </div>
               </section>
@@ -456,8 +464,9 @@ export default function CheckoutPage() {
                 <StoreTextarea
                   label="Notas"
                   value={form.notes}
-                  onChange={(e) => set('notes', e.target.value)}
-                  placeholder="Instrucciones especiales, referencias de entrega..."                />
+                  onChange={(e) => set('notes', e.target.value.slice(0, 500))}
+                  placeholder="Instrucciones especiales, referencias de entrega..."
+                />
               </section>
             </div>
 

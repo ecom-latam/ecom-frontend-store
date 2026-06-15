@@ -3,6 +3,20 @@
 import { useState, useEffect } from 'react';
 import { useStoreConfig } from '@/context/StoreConfigContext';
 
+const BAR_STYLE: React.CSSProperties = {
+  background: 'var(--color-brand-500)',
+  color: 'var(--color-brand-contrast)',
+  fontSize: '12px',
+  fontFamily: 'var(--font-ui)',
+  fontWeight: 500,
+  textAlign: 'center',
+  padding: '6px 16px',
+  lineHeight: 1.4,
+  letterSpacing: '0.01em',
+};
+
+const FOOTER_HEIGHT = 34;
+
 function buildMessages(
   freeShipping: number | null | undefined,
   installments: number | null | undefined,
@@ -26,8 +40,8 @@ function buildMessages(
   return msgs;
 }
 
-export function PromoBar() {
-  const { promo_bar_enabled, free_shipping_min_amount, installments_count, interest_free } = useStoreConfig();
+export function PromoBar({ position }: { position: 'above-navbar' | 'below-navbar' | 'footer' }) {
+  const { promo_bar_enabled, promo_bar_position, free_shipping_min_amount, installments_count, interest_free } = useStoreConfig();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const messages = buildMessages(free_shipping_min_amount, installments_count, interest_free ?? false);
@@ -41,23 +55,32 @@ export function PromoBar() {
     return () => clearInterval(timer);
   }, [messages.length]);
 
-  if (!promo_bar_enabled || messages.length === 0) return null;
+  const resolvedPosition = promo_bar_position ?? 'above-navbar';
+  if (!promo_bar_enabled || messages.length === 0 || resolvedPosition !== position) return null;
+
+  if (position === 'footer') {
+    return (
+      <>
+        <div aria-hidden style={{ height: FOOTER_HEIGHT, flexShrink: 0 }} />
+        <div
+          style={{
+            ...BAR_STYLE,
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 30,
+          }}
+          aria-live="polite"
+        >
+          {messages[activeIndex]}
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div
-      style={{
-        background: 'var(--color-brand-500)',
-        color: 'var(--color-brand-contrast)',
-        fontSize: '12px',
-        fontFamily: 'var(--font-ui)',
-        fontWeight: 500,
-        textAlign: 'center',
-        padding: '6px 16px',
-        lineHeight: 1.4,
-        letterSpacing: '0.01em',
-      }}
-      aria-live="polite"
-    >
+    <div style={BAR_STYLE} aria-live="polite">
       {messages[activeIndex]}
     </div>
   );

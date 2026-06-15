@@ -13,8 +13,8 @@ import { formatPrice } from '@/lib/format';
 export function CartPageContent() {
   const router = useRouter();
   const { items, isLoading, updateItem, removeItem, clearCart } = useCart();
-  const { components_presets, currency } = useStoreConfig();
-  const btnVariant = (components_presets?.button ?? 'primary') as ButtonVariant;
+  const { theme, currency } = useStoreConfig();
+  const btnVariant = (theme ?? 'outlined') as ButtonVariant;
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
   const [stockLimits, setStockLimits] = useState<Record<string, number>>({});
 

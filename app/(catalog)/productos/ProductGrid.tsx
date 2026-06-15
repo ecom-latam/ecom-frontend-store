@@ -58,9 +58,9 @@ export function ProductGrid({
   currentView,
 }: Props) {
   const router = useRouter();
-  const { components_presets, currency, ratings_enabled } = useStoreConfig();
-  const cardVariant = components_presets?.product_card as ProductCardVariant | undefined;
-  const starVariant = (components_presets?.button ?? 'filled') as StarRatingVariant;
+  const { theme, currency, ratings_enabled } = useStoreConfig();
+  const cardVariant = theme as ProductCardVariant | undefined;
+  const starVariant = (theme ?? 'filled') as StarRatingVariant;
 
   // Reconstruimos los params desde los props (server-passed) en vez de useSearchParams:
   // así esta vista no fuerza el client-render bailout del Suspense (evita los warnings de hidratación).

@@ -45,7 +45,7 @@ export interface ProductPayload {
   description?: string;
   price: number;
   salePrice?: number | null;
-  stock?: number;
+  stock: number;
   categoryId?: string | null;
   status?: ProductStatus;
 }

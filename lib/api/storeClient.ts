@@ -122,15 +122,6 @@ export async function getCategories(): Promise<Category[]> {
   });
 }
 
-export interface ComponentsPresets {
-  button?: string;
-  input?: string;
-  select?: string;
-  textarea?: string;
-  navbar?: string;
-  product_card?: string;
-  view_toggle?: string;
-}
 
 export interface StorePolicies {
   returns_enabled?: boolean;
@@ -147,11 +138,13 @@ export interface StoreInfo {
   brand_saturation?: number;
   brand_lightness?: number;
   font_family?: string;
-  components_presets?: ComponentsPresets;
+  theme?: string;
+  background?: string;
   product_detail_layout?: string;
   cart_layout?: string;
   search_preset?: string;
   promo_bar_enabled?: boolean;
+  promo_bar_position?: 'above-navbar' | 'below-navbar' | 'footer';
   free_shipping_min_amount?: number | null;
   installments_count?: number | null;
   interest_free?: boolean;

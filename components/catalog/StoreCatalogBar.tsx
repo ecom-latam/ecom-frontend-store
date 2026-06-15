@@ -22,10 +22,10 @@ export function StoreCatalogBar({
   categories, categoryValue, onCategoryChange,
   view, onViewChange,
 }: Props) {
-  const { components_presets = {} } = useStoreConfig();
-  const inputVariant   = (components_presets.input       ?? 'outlined') as FieldVariant;
-  const selectVariant  = (components_presets.select      ?? 'outlined') as FieldVariant;
-  const toggleVariant  = (components_presets.view_toggle ?? 'capsule')  as ViewToggleVariant;
+  const { theme } = useStoreConfig();
+  const inputVariant  = (theme ?? 'outlined') as FieldVariant;
+  const selectVariant = (theme ?? 'outlined') as FieldVariant;
+  const toggleVariant = (theme ?? 'outlined') as ViewToggleVariant;
 
   const categoryOptions = [
     { value: '__all__', label: 'Todas las categorías' },
