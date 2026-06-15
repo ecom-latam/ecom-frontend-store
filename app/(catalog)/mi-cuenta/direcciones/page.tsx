@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Text, Badge, Modal } from 'zoui';
-import { StoreButton } from '@/components/ui/StoreButton';
-import { StoreInput } from '@/components/ui/StoreInput';
-import { StoreSelect } from '@/components/ui/StoreSelect';
+import { Text, Modal, Icon } from 'zoui';
+import { StoreButton }       from '@/components/ui/StoreButton';
+import { StoreInput }        from '@/components/ui/StoreInput';
+import { StoreSelect }       from '@/components/ui/StoreSelect';
+import { AddressCard }            from '@/components/direcciones/AddressCard';
+import { AddressSlotsIndicator }  from '@/components/direcciones/AddressSlotsIndicator';
+import { PROVINCES }              from '@/lib/constants';
 import { addresses } from '@/utils/api/addresses';
 import type { Address, AddressPayload } from '@/utils/api/addresses';
 
@@ -14,19 +17,6 @@ const Req = () => (
   <span style={{ color: 'var(--color-error-500)', marginLeft: '2px' }} aria-hidden="true">*</span>
 );
 
-const PROVINCES = [
-  'Buenos Aires', 'Catamarca', 'Chaco', 'Chubut',
-  'Ciudad Autónoma de Buenos Aires', 'Córdoba', 'Corrientes', 'Entre Ríos',
-  'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones',
-  'Neuquén', 'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz',
-  'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán',
-];
-
-const EMPTY_FORM: AddressPayload = {
-  label: '', fullName: '', phone: '', address: '', floor: '',
-  city: '', province: '', zip: '',
-};
-
 const LocationIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
@@ -34,45 +24,22 @@ const LocationIcon = () => (
   </svg>
 );
 
-const PlusIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 5v14M5 12h14" />
-  </svg>
-);
-
-const EditIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z" />
-  </svg>
-);
-
-const TrashIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="3 6 5 6 21 6" />
-    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-    <path d="M10 11v6M14 11v6" />
-    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-  </svg>
-);
-
-const StarIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-  </svg>
-);
+const EMPTY_FORM: AddressPayload = {
+  label: '', fullName: '', phone: '', address: '', floor: '',
+  city: '', province: '', zip: '',
+};
 
 export default function DireccionesPage() {
-  const [list, setList]         = useState<Address[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing]   = useState<Address | null>(null);
-  const [form, setForm]         = useState<AddressPayload>(EMPTY_FORM);
-  const [saving, setSaving]     = useState(false);
-  const [error, setError]       = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
+  const [list, setList]               = useState<Address[]>([]);
+  const [loading, setLoading]         = useState(true);
+  const [modalOpen, setModalOpen]     = useState(false);
+  const [editing, setEditing]         = useState<Address | null>(null);
+  const [form, setForm]               = useState<AddressPayload>(EMPTY_FORM);
+  const [saving, setSaving]           = useState(false);
+  const [error, setError]             = useState<string | null>(null);
+  const [deleting, setDeleting]       = useState<string | null>(null);
   const [settingDefault, setSettingDefault] = useState<string | null>(null);
-  const [touched, setTouched] = useState<Partial<Record<keyof AddressPayload, boolean>>>({});
+  const [touched, setTouched]         = useState<Partial<Record<keyof AddressPayload, boolean>>>({});
 
   useEffect(() => {
     addresses.list()
@@ -140,7 +107,7 @@ export default function DireccionesPage() {
       setModalOpen(false);
     } catch (err: unknown) {
       const axErr = err as { response?: { data?: { error?: string } } };
-      const code = axErr?.response?.data?.error;
+      const code  = axErr?.response?.data?.error;
       if (code === 'ADDRESS_LIMIT_REACHED') setError('Llegaste al límite de 5 direcciones.');
       else if (code?.startsWith('MISSING_')) setError('Completá todos los campos requeridos.');
       else setError('Ocurrió un error. Intentá de nuevo.');
@@ -169,15 +136,14 @@ export default function DireccionesPage() {
     }
   }
 
-  const count = list.length;
-  const atLimit = count >= MAX;
-  const formErrors = validate(form);
+  const count       = list.length;
+  const atLimit     = count >= MAX;
+  const formErrors  = validate(form);
   const isFormValid = Object.keys(formErrors).length === 0;
 
   return (
     <main style={{ padding: '32px 24px', maxWidth: 680 }}>
 
-      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '28px' }}>
         <div>
           <Text variant="heading-2" as="h1">Mis direcciones</Text>
@@ -192,36 +158,13 @@ export default function DireccionesPage() {
           title={atLimit ? 'Llegaste al límite de 5 direcciones' : undefined}
           style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}
         >
-          <PlusIcon />
+          <Icon name="plus" size="sm" />
           Agregar
         </StoreButton>
       </div>
 
-      {/* Slots indicator */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
-        <div style={{ display: 'flex', gap: '5px' }}>
-          {Array.from({ length: MAX }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                width: 28,
-                height: 6,
-                borderRadius: 3,
-                background: i < count
-                  ? 'var(--color-brand-500)'
-                  : 'var(--color-border-default)',
-                transition: 'background 0.2s',
-              }}
-            />
-          ))}
-        </div>
-        <Text variant="caption" color="muted" style={{ fontWeight: atLimit ? 600 : 400 }}>
-          {count} / {MAX}
-          {atLimit && ' — límite alcanzado'}
-        </Text>
-      </div>
+      <AddressSlotsIndicator count={count} />
 
-      {/* Content */}
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {[1, 2].map((n) => (
@@ -229,12 +172,7 @@ export default function DireccionesPage() {
           ))}
         </div>
       ) : count === 0 ? (
-        <div style={{
-          border: '2px dashed var(--color-border-default)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '48px 24px',
-          textAlign: 'center',
-        }}>
+        <div style={{ border: '2px dashed var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '48px 24px', textAlign: 'center' }}>
           <div style={{ color: 'var(--color-fg-disabled)', marginBottom: '12px' }}>
             <LocationIcon />
           </div>
@@ -246,78 +184,19 @@ export default function DireccionesPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {list.map((addr) => (
-            <div
+            <AddressCard
               key={addr._id}
-              style={{
-                background: 'var(--color-bg-default)',
-                border: addr.isDefault
-                  ? '2px solid var(--color-brand-500)'
-                  : '1px solid var(--color-border-default)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '20px',
-                position: 'relative',
-              }}
-            >
-              {/* Label + badge */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                <Text variant="body-sm" weight="semibold" as="span">{addr.label}</Text>
-                {addr.isDefault && (
-                  <Badge tone="info" variant="pill" size="sm">Predeterminada</Badge>
-                )}
-              </div>
-
-              {/* Address data */}
-              <Text variant="body-sm" color="muted" as="p">
-                {addr.fullName} · {addr.phone}
-              </Text>
-              <Text variant="body-sm" color="muted" as="p">
-                {addr.address}{addr.floor ? `, ${addr.floor}` : ''}
-              </Text>
-              <Text variant="body-sm" color="muted" as="p">
-                {addr.city}, {addr.province}{addr.zip ? ` (${addr.zip})` : ''}
-              </Text>
-
-              {/* Actions */}
-              <div style={{ display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
-                <StoreButton
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => openEdit(addr)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
-                >
-                  <EditIcon /> Editar
-                </StoreButton>
-
-                {!addr.isDefault && (
-                  <StoreButton
-                    variant="ghost"
-                    size="sm"
-                    disabled={settingDefault === addr._id}
-                    onClick={() => handleSetDefault(addr._id)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
-                  >
-                    <StarIcon />
-                    {settingDefault === addr._id ? 'Guardando...' : 'Marcar predeterminada'}
-                  </StoreButton>
-                )}
-
-                <StoreButton
-                  variant="ghost"
-                  size="sm"
-                  disabled={deleting === addr._id}
-                  onClick={() => handleDelete(addr._id)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--color-error-600)' }}
-                >
-                  <TrashIcon />
-                  {deleting === addr._id ? 'Eliminando...' : 'Eliminar'}
-                </StoreButton>
-              </div>
-            </div>
+              addr={addr}
+              deleting={deleting === addr._id}
+              settingDefault={settingDefault === addr._id}
+              onEdit={() => openEdit(addr)}
+              onDelete={() => handleDelete(addr._id)}
+              onSetDefault={() => handleSetDefault(addr._id)}
+            />
           ))}
         </div>
       )}
 
-      {/* Modal */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="md">
         <Modal.Header>
           <Text variant="heading-3" as="h2">
@@ -335,7 +214,8 @@ export default function DireccionesPage() {
               onChange={(e) => set('label', e.target.value)}
               onBlur={() => touch('label')}
               error={touched.label ? formErrors.label : undefined}
-              maxLength={30}              size="md"
+              maxLength={30}
+              size="md"
             />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div style={{ gridColumn: '1 / -1' }}>
