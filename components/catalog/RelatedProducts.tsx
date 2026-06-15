@@ -1,5 +1,3 @@
-import NextLink from 'next/link';
-import NextImage from 'next/image';
 import Link from 'next/link';
 import { ProductCard, ProductGrid as ProductGridUI } from 'zoui';
 import type { ProductCardVariant } from 'zoui';
@@ -7,9 +5,6 @@ import { getProducts } from '@/lib/api/storeClient';
 import type { Product } from '@/lib/api/storeClient';
 import { formatPrice } from '@/lib/format';
 import type { Currency } from '@/context/StoreConfigContext';
-
-const AnyLink = NextLink as any;
-const AnyImage = NextImage as any;
 
 interface RelatedProductsProps {
   categoryId: string;
@@ -102,8 +97,6 @@ export async function RelatedProducts({
           return (
             <ProductCard
               key={p._id}
-              as={AnyLink}
-              ImageComponent={AnyImage}
               variant={cardVariant as ProductCardVariant | undefined}
               name={p.name}
               price={formatPrice(displayPrice, currency)}

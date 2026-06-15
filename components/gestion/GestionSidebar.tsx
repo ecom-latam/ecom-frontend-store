@@ -1,11 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Sidebar } from 'zoui';
 import type React from 'react';
-
-const NextLink = Link as any;
 
 const ELEVATED_ROLES = ['Admin', 'Manager'];
 
@@ -105,7 +102,7 @@ export function GestionSidebar({ role }: Props) {
 
     if (item.disabled) {
       return (
-        <Sidebar.Item key={item.href} disabled icon={item.icon as any}>
+        <Sidebar.Item key={item.href} disabled icon={item.icon}>
           {item.label}
         </Sidebar.Item>
       );
@@ -114,10 +111,9 @@ export function GestionSidebar({ role }: Props) {
     return (
       <Sidebar.Item
         key={item.href}
-        as={NextLink}
         href={item.href}
         active={isActive}
-        icon={item.icon as any}
+        icon={item.icon}
       >
         {item.label}
       </Sidebar.Item>

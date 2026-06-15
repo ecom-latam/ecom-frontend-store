@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import "./globals.css";
 import "./zoui.css";
-import { ToastProvider, brandScale } from "zoui";
+import NextLink from "next/link";
+import NextImage from "next/image";
+import { ToastProvider, ZouiProvider, brandScale } from "zoui";
 import { CartProvider } from "@/context/CartContext";
 import { DynamicStoreTheme } from "@/components/DynamicStoreTheme";
 import { getStoreInfo } from "@/lib/api/storeClient";
@@ -49,13 +51,15 @@ export default async function RootLayout({
       <body className="antialiased flex flex-col min-h-screen">
         <style dangerouslySetInnerHTML={{ __html: brandStyles }} />
         <DynamicStoreTheme initialConfig={(storeInfo ?? {}) as Record<string, unknown>}>
-          <ToastProvider>
-            <ErrorModalProvider>
-              <CartProvider hasSession={hasSession}>
-                {children}
-              </CartProvider>
-            </ErrorModalProvider>
-          </ToastProvider>
+          <ZouiProvider linkComponent={NextLink} imageComponent={NextImage}>
+            <ToastProvider>
+              <ErrorModalProvider>
+                <CartProvider hasSession={hasSession}>
+                  {children}
+                </CartProvider>
+              </ErrorModalProvider>
+            </ToastProvider>
+          </ZouiProvider>
         </DynamicStoreTheme>
       </body>
     </html>

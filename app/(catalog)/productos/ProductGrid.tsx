@@ -1,10 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-
-const NextLink = Link as any;
-const NextImage = Image as any;
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
@@ -122,8 +117,6 @@ export function ProductGrid({
             return (
               <ProductCard
                 key={p._id}
-                as={NextLink}
-                ImageComponent={NextImage}
                 variant={cardVariant}
                 name={p.name}
                 price={formatPrice(displayPrice, currency)}
