@@ -182,6 +182,7 @@ export default async function ProductoPage({ searchParams }: Props) {
             categoryId={String(category._id)}
             excludeId={id}
             cardVariant={storeInfo.theme}
+            currency={storeInfo.currency ?? 'ARS'}
           />
         )}
 

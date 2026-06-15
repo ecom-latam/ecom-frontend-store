@@ -138,6 +138,7 @@ export interface StoreInfo {
   brand_saturation?: number;
   brand_lightness?: number;
   font_family?: string;
+  currency?: 'ARS' | 'USD';
   theme?: string;
   background?: string;
   product_detail_layout?: string;
