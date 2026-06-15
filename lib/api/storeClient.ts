@@ -161,6 +161,7 @@ export interface StoreInfo {
 export interface ProductReview {
   _id: string;
   buyerId: string;
+  buyerEmail?: string;
   rating: number;
   title?: string;
   body?: string;

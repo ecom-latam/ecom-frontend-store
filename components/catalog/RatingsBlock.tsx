@@ -20,6 +20,13 @@ function formatDate(iso: string): string {
   });
 }
 
+function getBuyerDisplay(email?: string): { initial: string; name: string } {
+  if (!email) return { initial: 'C', name: 'Comprador verificado' };
+  const prefix = email.split('@')[0] ?? '';
+  const display = prefix.replace(/[._-]/g, ' ').trim();
+  return { initial: display[0]?.toUpperCase() ?? 'C', name: display || 'Comprador verificado' };
+}
+
 function DistributionBars({
   distribution,
   total,
@@ -82,6 +89,7 @@ function ReviewCard({
   review: ProductReview;
   starVariant: StarRatingVariant;
 }) {
+  const { initial, name } = getBuyerDisplay(review.buyerEmail);
   return (
     <div
       style={{
@@ -112,7 +120,7 @@ function ReviewCard({
             flexShrink: 0,
           }}
         >
-          C
+          {initial}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
           <span
@@ -121,9 +129,10 @@ function ReviewCard({
               fontSize: '13px',
               fontWeight: 600,
               color: 'var(--color-fg-primary)',
+              textTransform: 'capitalize',
             }}
           >
-            Comprador verificado
+            {name}
           </span>
           <span
             style={{
