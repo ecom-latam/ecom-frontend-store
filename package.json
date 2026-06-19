@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "build:zoui": "sass C:/Users/Milton/Documents/GitHub/zoui/src/zoui.scss app/zoui.css --no-source-map",
+    "build:zoui": "sass ../../zoui/src/zoui.scss app/zoui.css --no-source-map",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
