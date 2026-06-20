@@ -3,7 +3,6 @@
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Text, Badge, QuantityStepper } from 'zoui';
-import type { ChipGroupVariant, QuantityStepperVariant } from 'zoui';
 import { Price } from './Price';
 import { AddToCartButton } from './AddToCartButton';
 import { BenefitsRow } from './BenefitsRow';
@@ -31,7 +30,6 @@ interface PDPInfoPanelProps {
   returnDays?: number;
   warrantyEnabled?: boolean;
   warrantyMonths?: number;
-  chipVariant: ChipGroupVariant;
   categoryName?: string;
   categoryId?: string;
 }
@@ -54,7 +52,6 @@ export function PDPInfoPanel({
   returnDays,
   warrantyEnabled,
   warrantyMonths,
-  chipVariant,
   categoryName,
   categoryId,
 }: PDPInfoPanelProps) {
@@ -102,7 +99,7 @@ export function PDPInfoPanel({
           </Text>
         )}
         {discountPercent && (
-          <Badge variant="soft" tone="danger" size="sm">-{discountPercent}%</Badge>
+          <Badge variant="pill" tone="danger" size="sm">-{discountPercent}%</Badge>
         )}
       </div>
 
@@ -124,7 +121,6 @@ export function PDPInfoPanel({
         <div style={{ marginTop: '24px' }}>
           <VariantSelector
             product={product}
-            chipVariant={chipVariant}
             onVariantChange={handleVariantChange}
           />
         </div>
@@ -134,14 +130,14 @@ export function PDPInfoPanel({
         {product.hasVariants && selectedVariant === null ? (
           <Text variant="body-sm" color="muted">Seleccioná una opción para ver disponibilidad</Text>
         ) : effectiveStock > 0 ? (
-          <Badge variant="soft" tone={showLowStock ? 'warning' : 'success'} size="sm">
+          <Badge variant="pill" tone={showLowStock ? 'warning' : 'success'} size="sm">
             {showLowStock ? 'Últimas unidades' : 'En stock'}
           </Badge>
         ) : (
-          <Badge variant="soft" tone="danger" size="sm">Sin stock</Badge>
+          <Badge variant="pill" tone="danger" size="sm">Sin stock</Badge>
         )}
         {showFreeShipping && (
-          <Badge variant="soft" tone="info" size="sm">Envío gratis</Badge>
+          <Badge variant="pill" tone="info" size="sm">Envío gratis</Badge>
         )}
       </div>
 
@@ -154,7 +150,6 @@ export function PDPInfoPanel({
             min={1}
             max={effectiveStock > 0 ? effectiveStock : 1}
             disabled={!canBuy}
-            variant={chipVariant as unknown as QuantityStepperVariant}
           />
           <div style={{ flex: 1 }}>
             <AddToCartButton

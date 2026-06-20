@@ -8,7 +8,6 @@ import { PDPInfoPanel } from '@/components/catalog/PDPInfoPanel';
 import { RelatedProducts } from '@/components/catalog/RelatedProducts';
 import { RatingsBlock } from '@/components/catalog/RatingsBlock';
 import { getCategories, getProduct, getProductReviews, getStoreInfo } from '@/lib/api/storeClient';
-import type { BreadcrumbsVariant, ChipGroupVariant, StarRatingVariant } from 'zoui';
 
 interface Props {
   searchParams: { id?: string };
@@ -69,8 +68,6 @@ export default async function ProductoPage({ searchParams }: Props) {
   const storeRatingsEnabled = storeInfo?.ratings_enabled ?? false;
   const storeReviewsEnabled = storeInfo?.reviews_enabled ?? false;
 
-  const themeVariant = (storeInfo?.theme ?? 'outlined') as BreadcrumbsVariant & ChipGroupVariant;
-
   const discountPercent = hasDiscount && product.salePrice
     ? Math.round((1 - product.salePrice / product.price) * 100)
     : null;
@@ -90,7 +87,7 @@ export default async function ProductoPage({ searchParams }: Props) {
       <div className="max-w-5xl mx-auto px-4 py-8">
 
         <div style={{ marginBottom: '24px' }}>
-          <Breadcrumbs items={breadcrumbItems} variant={themeVariant as BreadcrumbsVariant} />
+          <Breadcrumbs items={breadcrumbItems} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
@@ -170,7 +167,6 @@ export default async function ProductoPage({ searchParams }: Props) {
               returnDays={storeInfo?.store_policies?.return_days}
               warrantyEnabled={storeInfo?.store_policies?.warranty_enabled}
               warrantyMonths={storeInfo?.store_policies?.warranty_months}
-              chipVariant={themeVariant as ChipGroupVariant}
               categoryName={category?.name}
               categoryId={category?._id}
             />
@@ -181,7 +177,6 @@ export default async function ProductoPage({ searchParams }: Props) {
           <RelatedProducts
             categoryId={String(category._id)}
             excludeId={id}
-            cardVariant={storeInfo.theme}
             currency={storeInfo.currency ?? 'ARS'}
           />
         )}
@@ -194,7 +189,6 @@ export default async function ProductoPage({ searchParams }: Props) {
             distribution={reviewsData?.distribution ?? null}
             ratingsEnabled={storeRatingsEnabled}
             reviewsEnabled={storeReviewsEnabled}
-            starVariant={themeVariant as StarRatingVariant}
           />
         )}
       </div>

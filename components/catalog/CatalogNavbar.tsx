@@ -4,17 +4,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/context/CartContext';
-import { useStoreConfig } from '@/context/StoreConfigContext';
 import { getAccessTokenRole } from '@/utils/helpers';
 import { Navbar } from 'zoui';
-import type { NavbarVariant } from 'zoui';
 
 const MANAGEMENT_ROLES = ['Admin', 'Manager', 'Seller'];
 
 export function CatalogNavbar() {
   const router = useRouter();
   const { itemCount, openDrawer } = useCart();
-  const { theme } = useStoreConfig();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [canManage,  setCanManage]  = useState(false);
@@ -41,11 +38,8 @@ export function CatalogNavbar() {
     ...(canManage ? [{ label: 'Gestión', onClick: () => router.push('/gestion') }] : []),
   ];
 
-  const variant = (theme ?? 'outlined') as NavbarVariant;
-
   return (
     <Navbar
-      variant={variant}
       storeName="Tienda"
       links={links}
       onLogoClick={() => router.push('/productos')}
