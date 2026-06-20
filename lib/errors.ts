@@ -38,11 +38,13 @@ const errors: Record<string, ErrorDefinition> = {
   // ── Catálogo — Categorías (MS03) ──────────────────────────────────────────
   'MS03-ERR013': { message: 'Ya existe una categoría con ese nombre', severity: 'info' },
   'MS03-ERR014': { message: 'No se puede anidar más de 4 niveles', severity: 'info' },
+  'MS03-ERR016': { message: 'Llegaste al límite de categorías de tu plan', detail: 'Mejorá tu plan para crear más categorías.', severity: 'info' },
 
   // ── Catálogo — Productos (MS03) ───────────────────────────────────────────
   'MS03-ERR011': { message: 'El nombre del producto es requerido', severity: 'info' },
   'MS03-ERR021': { message: 'El precio ingresado no es válido', severity: 'info' },
   'MS03-ERR022': { message: 'Ya existe un producto con ese nombre', severity: 'info' },
+  'MS03-ERR023': { message: 'Llegaste al límite de productos de tu plan', detail: 'Mejorá tu plan para crear más productos.', severity: 'info' },
 
   // ── Config de tienda (MS05) ───────────────────────────────────────────────
   'MS05-ERR010': { message: 'La tienda no está configurada', severity: 'warning', action: { label: 'Reintentar', retry: true } },
