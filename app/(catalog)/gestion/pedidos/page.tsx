@@ -201,7 +201,7 @@ export default function AdminPedidosPage() {
                   </Table.Td>
                   <Table.Td>
                     <StoreButton
-                      variant="ghost"
+                      emphasis="ghost"
                       size="md"
                       onClick={() => router.push(`/gestion/pedidos/${order._id}`)}
                       data-testid={`order-view-btn-${order._id}`}

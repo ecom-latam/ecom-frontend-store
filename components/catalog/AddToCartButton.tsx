@@ -37,7 +37,7 @@ export function AddToCartButton({ product, hasSession, availableStock, quantity 
   if (isOutOfStock) {
     return (
       <Button
-        variant="secondary"
+        emphasis="outlined"
         size="md"
         style={{ width: '100%' }}
         disabled

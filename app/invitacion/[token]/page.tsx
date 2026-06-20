@@ -123,7 +123,7 @@ export default function InvitacionPage() {
           <Text variant="body-sm" weight="medium" as="p">¡Listo! Tu cuenta fue creada.</Text>
           <Text variant="body-sm" color="secondary" as="p" style={{ marginTop: '4px' }}>
             Podés{' '}
-            <StoreButton variant="ghost" size="md" onClick={() => router.push('/iniciar-sesion')} style={{ padding: 0, height: 'auto', textDecoration: 'underline', fontWeight: 500 }}>
+            <StoreButton emphasis="ghost" size="md" onClick={() => router.push('/iniciar-sesion')} style={{ padding: 0, height: 'auto', textDecoration: 'underline', fontWeight: 500 }}>
               iniciar sesión
             </StoreButton>
             .

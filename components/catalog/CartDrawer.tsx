@@ -28,7 +28,7 @@ export function CartDrawer() {
       {items.length === 0 ? (
         <Drawer.Body style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
           <Text variant="body-sm" color="muted">Tu carrito está vacío.</Text>
-          <Button variant="ghost" size="md" onClick={() => { closeDrawer(); router.push('/productos'); }} style={{ marginTop: '16px', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
+          <Button emphasis="ghost" size="md" onClick={() => { closeDrawer(); router.push('/productos'); }} style={{ marginTop: '16px', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
             Ver productos
           </Button>
         </Drawer.Body>
@@ -61,7 +61,7 @@ export function CartDrawer() {
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
                       <Button
-                        variant="secondary"
+                        emphasis="outlined"
                         size="md"
                         onClick={() => item.quantity <= 1 ? setItemToRemove(item._id) : updateItem(item._id, item.quantity - 1)}
                         disabled={isLoading}
@@ -71,7 +71,7 @@ export function CartDrawer() {
                       </Button>
                       <Text variant="body-sm" as="span" style={{ width: 20, textAlign: 'center' }}>{item.quantity}</Text>
                       <Button
-                        variant="secondary"
+                        emphasis="outlined"
                         size="md"
                         onClick={async () => {
                           const result = await updateItem(item._id, item.quantity + 1);
@@ -89,7 +89,7 @@ export function CartDrawer() {
                         +
                       </Button>
                       <Button
-                        variant="ghost"
+                        emphasis="ghost"
                         size="md"
                         onClick={() => setItemToRemove(item._id)}
                         disabled={isLoading}
@@ -110,7 +110,7 @@ export function CartDrawer() {
               <Text variant="body-sm" weight="semibold" as="span">{formatPrice(subtotal, currency)}</Text>
             </div>
             <Button
-              variant="secondary"
+              emphasis="outlined"
               size="md"
               style={{ justifyContent: 'center' }}
               onClick={() => { closeDrawer(); router.push('/carrito'); }}
@@ -136,7 +136,7 @@ export function CartDrawer() {
         <Text variant="body-sm">¿Querés eliminar este producto del carrito?</Text>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="ghost" size="md" onClick={() => setItemToRemove(null)}>
+        <Button emphasis="ghost" size="md" onClick={() => setItemToRemove(null)}>
           Cancelar
         </Button>
         <Button variant={btnVariant} size="md" onClick={() => { removeItem(itemToRemove!); setItemToRemove(null); }}>

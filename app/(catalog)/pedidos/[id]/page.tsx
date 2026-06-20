@@ -311,7 +311,7 @@ export default function OrderDetailPage() {
               )}
               {canCancel && (
                 <StoreButton
-                  variant="secondary"
+                  emphasis="outlined"
                   size="md"
                   onClick={() => setConfirmModal('cancel')}
                   disabled={actionLoading}
@@ -365,7 +365,7 @@ export default function OrderDetailPage() {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <StoreButton variant="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>
+          <StoreButton emphasis="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>
             Cancelar
           </StoreButton>
           <StoreButton size="md" onClick={handleNotifyPayment} disabled={actionLoading}>
@@ -383,7 +383,7 @@ export default function OrderDetailPage() {
           </Text>
         </Modal.Body>
         <Modal.Footer>
-          <StoreButton variant="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>
+          <StoreButton emphasis="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>
             Volver
           </StoreButton>
           <StoreButton

@@ -53,7 +53,7 @@ export function CartPageContent() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <Text variant="heading-2" as="h1">Mi carrito</Text>
-          <Button variant="ghost" size="md" onClick={clearCart} disabled={isLoading} style={{ color: 'var(--color-fg-muted)' }}>
+          <Button emphasis="ghost" size="md" onClick={clearCart} disabled={isLoading} style={{ color: 'var(--color-fg-muted)' }}>
             Vaciar carrito
           </Button>
         </div>
@@ -83,7 +83,7 @@ export function CartPageContent() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <Button variant="ghost" size="md" onClick={() => router.push(`/producto?id=${item.productId}`)} style={{ fontWeight: 500, padding: 0, height: 'auto', justifyContent: 'flex-start' }}>
+                  <Button emphasis="ghost" size="md" onClick={() => router.push(`/producto?id=${item.productId}`)} style={{ fontWeight: 500, padding: 0, height: 'auto', justifyContent: 'flex-start' }}>
                     {item.name}
                   </Button>
 
@@ -101,7 +101,7 @@ export function CartPageContent() {
 
                   <div className="flex items-center gap-2 mt-3">
                     <Button
-                      variant="secondary"
+                      emphasis="outlined"
                       size="md"
                       onClick={() => item.quantity <= 1 ? setItemToRemove(item._id) : updateItem(item._id, item.quantity - 1)}
                       disabled={isLoading}
@@ -110,7 +110,7 @@ export function CartPageContent() {
                     </Button>
                     <Text variant="body-sm" weight="medium" as="span" style={{ width: '24px', textAlign: 'center' }}>{item.quantity}</Text>
                     <Button
-                      variant="secondary"
+                      emphasis="outlined"
                       size="md"
                       onClick={async () => {
                         const result = await updateItem(item._id, item.quantity + 1);
@@ -131,7 +131,7 @@ export function CartPageContent() {
                       Total: {formatPrice(item.price * item.quantity, currency)}
                     </Text>
 
-                    <Button variant="ghost" size="md" onClick={() => setItemToRemove(item._id)} disabled={isLoading} style={{ marginLeft: 'auto', color: 'var(--color-fg-muted)' }}>
+                    <Button emphasis="ghost" size="md" onClick={() => setItemToRemove(item._id)} disabled={isLoading} style={{ marginLeft: 'auto', color: 'var(--color-fg-muted)' }}>
                       Eliminar
                     </Button>
                   </div>
@@ -165,7 +165,7 @@ export function CartPageContent() {
                 Ir al checkout
               </Button>
 
-              <Button variant="ghost" size="md" onClick={() => router.push('/productos')} style={{ width: '100%', justifyContent: 'center', color: 'var(--color-fg-muted)' }}>
+              <Button emphasis="ghost" size="md" onClick={() => router.push('/productos')} style={{ width: '100%', justifyContent: 'center', color: 'var(--color-fg-muted)' }}>
                 Seguir comprando
               </Button>
             </div>
@@ -180,7 +180,7 @@ export function CartPageContent() {
         <Text variant="body-sm">¿Querés eliminar este producto del carrito?</Text>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="ghost" size="md" onClick={() => setItemToRemove(null)}>
+        <Button emphasis="ghost" size="md" onClick={() => setItemToRemove(null)}>
           Cancelar
         </Button>
         <Button variant={btnVariant} size="md" onClick={() => { removeItem(itemToRemove!); setItemToRemove(null); }}>

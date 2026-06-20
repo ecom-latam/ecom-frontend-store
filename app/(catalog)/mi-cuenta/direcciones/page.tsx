@@ -318,7 +318,7 @@ export default function DireccionesPage() {
         </Modal.Body>
 
         <Modal.Footer>
-          <StoreButton variant="ghost" size="md" onClick={() => setModalOpen(false)} disabled={saving}>
+          <StoreButton emphasis="ghost" size="md" onClick={() => setModalOpen(false)} disabled={saving}>
             Cancelar
           </StoreButton>
           <StoreButton size="md" onClick={handleSave} disabled={saving || !isFormValid}>

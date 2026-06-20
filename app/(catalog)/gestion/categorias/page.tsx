@@ -40,7 +40,7 @@ function ConfirmModal({ title, message, confirmLabel, danger = false, onConfirm,
         <Text variant="body-sm" color="secondary" as="p" style={{ lineHeight: 1.6 }}>{message}</Text>
       </Modal.Body>
       <Modal.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-        <StoreButton variant="secondary" size="md" onClick={onCancel}>Cancelar</StoreButton>
+        <StoreButton emphasis="outlined" size="md" onClick={onCancel}>Cancelar</StoreButton>
         <StoreButton
           size="md"
           onClick={onConfirm}
@@ -157,7 +157,7 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
         </Drawer.Body>
 
         <Drawer.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <StoreButton type="button" variant="secondary" size="md" onClick={onClose}>Cancelar</StoreButton>
+          <StoreButton type="button" emphasis="outlined" size="md" onClick={onClose}>Cancelar</StoreButton>
           <StoreButton size="md" disabled={loading} onClick={handleSubmit} data-testid="cat-submit-btn">
             {loading ? 'Guardando...' : category ? 'Guardar cambios' : 'Crear categoría'}
           </StoreButton>
@@ -418,7 +418,7 @@ export default function GestionCategoriasPage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', paddingLeft: `${depth * 20}px` }}>
                     {hasChildren(category._id) ? (
                       <StoreButton
-                        variant="ghost"
+                        emphasis="ghost"
                         size="md"
                         onClick={() => toggleCollapse(category._id)}
                         style={{ width: 20, height: 20, minWidth: 0, fontSize: '10px', color: 'var(--color-fg-muted)', flexShrink: 0 }}
@@ -451,7 +451,7 @@ export default function GestionCategoriasPage() {
                       Editar
                     </StoreButton>
                     <StoreButton
-                      variant="secondary"
+                      emphasis="outlined"
                       size="md"
                       onClick={() => handleToggleStatus(category)}
                       disabled={toggling.has(category._id)}
@@ -460,7 +460,7 @@ export default function GestionCategoriasPage() {
                     >
                       {category.status === 'active' ? 'Desactivar' : 'Activar'}
                     </StoreButton>
-                    <StoreButton variant="ghost" size="md" onClick={() => handleDelete(category)} style={{ color: 'var(--color-error-500)' }}>Eliminar</StoreButton>
+                    <StoreButton emphasis="ghost" size="md" onClick={() => handleDelete(category)} style={{ color: 'var(--color-error-500)' }}>Eliminar</StoreButton>
                   </div>
                 </Table.Td>
               </Table.Row>

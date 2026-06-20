@@ -82,11 +82,11 @@ export function ErrorModalProvider({ children }: { children: React.ReactNode }) 
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" size="sm" onClick={handleClose}>
+          <Button emphasis="outlined" size="sm" onClick={handleClose}>
             Cerrar
           </Button>
           {action && (action.href || (action.retry && state.onRetry)) && (
-            <Button variant="primary" size="sm" onClick={handleAction}>
+            <Button emphasis="filled" size="sm" onClick={handleAction}>
               {action.label}
             </Button>
           )}

@@ -96,7 +96,7 @@ function ConfirmModal({ title, message, confirmLabel, danger = false, onConfirm,
         >
           {confirmLabel}
         </StoreButton>
-        <StoreButton variant="secondary" size="md" onClick={onCancel}>Cancelar</StoreButton>
+        <StoreButton emphasis="outlined" size="md" onClick={onCancel}>Cancelar</StoreButton>
       </Modal.Footer>
     </Modal>
   );
@@ -229,7 +229,7 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
         </Drawer.Body>
 
         <Drawer.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <StoreButton type="button" variant="secondary" size="md" onClick={onClose}>Cancelar</StoreButton>
+          <StoreButton type="button" emphasis="outlined" size="md" onClick={onClose}>Cancelar</StoreButton>
           <StoreButton size="md" disabled={loading} onClick={handleSubmit} data-testid="prod-submit-btn">
             {loading ? 'Guardando...' : product ? 'Guardar cambios' : 'Crear producto'}
           </StoreButton>
@@ -417,14 +417,14 @@ export default function GestionProductosPage() {
                   <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
                     <StoreButton size="md" onClick={() => openEdit(product)}>Editar</StoreButton>
                     <StoreButton
-                      variant="secondary"
+                      emphasis="outlined"
                       size="md"
                       onClick={() => handleToggleStatus(product)}
                       data-testid="prod-toggle-btn"
                     >
                       {product.status === 'active' ? 'Desactivar' : 'Activar'}
                     </StoreButton>
-                    <StoreButton variant="ghost" size="md" onClick={() => handleDelete(product)} style={{ color: 'var(--color-error-500)' }}>Eliminar</StoreButton>
+                    <StoreButton emphasis="ghost" size="md" onClick={() => handleDelete(product)} style={{ color: 'var(--color-error-500)' }}>Eliminar</StoreButton>
                   </div>
                 </Table.Td>
               </Table.Row>

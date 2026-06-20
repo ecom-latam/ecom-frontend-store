@@ -70,7 +70,7 @@ function MpResultInner({ variant }: { variant: Variant }) {
               Volver al carrito
             </StoreButton>
           )}
-          <StoreButton variant="secondary" size="md" onClick={() => router.push('/productos')}>
+          <StoreButton emphasis="outlined" size="md" onClick={() => router.push('/productos')}>
             Seguir comprando
           </StoreButton>
         </div>

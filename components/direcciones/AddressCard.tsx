@@ -32,18 +32,18 @@ export function AddressCard({ addr, deleting, settingDefault, onEdit, onDelete, 
       <Text variant="body-sm" color="muted" as="p">{addr.city}, {addr.province}{addr.zip ? ` (${addr.zip})` : ''}</Text>
 
       <div style={{ display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
-        <StoreButton variant="ghost" size="sm" onClick={onEdit} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+        <StoreButton emphasis="ghost" size="sm" onClick={onEdit} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <Icon name="edit" size="sm" /> Editar
         </StoreButton>
 
         {!addr.isDefault && (
-          <StoreButton variant="ghost" size="sm" disabled={settingDefault} onClick={onSetDefault} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <StoreButton emphasis="ghost" size="sm" disabled={settingDefault} onClick={onSetDefault} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             <Icon name="star" size="sm" />
             {settingDefault ? 'Guardando...' : 'Marcar predeterminada'}
           </StoreButton>
         )}
 
-        <StoreButton variant="ghost" size="sm" disabled={deleting} onClick={onDelete} style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--color-error-600)' }}>
+        <StoreButton emphasis="ghost" size="sm" disabled={deleting} onClick={onDelete} style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--color-error-600)' }}>
           <Icon name="trash" size="sm" />
           {deleting ? 'Eliminando...' : 'Eliminar'}
         </StoreButton>

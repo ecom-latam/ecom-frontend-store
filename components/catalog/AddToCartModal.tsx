@@ -163,7 +163,8 @@ export function AddToCartModal({ product, open, onClose, initialQuantity = 1 }: 
                       <Button
                         key={value}
                         size="md"
-                        variant={isSelected ? btnVariant : 'secondary'}
+                        variant={btnVariant}
+                        emphasis={isSelected ? 'filled' : 'outlined'}
                         onClick={() => available && selectValue(name, value)}
                         disabled={!available}
                         style={!available ? { opacity: 0.4 } : undefined}

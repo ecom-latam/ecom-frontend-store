@@ -181,7 +181,7 @@ export default function SeguridadPage() {
                 </div>
               </div>
 
-              <StoreButton variant="secondary" size="sm" disabled>
+              <StoreButton emphasis="outlined" size="sm" disabled>
                 Activar
               </StoreButton>
             </div>

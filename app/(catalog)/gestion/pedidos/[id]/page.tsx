@@ -133,7 +133,7 @@ export default function AdminPedidoDetailPage() {
     return (
       <main style={{ padding: '32px' }}>
         <Text variant="body" color="muted">Pedido no encontrado.</Text>
-        <StoreButton variant="ghost" size="md" style={{ marginTop: '12px' }} onClick={() => router.push('/gestion/pedidos')}>
+        <StoreButton emphasis="ghost" size="md" style={{ marginTop: '12px' }} onClick={() => router.push('/gestion/pedidos')}>
           ← Volver a pedidos
         </StoreButton>
       </main>
@@ -253,7 +253,7 @@ export default function AdminPedidoDetailPage() {
                 {nonCancelNext.map((status) => (
                   <StoreButton
                     key={status}
-                    variant="secondary"
+                    emphasis="outlined"
                     size="md"
                     onClick={() => setConfirmModal({ type: 'status', status: status as OrderStatus })}
                     disabled={actionLoading}
@@ -265,7 +265,7 @@ export default function AdminPedidoDetailPage() {
                 ))}
                 {canCancel && (
                   <StoreButton
-                    variant="secondary"
+                    emphasis="outlined"
                     size="md"
                     onClick={() => setConfirmModal({ type: 'cancel' })}
                     disabled={actionLoading}
@@ -301,7 +301,7 @@ export default function AdminPedidoDetailPage() {
           </Text>
         </Modal.Body>
         <Modal.Footer>
-          <StoreButton variant="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>Cancelar</StoreButton>
+          <StoreButton emphasis="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>Cancelar</StoreButton>
           <StoreButton size="md" onClick={handleConfirmPayment} disabled={actionLoading} data-testid="confirm-payment-confirm-btn">
             {actionLoading ? 'Confirmando...' : 'Confirmar'}
           </StoreButton>
@@ -317,7 +317,7 @@ export default function AdminPedidoDetailPage() {
           </Text>
         </Modal.Body>
         <Modal.Footer>
-          <StoreButton variant="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>Cancelar</StoreButton>
+          <StoreButton emphasis="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>Cancelar</StoreButton>
           <StoreButton size="md" onClick={() => confirmModal?.type === 'status' && handleStatusUpdate(confirmModal.status!)} disabled={actionLoading} data-testid="status-confirm-btn">
             {actionLoading ? 'Actualizando...' : 'Confirmar'}
           </StoreButton>
@@ -333,7 +333,7 @@ export default function AdminPedidoDetailPage() {
             </Text>
           </Modal.Body>
           <Modal.Footer>
-            <StoreButton variant="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>Volver</StoreButton>
+            <StoreButton emphasis="ghost" size="md" onClick={() => setConfirmModal(null)} disabled={actionLoading}>Volver</StoreButton>
             <StoreButton
               size="md"
               onClick={handleCancel}
