@@ -226,7 +226,6 @@ export default function DireccionesPage() {
                   onChange={(e) => set('fullName', e.target.value.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s'.-]/g, ''))}
                   onBlur={() => touch('fullName')}
                   error={touched.fullName ? formErrors.fullName : undefined}
-                  variant="outlined"
                   size="md"
                 />
               </div>
@@ -240,7 +239,6 @@ export default function DireccionesPage() {
                   onBlur={() => touch('phone')}
                   error={touched.phone ? formErrors.phone : undefined}
                   inputMode="tel"
-                  variant="outlined"
                   size="md"
                 />
               </div>
@@ -253,7 +251,6 @@ export default function DireccionesPage() {
                   onChange={(e) => set('address', e.target.value)}
                   onBlur={() => touch('address')}
                   error={touched.address ? formErrors.address : undefined}
-                  variant="outlined"
                   size="md"
                 />
               </div>
@@ -264,7 +261,6 @@ export default function DireccionesPage() {
                   placeholder="Ej: 3° B"
                   value={form.floor}
                   onChange={(e) => set('floor', e.target.value)}
-                  variant="outlined"
                   size="md"
                 />
               </div>
@@ -276,7 +272,6 @@ export default function DireccionesPage() {
                   onChange={(e) => set('city', e.target.value.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s'.-]/g, ''))}
                   onBlur={() => touch('city')}
                   error={touched.city ? formErrors.city : undefined}
-                  variant="outlined"
                   size="md"
                 />
               </div>
@@ -290,7 +285,6 @@ export default function DireccionesPage() {
                   onBlur={() => touch('zip')}
                   error={touched.zip ? formErrors.zip : undefined}
                   inputMode="numeric"
-                  variant="outlined"
                   size="md"
                 />
               </div>
@@ -303,7 +297,6 @@ export default function DireccionesPage() {
                   error={touched.province ? formErrors.province : undefined}
                   placeholder="Seleccioná una provincia"
                   options={PROVINCES.map((p) => ({ value: p, label: p }))}
-                  variant="outlined"
                   size="md"
                 />
               </div>

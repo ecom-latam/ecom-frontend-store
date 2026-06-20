@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ProductCard, ProductGrid as ProductGridUI } from 'zoui';
-import type { ProductCardVariant } from 'zoui';
 import { getProducts } from '@/lib/api/storeClient';
 import type { Product } from '@/lib/api/storeClient';
 import { formatPrice } from '@/lib/format';
@@ -9,7 +8,6 @@ import type { Currency } from '@/context/StoreConfigContext';
 interface RelatedProductsProps {
   categoryId: string;
   excludeId: string;
-  cardVariant?: string;
   currency?: Currency;
 }
 
@@ -39,7 +37,6 @@ function getEffectiveStock(p: Product): number {
 export async function RelatedProducts({
   categoryId,
   excludeId,
-  cardVariant,
   currency = 'ARS',
 }: RelatedProductsProps) {
   let products: Product[];
@@ -97,7 +94,6 @@ export async function RelatedProducts({
           return (
             <ProductCard
               key={p._id}
-              variant={cardVariant as ProductCardVariant | undefined}
               name={p.name}
               price={formatPrice(displayPrice, currency)}
               priceOld={hasDiscount ? formatPrice(p.price, currency) : undefined}

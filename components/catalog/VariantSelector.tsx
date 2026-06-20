@@ -2,13 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { ChipGroup } from 'zoui';
-import type { ChipGroupVariant } from 'zoui';
 import { Price } from './Price';
 import type { Product, ProductVariant } from '@/lib/api/storeClient';
 
 interface VariantSelectorProps {
   product: Product;
-  chipVariant?: ChipGroupVariant;
   onVariantChange?: (variant: ProductVariant | null, price: number, stock: number) => void;
 }
 
@@ -53,7 +51,7 @@ function isValueAvailable(product: Product, optionId: string, value: string, cur
   });
 }
 
-export function VariantSelector({ product, chipVariant = 'outlined', onVariantChange }: VariantSelectorProps) {
+export function VariantSelector({ product, onVariantChange }: VariantSelectorProps) {
   const [selection, setSelection] = useState<Record<string, string>>({});
 
   const selectedVariant = Object.keys(selection).length === product.linkedOptions.length
@@ -107,7 +105,6 @@ export function VariantSelector({ product, chipVariant = 'outlined', onVariantCh
               options={options}
               value={selection[option.storeOptionId]}
               onChange={val => handleSelect(option.storeOptionId, val)}
-              variant={chipVariant}
             />
           </div>
         );

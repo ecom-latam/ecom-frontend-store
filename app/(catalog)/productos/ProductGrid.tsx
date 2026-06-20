@@ -5,7 +5,6 @@ import { useCallback } from 'react';
 
 import type { Category, Product } from '@/lib/api/storeClient';
 import { ProductCard, ProductGrid as ProductGridUI, Pagination, EmptyState, Icon, Badge, Text } from 'zoui';
-import type { ProductCardVariant, StarRatingVariant } from 'zoui';
 import { StoreCatalogBar } from '@/components/catalog/StoreCatalogBar';
 import { useStoreConfig } from '@/context/StoreConfigContext';
 import { formatPrice } from '@/lib/format';
@@ -53,9 +52,7 @@ export function ProductGrid({
   currentView,
 }: Props) {
   const router = useRouter();
-  const { theme, currency, ratings_enabled } = useStoreConfig();
-  const cardVariant = theme as ProductCardVariant | undefined;
-  const starVariant = (theme ?? 'filled') as StarRatingVariant;
+  const { currency, ratings_enabled } = useStoreConfig();
 
   // Reconstruimos los params desde los props (server-passed) en vez de useSearchParams:
   // así esta vista no fuerza el client-render bailout del Suspense (evita los warnings de hidratación).
@@ -105,7 +102,6 @@ export function ProductGrid({
           title="Sin resultados"
           description="Probá con menos filtros o ajustá los términos."
           tone="neutral"
-          variant={cardVariant}
         />
       ) : currentView === 'grid' ? (
         <ProductGridUI>
@@ -117,7 +113,6 @@ export function ProductGrid({
             return (
               <ProductCard
                 key={p._id}
-                variant={cardVariant}
                 name={p.name}
                 price={formatPrice(displayPrice, currency)}
                 priceOld={hasDiscount ? formatPrice(p.price, currency) : undefined}
@@ -127,7 +122,6 @@ export function ProductGrid({
                 outOfStock={outOfStock}
                 avgRating={ratings_enabled && p.avgRating != null ? p.avgRating : undefined}
                 reviewCount={ratings_enabled && p.reviewCount != null ? p.reviewCount : undefined}
-                starVariant={starVariant}
               />
             );
           })}

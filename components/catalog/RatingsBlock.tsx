@@ -1,5 +1,4 @@
 import { StarRating } from 'zoui';
-import type { StarRatingVariant } from 'zoui';
 import type { ProductReview, ReviewDistribution } from '@/lib/api/storeClient';
 
 interface RatingsBlockProps {
@@ -9,7 +8,6 @@ interface RatingsBlockProps {
   distribution: ReviewDistribution | null;
   ratingsEnabled: boolean;
   reviewsEnabled: boolean;
-  starVariant?: StarRatingVariant;
 }
 
 function formatDate(iso: string): string {
@@ -30,11 +28,9 @@ function getBuyerDisplay(email?: string): { initial: string; name: string } {
 function DistributionBars({
   distribution,
   total,
-  starVariant,
 }: {
   distribution: ReviewDistribution;
   total: number;
-  starVariant: StarRatingVariant;
 }) {
   const rows = [5, 4, 3, 2, 1] as const;
   return (
@@ -44,7 +40,7 @@ function DistributionBars({
         const pct   = total > 0 ? Math.round((count / total) * 100) : 0;
         return (
           <div key={star} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <StarRating value={star} readonly size="sm" variant={starVariant} />
+            <StarRating value={star} readonly size="sm" />
             <div
               style={{
                 flex: 1,
@@ -84,10 +80,8 @@ function DistributionBars({
 
 function ReviewCard({
   review,
-  starVariant,
 }: {
   review: ProductReview;
-  starVariant: StarRatingVariant;
 }) {
   const { initial, name } = getBuyerDisplay(review.buyerEmail);
   return (
@@ -145,7 +139,7 @@ function ReviewCard({
           </span>
         </div>
         <div style={{ marginLeft: 'auto' }}>
-          <StarRating value={review.rating} readonly size="sm" variant={starVariant} />
+          <StarRating value={review.rating} readonly size="sm" />
         </div>
       </div>
 
@@ -187,7 +181,6 @@ export function RatingsBlock({
   distribution,
   ratingsEnabled,
   reviewsEnabled,
-  starVariant = 'filled',
 }: RatingsBlockProps) {
   if (!ratingsEnabled && !reviewsEnabled) return null;
 
@@ -253,14 +246,14 @@ export function RatingsBlock({
             >
               {avgRating!.toFixed(1)}
             </span>
-            <StarRating value={avgRating!} readonly showValue={false} variant={starVariant} size="md" />
+            <StarRating value={avgRating!} readonly showValue={false} size="md" />
             <span style={{ fontFamily: 'var(--font-ui)', fontSize: '13px', color: 'var(--color-fg-secondary)' }}>
               {total} {total === 1 ? 'reseña' : 'reseñas'}
             </span>
           </div>
 
           {distribution && (
-            <DistributionBars distribution={distribution} total={total} starVariant={starVariant} />
+            <DistributionBars distribution={distribution} total={total} />
           )}
         </div>
       )}
@@ -275,7 +268,7 @@ export function RatingsBlock({
           }}
         >
           {reviews.map((r) => (
-            <ReviewCard key={r._id} review={r} starVariant={starVariant} />
+            <ReviewCard key={r._id} review={r} />
           ))}
         </div>
       )}
