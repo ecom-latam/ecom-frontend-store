@@ -15,6 +15,7 @@ export interface ProductVariant {
   price: number | null;
   stock: number;
   availableStock?: number;
+  images: { url: string; publicId: string; isMain: boolean }[];
   enabled: boolean;
 }
 
