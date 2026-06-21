@@ -64,6 +64,7 @@ export interface ProductListParams {
   categoryId?: string;
   q?: string;
   exclude?: string;
+  hideOutOfStock?: boolean;
 }
 
 async function getSlug(): Promise<string> {
@@ -90,6 +91,7 @@ export async function getProducts(params: ProductListParams = {}): Promise<Produ
     categoryId: params.categoryId,
     q: params.q,
     exclude: params.exclude,
+    hideOutOfStock: params.hideOutOfStock ? 'true' : undefined,
   });
   return client.get<ProductListResponse>(`/api/product/products${query}`, {
     headers: { 'X-Tenant-Slug': slug },
@@ -158,6 +160,7 @@ export interface StoreInfo {
   low_stock_threshold?: number;
   ratings_enabled?: boolean;
   reviews_enabled?: boolean;
+  hide_out_of_stock_products?: boolean;
   store_policies?: StorePolicies;
 }
 

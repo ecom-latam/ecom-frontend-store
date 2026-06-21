@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { getCategories, getProducts } from '@/lib/api/storeClient';
+import { getCategories, getProducts, getStoreInfo } from '@/lib/api/storeClient';
 import { Text } from 'zoui';
 import { ProductGrid } from './ProductGrid';
 
@@ -12,10 +12,18 @@ export default async function ProductosPage({ searchParams }: Props) {
   const page = Math.max(parseInt(searchParams.page ?? '1', 10) || 1, 1);
   const limit = 30;
 
-  const [productsRes, categories] = await Promise.all([
-    getProducts({ page, limit, categoryId: searchParams.categoryId, q: searchParams.q }),
+  const [storeInfo, categories] = await Promise.all([
+    getStoreInfo(),
     getCategories(),
   ]);
+
+  const productsRes = await getProducts({
+    page,
+    limit,
+    categoryId: searchParams.categoryId,
+    q: searchParams.q,
+    hideOutOfStock: storeInfo?.hide_out_of_stock_products,
+  });
 
   const totalPages = Math.ceil(productsRes.total / limit);
 
