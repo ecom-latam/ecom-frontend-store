@@ -21,6 +21,9 @@ export interface StoreConfig {
   reviews_enabled?: boolean;
   hasCatalog?: boolean;
   hasPurchases?: boolean;
+  // EC-568: solo tipado por consistencia -- EC-14 (analiticas) no existe
+  // todavia, nada lee este campo en el storefront.
+  hasMetrics?: boolean;
 }
 
 export const StoreConfigContext = createContext<StoreConfig>({});

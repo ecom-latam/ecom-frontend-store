@@ -88,6 +88,7 @@ function toStoreConfig(raw: Record<string, unknown>): StoreConfig {
     // respuesta fresca de ecom-page -- mismo default que aplica el backend.
     hasCatalog:            raw.hasCatalog !== false,
     hasPurchases:          raw.hasPurchases !== false,
+    hasMetrics:            raw.hasMetrics === true,
   };
 }
 
