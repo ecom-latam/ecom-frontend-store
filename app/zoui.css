@@ -1073,7 +1073,7 @@
   --_ring: var(--color-brand-500);
 }
 .zoui-btn[data-variant=gradient][data-emphasis=filled] {
-  background: linear-gradient(115deg, hsl(calc(var(--brand-h) + 60), 85%, 60%) 0%, hsl(var(--brand-h), 90%, 55%) 50%, hsl(calc(var(--brand-h) - 40), 80%, 50%) 100%);
+  background: linear-gradient(115deg, var(--color-brand-500) 0%, var(--color-brand2-500) 100%);
   background-size: 220% 100%;
   background-position: 0% 50%;
   border: 0;
@@ -1456,7 +1456,7 @@
 
 .zoui-modal[data-variant=gradient] {
   border: 2px solid transparent;
-  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
   --_border: transparent;
   --_divider: var(--color-border-default);
   --_shadow: var(--shadow-md);
@@ -1968,11 +1968,11 @@
 }
 .zoui-drawer[data-variant=gradient][data-side=right] {
   border-left: 3px solid transparent;
-  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(180deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(180deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
 }
 .zoui-drawer[data-variant=gradient][data-side=left] {
   border-right: 3px solid transparent;
-  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(180deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(180deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
 }
 
 .zoui-drawer[data-variant=neon] {
@@ -2209,7 +2209,7 @@
 
 .zoui-toast[data-variant=gradient] {
   border: 2px solid transparent;
-  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
   box-shadow: var(--shadow-md);
 }
 
@@ -2477,7 +2477,7 @@
   --_cell-border: #e5e5e5;
   --_radius: 0;
   --_shadow: 4px 4px 0 0 #0A0A0A;
-  --_stripe-tinted: var(--color-brand-50);
+  --_stripe-tinted: #f0f0f0;
   border-width: 2px;
 }
 .zoui-table-wrapper[data-variant=brutalist] .zoui-table__th {
@@ -2560,7 +2560,7 @@
   --_shadow: var(--shadow-md);
 }
 .zoui-table-wrapper[data-variant=gradient] .zoui-table__head {
-  background: linear-gradient(90deg, hsl(calc(var(--brand-h) + 40), 85%, 55%), hsl(var(--brand-h), 90%, 50%), hsl(calc(var(--brand-h) - 30), 80%, 48%));
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand2-500));
 }
 
 .zoui-table-wrapper[data-variant=neon] {
@@ -3072,7 +3072,7 @@
 }
 .zoui-field[data-variant=gradient] .zoui-field__control {
   border: 2px solid transparent;
-  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
 }
 .zoui-field[data-variant=gradient] .zoui-field__control:focus-within {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-500) 20%, transparent);
@@ -3711,7 +3711,7 @@
 
 .zoui-select__content[data-variant=gradient] {
   border: 2px solid transparent;
-  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
   box-shadow: var(--shadow-lg);
 }
 .zoui-select__content[data-variant=gradient] .zoui-select__item[data-highlighted] {
@@ -4020,7 +4020,7 @@
   --_track-off: var(--color-neutral-200);
 }
 .zoui-switch[data-variant=gradient] .zoui-switch__input:checked ~ .zoui-switch__track {
-  background: linear-gradient(90deg, hsl(calc(var(--brand-h) + 40), 85%, 55%), hsl(var(--brand-h), 90%, 50%), hsl(calc(var(--brand-h) - 30), 80%, 45%));
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand2-500));
 }
 
 .zoui-switch[data-variant=neon] {
@@ -4368,7 +4368,7 @@
   --_active-fg: #ffffff;
 }
 .zoui-pagination[data-variant=gradient] .zoui-pagination__cell--page[data-active] {
-  background: linear-gradient(115deg, hsl(calc(var(--brand-h) + 40), 85%, 58%), hsl(var(--brand-h), 90%, 52%), hsl(calc(var(--brand-h) - 30), 80%, 48%));
+  background: linear-gradient(115deg, var(--color-brand-500), var(--color-brand2-500));
   box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--color-brand-500) 45%, transparent);
 }
 
@@ -4709,7 +4709,7 @@
 
 .zoui-empty-state[data-variant=gradient] {
   border: 2px solid transparent;
-  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
   --_border: transparent;
   --_shadow: var(--shadow-md);
 }
@@ -5039,11 +5039,11 @@
 }
 
 .zoui-breadcrumbs[data-variant=boutique] .zoui-breadcrumbs__separator {
-  color: var(--color-brand-300);
+  color: color-mix(in srgb, #d97706 45%, transparent);
 }
 
 .zoui-breadcrumbs[data-variant=boutique] .zoui-breadcrumbs__current {
-  color: var(--color-brand-700);
+  color: #d97706;
   font-style: italic;
 }
 
@@ -5253,14 +5253,14 @@
 }
 
 .zoui-chip-group[data-variant=boutique] .zoui-chip-group__chip {
-  border-color: var(--color-brand-200);
+  border-color: color-mix(in srgb, #d97706 30%, transparent);
 }
 
 .zoui-chip-group[data-variant=boutique] .zoui-chip-group__chip--active {
-  color: var(--color-brand-700);
+  color: #d97706;
   font-style: italic;
-  border-color: var(--color-brand-400);
-  background: var(--color-brand-50);
+  border-color: #d97706;
+  background: color-mix(in srgb, #d97706 8%, transparent);
 }
 
 .zoui-chip-group[data-variant=terminal] .zoui-chip-group__chip {
@@ -5649,7 +5649,7 @@
   border-color: var(--color-fg-primary);
 }
 .zoui-quantity-stepper[data-variant=brutalist]:focus-within {
-  box-shadow: 4px 4px 0 var(--color-brand-500);
+  box-shadow: 4px 4px 0 #FFD60A;
 }
 
 .zoui-quantity-stepper[data-variant=glass] {
@@ -5992,6 +5992,337 @@
   line-height: 1;
 }
 
+.zoui-tabs[data-variant=filled] .zoui-tabs__trigger--active {
+  background: var(--color-brand-500);
+  color: var(--color-brand-contrast);
+  border-bottom-color: transparent;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.zoui-tabs[data-variant=soft] .zoui-tabs__trigger--active {
+  background: var(--color-brand-50);
+  color: var(--color-brand-700);
+  border-bottom-color: transparent;
+  border-radius: var(--radius-md);
+}
+
+.zoui-tabs[data-variant=ghost] .zoui-tabs__trigger--active {
+  border-bottom-color: transparent;
+  background: color-mix(in srgb, var(--color-brand-500) 12%, transparent);
+  color: var(--color-brand-600);
+  border-radius: var(--radius-md);
+}
+
+.zoui-tabs[data-variant=pill] .zoui-tabs__list {
+  border-bottom: none;
+  gap: 8px;
+}
+
+.zoui-tabs[data-variant=pill] .zoui-tabs__trigger {
+  border-bottom: none;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border-subtle);
+}
+
+.zoui-tabs[data-variant=pill] .zoui-tabs__trigger--active {
+  background: var(--color-brand-500);
+  color: var(--color-brand-contrast);
+  border-color: var(--color-brand-500);
+}
+
+.zoui-tabs[data-variant=editorial] .zoui-tabs__trigger {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+}
+
+.zoui-tabs[data-variant=terminal] .zoui-tabs__trigger {
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  color: #4caf50;
+}
+
+.zoui-tabs[data-variant=terminal] .zoui-tabs__trigger--active {
+  border-bottom-color: #81c784;
+  color: #a5d6a7;
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.zoui-tabs[data-variant=boutique] .zoui-tabs__trigger--active {
+  color: #d97706;
+  font-style: italic;
+  border-bottom-color: #d97706;
+  background: color-mix(in srgb, #d97706 8%, transparent);
+}
+
+.zoui-tabs[data-variant=frame] .zoui-tabs__list {
+  border: 1px solid var(--color-border-subtle);
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  padding: 4px;
+}
+
+.zoui-tabs[data-variant=frame] .zoui-tabs__trigger {
+  border-bottom: none;
+  border-radius: var(--radius-sm);
+}
+
+.zoui-tabs[data-variant=frame] .zoui-tabs__trigger--active {
+  background: var(--color-brand-500);
+  color: var(--color-brand-contrast);
+}
+
+.zoui-tabs[data-variant=capsule] .zoui-tabs__trigger {
+  border-bottom: none;
+  border-radius: var(--radius-sm);
+}
+
+.zoui-tabs[data-variant=capsule] .zoui-tabs__trigger--active {
+  background: var(--color-brand-500);
+  color: var(--color-brand-contrast);
+}
+
+.zoui-tabs[data-variant=brutalist] .zoui-tabs__trigger {
+  border-bottom: 2px solid var(--color-fg-primary);
+  color: var(--color-fg-primary);
+  font-weight: 700;
+}
+
+.zoui-tabs[data-variant=brutalist] .zoui-tabs__trigger--active {
+  background: var(--color-fg-primary);
+  color: var(--color-bg-surface);
+  font-weight: 900;
+}
+
+.zoui-tabs[data-variant=glass] .zoui-tabs__trigger {
+  color: color-mix(in srgb, var(--color-fg-secondary) 80%, transparent);
+}
+
+.zoui-tabs[data-variant=glass] .zoui-tabs__trigger--active {
+  background: color-mix(in srgb, var(--color-brand-500) 20%, transparent);
+  border-bottom-color: var(--color-brand-400);
+  color: white;
+}
+
+.zoui-tabs[data-variant=retro] .zoui-tabs__trigger {
+  color: #92400e;
+}
+
+.zoui-tabs[data-variant=retro] .zoui-tabs__trigger--active {
+  background: #92400e;
+  color: #fef3c7;
+  border-bottom-color: #92400e;
+}
+
+.zoui-tabs[data-variant=glow] .zoui-tabs__trigger--active {
+  border-bottom-color: var(--color-brand-400);
+  color: var(--color-brand-400);
+  background: color-mix(in srgb, var(--color-brand-500) 8%, transparent);
+  text-shadow: 0 0 8px var(--color-brand-500);
+}
+
+.zoui-tabs[data-variant=gradient] .zoui-tabs__trigger--active {
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand-300));
+  color: var(--color-brand-contrast);
+  border-bottom-color: transparent;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.zoui-tabs[data-variant=neon] .zoui-tabs__trigger {
+  color: var(--color-brand-400);
+}
+
+.zoui-tabs[data-variant=neon] .zoui-tabs__trigger--active {
+  border-bottom-color: var(--color-brand-400);
+  color: var(--color-brand-300);
+  background: color-mix(in srgb, var(--color-brand-500) 12%, transparent);
+  box-shadow: 0 0 8px var(--color-brand-500);
+}
+
+.zoui-tabs[data-variant="3d"] .zoui-tabs__trigger--active {
+  border-bottom-color: var(--color-brand-400);
+  color: var(--color-brand-600);
+  background: var(--color-brand-50);
+  box-shadow: 2px 2px 0 var(--color-brand-300), 4px 4px 0 var(--color-brand-200);
+}
+
+.zoui-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.zoui-tabs__list {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.zoui-tabs__trigger {
+  padding: 10px 16px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-fg-secondary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: border-color 120ms, color 120ms, background 120ms;
+  white-space: nowrap;
+}
+.zoui-tabs__trigger:hover:not(.zoui-tabs__trigger--disabled) {
+  color: var(--color-brand-600);
+}
+.zoui-tabs__trigger--active {
+  color: var(--color-brand-600);
+  border-bottom-color: var(--color-brand-500);
+  font-weight: var(--font-weight-semibold);
+}
+.zoui-tabs__trigger--disabled {
+  color: var(--color-fg-disabled);
+  cursor: not-allowed;
+}
+
+.zoui-tabs__content {
+  padding-top: 20px;
+}
+
+.zoui-tooltip[data-variant=filled] .zoui-tooltip__bubble {
+  background: var(--color-brand-500);
+  color: var(--color-brand-contrast);
+}
+
+.zoui-tooltip[data-variant=soft] .zoui-tooltip__bubble {
+  background: var(--color-brand-100);
+  color: var(--color-brand-700);
+  box-shadow: none;
+}
+
+.zoui-tooltip[data-variant=ghost] .zoui-tooltip__bubble {
+  background: var(--color-bg-surface);
+  color: var(--color-fg-primary);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: none;
+}
+
+.zoui-tooltip[data-variant=pill] .zoui-tooltip__bubble {
+  border-radius: 9999px;
+}
+
+.zoui-tooltip[data-variant=editorial] .zoui-tooltip__bubble {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+}
+
+.zoui-tooltip[data-variant=terminal] .zoui-tooltip__bubble {
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  background: #1b1b1b;
+  color: #4caf50;
+  border: 1px solid #2e7d32;
+  box-shadow: none;
+}
+
+.zoui-tooltip[data-variant=boutique] .zoui-tooltip__bubble {
+  background: #fffbeb;
+  color: #d97706;
+  font-style: italic;
+  border: 1px solid #d97706;
+  box-shadow: none;
+}
+
+.zoui-tooltip[data-variant=frame] .zoui-tooltip__bubble {
+  background: var(--color-bg-surface);
+  color: var(--color-brand-600);
+  border: 1px solid var(--color-brand-500);
+  box-shadow: none;
+}
+
+.zoui-tooltip[data-variant=capsule] .zoui-tooltip__bubble {
+  background: var(--color-brand-500);
+  color: var(--color-brand-contrast);
+  border-radius: var(--radius-sm);
+}
+
+.zoui-tooltip[data-variant=brutalist] .zoui-tooltip__bubble {
+  background: var(--color-fg-primary);
+  color: var(--color-bg-surface);
+  border: 2px solid var(--color-fg-primary);
+  border-radius: 0;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.zoui-tooltip[data-variant=glass] .zoui-tooltip__bubble {
+  background: color-mix(in srgb, var(--color-fg-primary) 70%, transparent);
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+.zoui-tooltip[data-variant=retro] .zoui-tooltip__bubble {
+  background: #92400e;
+  color: #fef3c7;
+}
+
+.zoui-tooltip[data-variant=glow] .zoui-tooltip__bubble {
+  background: var(--color-fg-primary);
+  color: var(--color-brand-400);
+  box-shadow: 0 0 8px var(--color-brand-500);
+}
+
+.zoui-tooltip[data-variant=gradient] .zoui-tooltip__bubble {
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand-300));
+  color: var(--color-brand-contrast);
+}
+
+.zoui-tooltip[data-variant=neon] .zoui-tooltip__bubble {
+  background: #0a0a0a;
+  color: var(--color-brand-300);
+  border: 1px solid var(--color-brand-400);
+  box-shadow: 0 0 8px var(--color-brand-500);
+}
+
+.zoui-tooltip[data-variant="3d"] .zoui-tooltip__bubble {
+  background: var(--color-brand-50);
+  color: var(--color-brand-600);
+  box-shadow: 2px 2px 0 var(--color-brand-300), 4px 4px 0 var(--color-brand-200);
+}
+
+.zoui-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.zoui-tooltip__trigger {
+  display: inline-block;
+}
+
+.zoui-tooltip__bubble {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  background: var(--color-fg-primary);
+  color: var(--color-bg-surface);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.zoui-tooltip[data-side=top] .zoui-tooltip__bubble {
+  bottom: calc(100% + 6px);
+}
+
+.zoui-tooltip[data-side=bottom] .zoui-tooltip__bubble {
+  top: calc(100% + 6px);
+}
+
 [data-theme=dark] .zoui-product-card[data-variant=outlined] {
   --_bg: var(--color-bg-surface);
   --_border: var(--color-border-default);
@@ -6223,7 +6554,7 @@
 
 .zoui-product-card[data-variant=gradient] {
   border: 2px solid transparent;
-  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--color-bg-surface), var(--color-bg-surface)) padding-box, linear-gradient(135deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
   --_border: transparent;
   --_shadow: var(--shadow-sm);
   --_hover-shadow: var(--shadow-md);
@@ -8305,7 +8636,7 @@
 }
 .zoui-option-card[data-variant=gradient][data-selected] {
   border: 2px solid transparent;
-  background: linear-gradient(var(--_bg), var(--_bg)) padding-box, linear-gradient(135deg, hsl(calc(var(--brand-h) + 60), 85%, 60%), hsl(var(--brand-h), 90%, 55%), hsl(calc(var(--brand-h) - 40), 80%, 50%)) border-box;
+  background: linear-gradient(var(--_bg), var(--_bg)) padding-box, linear-gradient(135deg, var(--color-brand-500), var(--color-brand2-500)) border-box;
 }
 
 .zoui-option-card[data-variant=neon] {

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { products as productsApi, categories as categoriesApi } from '@/utils/api';
 import { triggerErrorModal } from '@/lib/errorModal';
 import type { Product, ProductPayload, ProductStatus, Category } from '@/utils/api';
-import { Modal, Drawer, Table, Badge, Pagination, Text } from 'zoui';
+import { Modal, Drawer, Table, Badge, Pagination, Text, Tabs, Tooltip } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { StoreInput } from '@/components/ui/StoreInput';
 import { StoreMoneyInput } from '@/components/ui/StoreMoneyInput';
@@ -104,20 +104,35 @@ function ConfirmModal({ title, message, confirmLabel, danger = false, onConfirm,
 
 // ─── Product Drawer ───────────────────────────────────────────────────────────
 
+const SECTION_LOCKED_MESSAGE = 'Guardá los datos básicos primero para habilitar esta sección.';
+
+function LockedTrigger({ value, children }: { value: string; children: string }) {
+  return (
+    <Tooltip content={SECTION_LOCKED_MESSAGE}>
+      <Tabs.Trigger value={value} disabled>{children}</Tabs.Trigger>
+    </Tooltip>
+  );
+}
+
 interface ProductDrawerProps {
   product: Product | null;
   categories: Category[];
   onClose: () => void;
   onSaved: () => void;
+  onCreated: () => void;
 }
 
-function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerProps) {
+function ProductDrawer({ product, categories, onClose, onSaved, onCreated }: ProductDrawerProps) {
+  const [savedProduct, setSavedProduct] = useState<Product | null>(product);
   const [form, setForm] = useState<ProductPayload>(
     product
       ? { name: product.name, description: product.description, price: product.price, salePrice: product.salePrice, stock: product.stock, categoryId: product.categoryId, status: product.status }
       : EMPTY_FORM
   );
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('datos');
+
+  const hasProductId = savedProduct !== null;
 
   function set<K extends keyof ProductPayload>(key: K, value: ProductPayload[K]) {
     setForm(f => ({ ...f, [key]: value }));
@@ -142,12 +157,14 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
     }
     setLoading(true);
     try {
-      if (product) {
-        await productsApi.update(product._id, form);
+      if (savedProduct) {
+        await productsApi.update(savedProduct._id, form);
+        onSaved();
       } else {
-        await productsApi.create(form);
+        const { data } = await productsApi.create(form);
+        setSavedProduct(data);
+        onCreated();
       }
-      onSaved();
     } catch {
       // errors shown via modal (axios interceptor)
     } finally {
@@ -156,82 +173,105 @@ function ProductDrawer({ product, categories, onClose, onSaved }: ProductDrawerP
   }
 
   return (
-    <Drawer open side="right" size="lg" onClose={onClose} label={product ? 'Editar producto' : 'Nuevo producto'}>
-      <Drawer.Header>{product ? 'Editar producto' : 'Nuevo producto'}</Drawer.Header>
+    <Drawer open side="right" size="lg" onClose={onClose} label={savedProduct ? 'Editar producto' : 'Nuevo producto'}>
+      <Drawer.Header>{savedProduct ? 'Editar producto' : 'Nuevo producto'}</Drawer.Header>
       <>
-        <Drawer.Body style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <StoreInput
-            label="Nombre *"
-            value={form.name}
-            onChange={e => set('name', e.target.value)}
-            placeholder="Ej: Remera de algodón"
-            fullWidth
-            data-testid="prod-name-input"
-          />
+        <Drawer.Body>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <Tabs.List>
+              <Tabs.Trigger value="datos">Datos básicos</Tabs.Trigger>
+              {hasProductId
+                ? <Tabs.Trigger value="imagenes">Imágenes</Tabs.Trigger>
+                : <LockedTrigger value="imagenes">Imágenes</LockedTrigger>}
+              {hasProductId
+                ? <Tabs.Trigger value="variantes">Variantes</Tabs.Trigger>
+                : <LockedTrigger value="variantes">Variantes</LockedTrigger>}
+            </Tabs.List>
 
-          <StoreTextarea
-            label="Descripción"
-            value={form.description ?? ''}
-            onChange={e => set('description', e.target.value)}
-            placeholder="Descripción del producto"
-            fullWidth
-          />
+            <Tabs.Content value="datos">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <StoreInput
+                  label="Nombre *"
+                  value={form.name}
+                  onChange={e => set('name', e.target.value)}
+                  placeholder="Ej: Remera de algodón"
+                  fullWidth
+                  data-testid="prod-name-input"
+                />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <StoreMoneyInput
-              label="Precio *"
-              value={form.price}
-              onValueChange={v => set('price', v ?? 0)}
-              fullWidth
-              data-testid="prod-price-input"
-            />
-            <StoreMoneyInput
-              label="Precio de oferta"
-              value={form.salePrice ?? null}
-              onValueChange={v => set('salePrice', v)}
-              placeholder="Opcional"
-              fullWidth
-              data-testid="prod-sale-price-input"
-            />
-          </div>
+                <StoreTextarea
+                  label="Descripción"
+                  value={form.description ?? ''}
+                  onChange={e => set('description', e.target.value)}
+                  placeholder="Descripción del producto"
+                  fullWidth
+                />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <StoreNumberInput
-              label="Stock"
-              value={form.stock ? String(form.stock) : ''}
-              onChange={e => set('stock', parseInt(e.target.value, 10) || 0)}
-              fullWidth
-              data-testid="prod-stock-input"
-            />
-            <StoreSelect
-              label="Categoría"
-              value={form.categoryId || '__none__'}
-              onValueChange={val => set('categoryId', val === '__none__' ? null : val)}
-              options={[
-                { value: '__none__', label: 'Sin categoría' },
-                ...categories.map(c => ({ value: c._id, label: c.name })),
-              ]}
-              fullWidth
-              data-testid="prod-category-select"
-            />
-          </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <StoreMoneyInput
+                    label="Precio *"
+                    value={form.price}
+                    onValueChange={v => set('price', v ?? 0)}
+                    fullWidth
+                    data-testid="prod-price-input"
+                  />
+                  <StoreMoneyInput
+                    label="Precio de oferta"
+                    value={form.salePrice ?? null}
+                    onValueChange={v => set('salePrice', v)}
+                    placeholder="Opcional"
+                    fullWidth
+                    data-testid="prod-sale-price-input"
+                  />
+                </div>
 
-          <StoreSelect
-            label="Estado"
-            value={form.status}
-            onValueChange={val => set('status', val as ProductStatus)}
-            options={(Object.keys(STATUS_LABELS) as ProductStatus[])
-              .filter(s => s !== 'archived')
-              .map(s => ({ value: s, label: STATUS_LABELS[s] }))}
-            fullWidth
-          />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <StoreNumberInput
+                    label="Stock"
+                    value={form.stock ? String(form.stock) : ''}
+                    onChange={e => set('stock', parseInt(e.target.value, 10) || 0)}
+                    fullWidth
+                    data-testid="prod-stock-input"
+                  />
+                  <StoreSelect
+                    label="Categoría"
+                    value={form.categoryId || '__none__'}
+                    onValueChange={val => set('categoryId', val === '__none__' ? null : val)}
+                    options={[
+                      { value: '__none__', label: 'Sin categoría' },
+                      ...categories.map(c => ({ value: c._id, label: c.name })),
+                    ]}
+                    fullWidth
+                    data-testid="prod-category-select"
+                  />
+                </div>
 
+                <StoreSelect
+                  label="Estado"
+                  value={form.status}
+                  onValueChange={val => set('status', val as ProductStatus)}
+                  options={(Object.keys(STATUS_LABELS) as ProductStatus[])
+                    .filter(s => s !== 'archived')
+                    .map(s => ({ value: s, label: STATUS_LABELS[s] }))}
+                  fullWidth
+                />
+              </div>
+            </Tabs.Content>
+
+            <Tabs.Content value="imagenes">
+              <Text variant="body" color="secondary" tag="p">Próximamente: gestión de imágenes del producto.</Text>
+            </Tabs.Content>
+
+            <Tabs.Content value="variantes">
+              <Text variant="body" color="secondary" tag="p">Próximamente: gestión de variantes del producto.</Text>
+            </Tabs.Content>
+          </Tabs>
         </Drawer.Body>
 
         <Drawer.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <StoreButton type="button" emphasis="outlined" size="md" onClick={onClose}>Cancelar</StoreButton>
           <StoreButton size="md" disabled={loading} onClick={handleSubmit} data-testid="prod-submit-btn">
-            {loading ? 'Guardando...' : product ? 'Guardar cambios' : 'Crear producto'}
+            {loading ? 'Guardando...' : savedProduct ? 'Guardar cambios' : 'Crear producto'}
           </StoreButton>
         </Drawer.Footer>
       </>
@@ -341,6 +381,7 @@ export default function GestionProductosPage() {
   }
 
   function handleSaved() { setDrawerOpen(false); load(page, search, statusFilter); loadCounts(); }
+  function handleCreated() { load(page, search, statusFilter); loadCounts(); }
 
   return (
     <main style={{ padding: '32px' }}>
@@ -443,7 +484,7 @@ export default function GestionProductosPage() {
       )}
 
       {drawerOpen && (
-        <ProductDrawer product={editing} categories={categoryList.filter(c => c.status === 'active')} onClose={() => setDrawerOpen(false)} onSaved={handleSaved} />
+        <ProductDrawer product={editing} categories={categoryList.filter(c => c.status === 'active')} onClose={() => setDrawerOpen(false)} onSaved={handleSaved} onCreated={handleCreated} />
       )}
 
       {confirmModal && (
