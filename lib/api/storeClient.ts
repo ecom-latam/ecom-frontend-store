@@ -166,6 +166,9 @@ export interface StoreInfo {
   content?: { type: string; data: Record<string, unknown> }[];
   hasCatalog?: boolean;
   hasPurchases?: boolean;
+  // EC-568: solo tipado por consistencia -- EC-14 (analiticas) no existe
+  // todavia, nada lee este campo en el storefront.
+  hasMetrics?: boolean;
 }
 
 export interface ProductReview {
