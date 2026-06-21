@@ -8,6 +8,26 @@ export interface ProductImage {
   isMain: boolean;
 }
 
+export interface ProductOptionRef {
+  storeOptionId: string;
+  storeOptionName: string;
+}
+
+export interface VariantCombinationEntry {
+  optionId: string;
+  optionName: string;
+  value: string;
+}
+
+export interface ProductVariant {
+  _id: string;
+  combination: VariantCombinationEntry[];
+  price: number | null;
+  stock: number;
+  images: ProductImage[];
+  enabled: boolean;
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -20,6 +40,8 @@ export interface Product {
   categoryId: string | null;
   images: ProductImage[];
   hasVariants: boolean;
+  linkedOptions: ProductOptionRef[];
+  variants: ProductVariant[];
   createdAt: string;
   updatedAt: string;
 }
@@ -89,4 +111,10 @@ export const products = {
 
   reorderImages: (id: string, order: string[]) =>
     apiClient.put<ProductImage[]>(`${BASE}/${id}/images/order`, { order }),
+
+  setOptions: (id: string, optionIds: string[]) =>
+    apiClient.put<Product>(`${BASE}/${id}/options`, { options: optionIds }),
+
+  updateVariant: (id: string, variantId: string, payload: Partial<Pick<ProductVariant, 'price' | 'stock' | 'enabled'>>) =>
+    apiClient.put<ProductVariant>(`${BASE}/${id}/variants/${variantId}`, payload),
 };
