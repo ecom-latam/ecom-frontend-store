@@ -257,13 +257,43 @@ function combinationLabel(combination: ProductVariant['combination']): string {
 }
 
 interface VariantRowProps {
+  productId: string;
   variant: ProductVariant;
   onSave: (variantId: string, payload: Partial<Pick<ProductVariant, 'price' | 'stock' | 'enabled'>>) => void;
+  onImagesChange: (variantId: string, images: ProductImage[]) => void;
 }
 
-function VariantRow({ variant, onSave }: VariantRowProps) {
+function VariantRow({ productId, variant, onSave, onImagesChange }: VariantRowProps) {
   const [price, setPrice] = useState<number | null>(variant.price);
   const [stock, setStock] = useState(String(variant.stock));
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleFilesSelected(fileList: FileList | null) {
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList);
+    setUploading(true);
+    try {
+      for (const file of files) {
+        const { data } = await productsApi.addVariantImage(productId, variant._id, file);
+        onImagesChange(variant._id, data);
+      }
+    } catch {
+      // errores mostrados via modal global (axios interceptor)
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }
+
+  async function handleDeleteImage(publicId: string) {
+    try {
+      const { data } = await productsApi.deleteVariantImage(productId, variant._id, publicId);
+      onImagesChange(variant._id, data);
+    } catch {
+      // errores mostrados via modal global
+    }
+  }
 
   return (
     <Table.Row data-testid="var-row">
@@ -291,6 +321,51 @@ function VariantRow({ variant, onSave }: VariantRowProps) {
           onCheckedChange={enabled => onSave(variant._id, { enabled })}
           data-testid="var-enabled-switch"
         />
+      </Table.Td>
+      <Table.Td>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }} data-testid="var-images-list">
+          {variant.images.map(img => (
+            <div key={img.publicId} style={{ position: 'relative', width: 28, height: 28 }} data-testid="var-image-thumb">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={img.url} alt="" style={{ width: 28, height: 28, objectFit: 'cover', borderRadius: 'var(--radius-sm)', display: 'block' }} />
+              <button
+                type="button"
+                onClick={() => handleDeleteImage(img.publicId)}
+                aria-label="Eliminar imagen"
+                data-testid="var-image-delete-btn"
+                style={{
+                  position: 'absolute', top: -4, right: -4, width: 14, height: 14, borderRadius: '50%',
+                  background: 'var(--color-error-500)', color: 'white', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
+                }}
+              >
+                <Icon name="x" size="xs" />
+              </button>
+            </div>
+          ))}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            hidden
+            onChange={e => handleFilesSelected(e.target.files)}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            aria-label="Subir imagen"
+            data-testid="var-image-upload-btn"
+            style={{
+              width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: '1px dashed var(--color-border-default)', borderRadius: 'var(--radius-sm)',
+              background: 'none', cursor: 'pointer', color: 'var(--color-fg-muted)',
+            }}
+          >
+            <Icon name="plus" size="xs" />
+          </button>
+        </div>
       </Table.Td>
     </Table.Row>
   );
@@ -389,11 +464,21 @@ function VariantsTab({ productId, product, onChange }: VariantsTabProps) {
                 <Table.Th style={{ textAlign: 'center' }}>Precio</Table.Th>
                 <Table.Th style={{ textAlign: 'center' }}>Stock</Table.Th>
                 <Table.Th style={{ textAlign: 'center' }}>Habilitada</Table.Th>
+                <Table.Th>Imágenes</Table.Th>
               </tr>
             </Table.Head>
             <Table.Body>
               {product.variants.map(variant => (
-                <VariantRow key={variant._id} variant={variant} onSave={handleVariantSave} />
+                <VariantRow
+                  key={variant._id}
+                  productId={productId}
+                  variant={variant}
+                  onSave={handleVariantSave}
+                  onImagesChange={(variantId, images) => onChange({
+                    ...product,
+                    variants: product.variants.map(v => v._id === variantId ? { ...v, images } : v),
+                  })}
+                />
               ))}
             </Table.Body>
           </Table.Root>
