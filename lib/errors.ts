@@ -46,6 +46,10 @@ const errors: Record<string, ErrorDefinition> = {
   'MS03-ERR022': { message: 'Ya existe un producto con ese nombre', severity: 'info' },
   'MS03-ERR023': { message: 'Llegaste al límite de productos de tu plan', detail: 'Mejorá tu plan para crear más productos.', severity: 'info' },
 
+  // ── Catálogo — Imágenes (MS03) ────────────────────────────────────────────
+  'MS03-ERR041': { message: 'Llegaste al límite de imágenes', detail: 'Cada variante comparte el mismo límite de imágenes que el producto. Eliminá alguna para subir otra.', severity: 'info' },
+  'MS03-ERR045': { message: 'No se recibió ningún archivo', severity: 'info' },
+
   // ── Catálogo — Variantes (MS03) ───────────────────────────────────────────
   'MS03-ERR060': { message: 'No encontramos esa variante', severity: 'info' },
   'MS03-ERR061': { message: 'Las opciones seleccionadas no son válidas', severity: 'info' },

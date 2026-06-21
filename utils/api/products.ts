@@ -117,4 +117,13 @@ export const products = {
 
   updateVariant: (id: string, variantId: string, payload: Partial<Pick<ProductVariant, 'price' | 'stock' | 'enabled'>>) =>
     apiClient.put<ProductVariant>(`${BASE}/${id}/variants/${variantId}`, payload),
+
+  addVariantImage: (id: string, variantId: string, file: File) => {
+    const form = new FormData();
+    form.append('image', file);
+    return apiClient.post<ProductImage[]>(`${BASE}/${id}/variants/${variantId}/images`, form);
+  },
+
+  deleteVariantImage: (id: string, variantId: string, publicId: string) =>
+    apiClient.delete<ProductImage[]>(`${BASE}/${id}/variants/${variantId}/images`, { data: { publicId } }),
 };
