@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { products as productsApi, categories as categoriesApi } from '@/utils/api';
 import { triggerErrorModal } from '@/lib/errorModal';
-import type { Product, ProductPayload, ProductStatus, Category } from '@/utils/api';
-import { Modal, Drawer, Table, Badge, Pagination, Text, Tabs, Tooltip } from 'zoui';
+import type { Product, ProductPayload, ProductStatus, ProductImage, Category } from '@/utils/api';
+import { Modal, Drawer, Table, Badge, Pagination, Text, Tabs, Tooltip, Icon } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { StoreInput } from '@/components/ui/StoreInput';
 import { StoreMoneyInput } from '@/components/ui/StoreMoneyInput';
@@ -99,6 +99,154 @@ function ConfirmModal({ title, message, confirmLabel, danger = false, onConfirm,
         <StoreButton emphasis="outlined" size="md" onClick={onCancel}>Cancelar</StoreButton>
       </Modal.Footer>
     </Modal>
+  );
+}
+
+// ─── Images Tab ───────────────────────────────────────────────────────────────
+
+const UPLOAD_CHUNK_SIZE = 5; // limite del backend por request (multer upload.array)
+
+interface ImagesTabProps {
+  productId: string;
+  images: ProductImage[];
+  onChange: (images: ProductImage[]) => void;
+}
+
+function ImagesTab({ productId, images, onChange }: ImagesTabProps) {
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const dragIndexRef = useRef<number | null>(null);
+
+  async function handleFilesSelected(fileList: FileList | null) {
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList);
+    setUploading(true);
+    try {
+      for (let i = 0; i < files.length; i += UPLOAD_CHUNK_SIZE) {
+        const chunk = files.slice(i, i + UPLOAD_CHUNK_SIZE);
+        const { data } = await productsApi.uploadImages(productId, chunk);
+        onChange(data);
+      }
+    } catch {
+      // errores mostrados via modal global (axios interceptor)
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }
+
+  async function handleDelete(publicId: string) {
+    try {
+      const { data } = await productsApi.deleteImage(productId, publicId);
+      onChange(data);
+    } catch {
+      // errores mostrados via modal global
+    }
+  }
+
+  async function handleSetMain(publicId: string) {
+    try {
+      const { data } = await productsApi.setMainImage(productId, publicId);
+      onChange(data);
+    } catch {
+      // errores mostrados via modal global
+    }
+  }
+
+  async function handleDrop(targetIndex: number) {
+    const fromIndex = dragIndexRef.current;
+    dragIndexRef.current = null;
+    if (fromIndex === null || fromIndex === targetIndex) return;
+    const reordered = [...images];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(targetIndex, 0, moved);
+    onChange(reordered);
+    try {
+      const { data } = await productsApi.reorderImages(productId, reordered.map(img => img.publicId));
+      onChange(data);
+    } catch {
+      onChange(images);
+    }
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          hidden
+          onChange={e => handleFilesSelected(e.target.files)}
+        />
+        <StoreButton
+          size="md"
+          emphasis="outlined"
+          disabled={uploading}
+          onClick={() => fileInputRef.current?.click()}
+          data-testid="prod-images-upload-btn"
+        >
+          {uploading ? 'Subiendo...' : 'Subir imágenes'}
+        </StoreButton>
+      </div>
+
+      {images.length === 0 ? (
+        <Text variant="body-sm" color="muted" tag="p">Todavía no hay imágenes para este producto.</Text>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }} data-testid="prod-images-grid">
+          {images.map((img, index) => (
+            <div
+              key={img.publicId}
+              draggable
+              onDragStart={() => { dragIndexRef.current = index; }}
+              onDragOver={e => e.preventDefault()}
+              onDrop={() => handleDrop(index)}
+              data-testid="prod-image-card"
+              style={{
+                position: 'relative',
+                border: '1px solid var(--color-border-default)',
+                borderRadius: 'var(--radius-md)',
+                overflow: 'hidden',
+                cursor: 'grab',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={img.url} alt="" style={{ width: '100%', height: 110, objectFit: 'cover', display: 'block' }} />
+
+              {img.isMain && (
+                <Badge tone="success" variant="pill" style={{ position: 'absolute', top: 6, left: 6 }}>Principal</Badge>
+              )}
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 8px' }}>
+                {img.isMain ? (
+                  <span />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleSetMain(img.publicId)}
+                    title="Marcar como principal"
+                    data-testid="prod-image-set-main-btn"
+                    style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-fg-muted)' }}
+                  >
+                    <Icon name="star" size="sm" />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => handleDelete(img.publicId)}
+                  title="Eliminar imagen"
+                  data-testid="prod-image-delete-btn"
+                  style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-error-500)' }}
+                >
+                  <Icon name="trash" size="sm" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -259,7 +407,13 @@ function ProductDrawer({ product, categories, onClose, onSaved, onCreated }: Pro
             </Tabs.Content>
 
             <Tabs.Content value="imagenes">
-              <Text variant="body" color="secondary" tag="p">Próximamente: gestión de imágenes del producto.</Text>
+              {savedProduct && (
+                <ImagesTab
+                  productId={savedProduct._id}
+                  images={savedProduct.images}
+                  onChange={images => setSavedProduct(p => p && { ...p, images })}
+                />
+              )}
             </Tabs.Content>
 
             <Tabs.Content value="variantes">
