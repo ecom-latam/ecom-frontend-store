@@ -1,10 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { products as productsApi, categories as categoriesApi } from '@/utils/api';
+import { products as productsApi, categories as categoriesApi, storeOptions as storeOptionsApi } from '@/utils/api';
 import { triggerErrorModal } from '@/lib/errorModal';
-import type { Product, ProductPayload, ProductStatus, ProductImage, Category } from '@/utils/api';
-import { Modal, Drawer, Table, Badge, Pagination, Text, Tabs, Tooltip, Icon } from 'zoui';
+import type { Product, ProductPayload, ProductStatus, ProductImage, ProductVariant, StoreOption, Category } from '@/utils/api';
+import { Modal, Drawer, Table, Badge, Pagination, Text, Tabs, Tooltip, Icon, Switch } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { StoreInput } from '@/components/ui/StoreInput';
 import { StoreMoneyInput } from '@/components/ui/StoreMoneyInput';
@@ -250,6 +250,159 @@ function ImagesTab({ productId, images, onChange }: ImagesTabProps) {
   );
 }
 
+// ─── Variants Tab ─────────────────────────────────────────────────────────────
+
+function combinationLabel(combination: ProductVariant['combination']): string {
+  return combination.map(c => `${c.optionName}: ${c.value}`).join(' / ');
+}
+
+interface VariantRowProps {
+  variant: ProductVariant;
+  onSave: (variantId: string, payload: Partial<Pick<ProductVariant, 'price' | 'stock' | 'enabled'>>) => void;
+}
+
+function VariantRow({ variant, onSave }: VariantRowProps) {
+  const [price, setPrice] = useState<number | null>(variant.price);
+  const [stock, setStock] = useState(String(variant.stock));
+
+  return (
+    <Table.Row data-testid="var-row">
+      <Table.Td>{combinationLabel(variant.combination)}</Table.Td>
+      <Table.Td style={{ textAlign: 'center' }}>
+        <StoreMoneyInput
+          value={price}
+          placeholder="Precio base"
+          onValueChange={setPrice}
+          onBlur={() => onSave(variant._id, { price })}
+          data-testid="var-price-input"
+        />
+      </Table.Td>
+      <Table.Td style={{ textAlign: 'center' }}>
+        <StoreNumberInput
+          value={stock}
+          onChange={e => setStock(e.target.value)}
+          onBlur={() => onSave(variant._id, { stock: parseInt(stock, 10) || 0 })}
+          data-testid="var-stock-input"
+        />
+      </Table.Td>
+      <Table.Td style={{ textAlign: 'center' }}>
+        <Switch
+          checked={variant.enabled}
+          onCheckedChange={enabled => onSave(variant._id, { enabled })}
+          data-testid="var-enabled-switch"
+        />
+      </Table.Td>
+    </Table.Row>
+  );
+}
+
+interface VariantsTabProps {
+  productId: string;
+  product: Product;
+  onChange: (product: Product) => void;
+}
+
+function VariantsTab({ productId, product, onChange }: VariantsTabProps) {
+  const [allOptions, setAllOptions] = useState<StoreOption[]>([]);
+  const [selected, setSelected] = useState<Set<string>>(
+    new Set(product.linkedOptions.map(o => o.storeOptionId))
+  );
+  const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    storeOptionsApi.list().then(({ data }) => setAllOptions(data)).catch(() => {});
+  }, []);
+
+  function toggleOption(id: string) {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  async function handleGenerate() {
+    setGenerating(true);
+    try {
+      const { data } = await productsApi.setOptions(productId, Array.from(selected));
+      onChange(data);
+    } catch {
+      // errores mostrados via modal global (axios interceptor)
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  async function handleVariantSave(variantId: string, payload: Partial<Pick<ProductVariant, 'price' | 'stock' | 'enabled'>>) {
+    try {
+      const { data } = await productsApi.updateVariant(productId, variantId, payload);
+      onChange({
+        ...product,
+        variants: product.variants.map(v => v._id === variantId ? data : v),
+      });
+    } catch {
+      // errores mostrados via modal global
+    }
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div>
+        <Text variant="label" tag="p" style={{ marginBottom: 8 }}>Opciones que definen las variantes</Text>
+        {allOptions.length === 0 ? (
+          <Text variant="body-sm" color="muted" tag="p">
+            Todavía no creaste ninguna opción. Creálas desde Catálogo → Opciones.
+          </Text>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {allOptions.map(opt => (
+              <Switch
+                key={opt._id}
+                label={`${opt.name} (${opt.values.join(', ')})`}
+                checked={selected.has(opt._id)}
+                onCheckedChange={() => toggleOption(opt._id)}
+                data-testid="var-option-switch"
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <StoreButton
+          size="md"
+          emphasis="outlined"
+          disabled={generating || selected.size === 0}
+          onClick={handleGenerate}
+          data-testid="var-generate-btn"
+        >
+          {generating ? 'Generando...' : 'Generar variantes'}
+        </StoreButton>
+      </div>
+
+      {product.hasVariants && product.variants.length > 0 && (
+        <Table>
+          <Table.Root compact>
+            <Table.Head>
+              <tr>
+                <Table.Th>Combinación</Table.Th>
+                <Table.Th style={{ textAlign: 'center' }}>Precio</Table.Th>
+                <Table.Th style={{ textAlign: 'center' }}>Stock</Table.Th>
+                <Table.Th style={{ textAlign: 'center' }}>Habilitada</Table.Th>
+              </tr>
+            </Table.Head>
+            <Table.Body>
+              {product.variants.map(variant => (
+                <VariantRow key={variant._id} variant={variant} onSave={handleVariantSave} />
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Table>
+      )}
+    </div>
+  );
+}
+
 // ─── Product Drawer ───────────────────────────────────────────────────────────
 
 const SECTION_LOCKED_MESSAGE = 'Guardá los datos básicos primero para habilitar esta sección.';
@@ -417,7 +570,13 @@ function ProductDrawer({ product, categories, onClose, onSaved, onCreated }: Pro
             </Tabs.Content>
 
             <Tabs.Content value="variantes">
-              <Text variant="body" color="secondary" tag="p">Próximamente: gestión de variantes del producto.</Text>
+              {savedProduct && (
+                <VariantsTab
+                  productId={savedProduct._id}
+                  product={savedProduct}
+                  onChange={updated => setSavedProduct(updated)}
+                />
+              )}
             </Tabs.Content>
           </Tabs>
         </Drawer.Body>

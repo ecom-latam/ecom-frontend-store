@@ -5,7 +5,7 @@ export { categories } from './categories';
 export { storeOptions } from './storeOptions';
 export { orders } from './orders';
 export { addresses } from './addresses';
-export type { Product, ProductListResponse, ProductListParams, ProductPayload, ProductStatus, ProductImage } from './products';
+export type { Product, ProductListResponse, ProductListParams, ProductPayload, ProductStatus, ProductImage, ProductOptionRef, VariantCombinationEntry, ProductVariant } from './products';
 export type { Category, CategoryPayload } from './categories';
 export type { StoreOption, StoreOptionPayload } from './storeOptions';
 export type { Order, OrderItem, OrderListResponse, CreateOrderPayload, ShippingAddress, PaymentMethod, PaymentStatus, OrderStatus, AdminOrderListParams } from './orders';
