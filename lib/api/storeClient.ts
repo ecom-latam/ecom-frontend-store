@@ -162,6 +162,10 @@ export interface StoreInfo {
   reviews_enabled?: boolean;
   hide_out_of_stock_products?: boolean;
   store_policies?: StorePolicies;
+  // ── De ecom-page (EC-553) ──
+  content?: { type: string; data: Record<string, unknown> }[];
+  hasCatalog?: boolean;
+  hasPurchases?: boolean;
 }
 
 export interface ProductReview {
@@ -191,15 +195,29 @@ export interface ProductReviewsResponse {
   distribution: ReviewDistribution;
 }
 
+// EC-553: branding (name, logo, colores, tipografia, theme, background) vive
+// en ecom-page; la config comercial publica (currency, mp_public_key, toggles
+// de catalogo) sigue en ecom-store. Se piden en paralelo y se mergean en un
+// solo objeto para no tener que tocar cada consumidor de StoreInfo.
 export async function getStoreInfo(): Promise<StoreInfo | null> {
   const slug = await getSlug();
   try {
-    const res = await fetch(`${BFF_BASE_URL}/api/store/public?_store=${slug}`, {
-      headers: { 'X-Tenant-Slug': slug },
-      cache: 'no-store',
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as StoreInfo;
+    const [pageRes, storeRes] = await Promise.all([
+      fetch(`${BFF_BASE_URL}/api/page/public?_store=${slug}`, {
+        headers: { 'X-Tenant-Slug': slug },
+        cache: 'no-store',
+      }),
+      fetch(`${BFF_BASE_URL}/api/store/public?_store=${slug}`, {
+        headers: { 'X-Tenant-Slug': slug },
+        cache: 'no-store',
+      }),
+    ]);
+
+    if (!pageRes.ok && !storeRes.ok) return null;
+
+    const page = pageRes.ok ? await pageRes.json().catch(() => ({})) : {};
+    const store = storeRes.ok ? await storeRes.json().catch(() => ({})) : {};
+    return { ...page, ...store } as StoreInfo;
   } catch {
     return null;
   }

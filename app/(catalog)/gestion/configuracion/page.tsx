@@ -54,7 +54,8 @@ export default function ConfiguracionPage() {
   async function handleSaveColor() {
     setSavingColor(true);
     try {
-      await apiClient.patch('/api/store/store/config/brand-hue', { brand_hue: hue });
+      // EC-553: branding (brand_hue) se movio de ecom-store a ecom-page.
+      await apiClient.patch('/api/page', { brand_hue: hue });
       toast({ message: 'Color de marca guardado', type: 'success' });
     } catch {
       toast({ message: 'No se pudo guardar el color', type: 'error' });

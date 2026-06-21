@@ -46,15 +46,23 @@ function writeSession(config: Record<string, unknown>): void {
   } catch {}
 }
 
+// EC-553: branding (theme, background, brand_hue, font_family, etc.) vive en
+// ecom-page; el resto (currency, mp_public_key, toggles de catalogo) sigue en
+// ecom-store. Se piden en paralelo y se mergean, igual que getStoreInfo() en
+// lib/api/storeClient.ts (acá no se puede reusar esa funcion porque usa
+// next/headers, server-only).
 async function fetchConfig(): Promise<Record<string, unknown> | null> {
   try {
     const slug = getSlug();
-    const res = await fetch(`${BFF_URL}/api/store/public?_store=${slug}`, {
-      headers: { 'X-Tenant-Slug': slug },
-      cache: 'no-store',
-    });
-    if (!res.ok) return null;
-    return await res.json();
+    const headers = { 'X-Tenant-Slug': slug };
+    const [pageRes, storeRes] = await Promise.all([
+      fetch(`${BFF_URL}/api/page/public?_store=${slug}`, { headers, cache: 'no-store' }),
+      fetch(`${BFF_URL}/api/store/public?_store=${slug}`, { headers, cache: 'no-store' }),
+    ]);
+    if (!pageRes.ok && !storeRes.ok) return null;
+    const page = pageRes.ok ? await pageRes.json().catch(() => ({})) : {};
+    const store = storeRes.ok ? await storeRes.json().catch(() => ({})) : {};
+    return { ...page, ...store };
   } catch {
     return null;
   }
