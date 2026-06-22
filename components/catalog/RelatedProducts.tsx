@@ -3,7 +3,7 @@ import { ProductCard, ProductGrid as ProductGridUI } from 'zoui';
 import { getProducts } from '@/lib/api/storeClient';
 import type { Product } from '@/lib/api/storeClient';
 import { formatPrice } from '@/lib/format';
-import type { Currency } from '@/context/StoreConfigContext';
+import type { Currency } from '@/context/PageConfigContext';
 
 interface RelatedProductsProps {
   categoryId: string;

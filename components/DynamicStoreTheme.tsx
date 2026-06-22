@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { brandScale, BRAND_STEPS, ZouiThemeProvider } from 'zoui';
 import type { SurfaceVariant } from 'zoui';
-import { StoreConfigContext } from '@/context/StoreConfigContext';
-import type { StoreConfig } from '@/context/StoreConfigContext';
+import { PageConfigContext } from '@/context/PageConfigContext';
+import type { PageConfig } from '@/context/PageConfigContext';
 
 const SESSION_KEY = 'store-theme-config';
 const BFF_URL = process.env.NEXT_PUBLIC_BFF_URL ?? 'http://localhost:4000';
@@ -46,49 +46,44 @@ function writeSession(config: Record<string, unknown>): void {
   } catch {}
 }
 
-// EC-553: branding (theme, background, brand_hue, font_family, etc.) vive en
-// ecom-page; el resto (currency, mp_public_key, toggles de catalogo) sigue en
-// ecom-store. Se piden en paralelo y se mergean, igual que getStoreInfo() en
-// lib/api/storeClient.ts (acá no se puede reusar esa funcion porque usa
-// next/headers, server-only).
-async function fetchConfig(): Promise<Record<string, unknown> | null> {
+// EC-632/633: un solo fetch a /api/page/public -- ecom-page ya embebe la
+// config comercial de ecom-store bajo `store` cuando la tienda tiene
+// catalogo, asi que el front no pide mas los dos servicios por separado.
+async function fetchPageInfo(): Promise<Record<string, unknown> | null> {
   try {
     const slug = getSlug();
-    const headers = { 'X-Tenant-Slug': slug };
-    const [pageRes, storeRes] = await Promise.all([
-      fetch(`${BFF_URL}/api/page/public?_store=${slug}`, { headers, cache: 'no-store' }),
-      fetch(`${BFF_URL}/api/store/public?_store=${slug}`, { headers, cache: 'no-store' }),
-    ]);
-    if (!pageRes.ok && !storeRes.ok) return null;
-    const page = pageRes.ok ? await pageRes.json().catch(() => ({})) : {};
-    const store = storeRes.ok ? await storeRes.json().catch(() => ({})) : {};
-    return { ...page, ...store };
+    const res = await fetch(`${BFF_URL}/api/page/public?_store=${slug}`, {
+      headers: { 'X-Tenant-Slug': slug },
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    return await res.json().catch(() => null);
   } catch {
     return null;
   }
 }
 
-function toStoreConfig(raw: Record<string, unknown>): StoreConfig {
+function toPageConfig(raw: Record<string, unknown>): PageConfig {
+  const store = (raw.store ?? undefined) as PageConfig['store'];
   return {
-    theme:      raw.theme      as string | undefined,
-    background: raw.background as string | undefined,
-    product_detail_layout: raw.product_detail_layout as string | undefined,
-    cart_layout:           raw.cart_layout           as string | undefined,
-    search_preset:         raw.search_preset         as string | undefined,
-    currency:              raw.currency === 'USD' ? 'USD' : 'ARS',
-    mp_public_key:         (raw.mp_public_key as string | null | undefined) ?? null,
-    promo_bar_enabled:     raw.promo_bar_enabled === true,
-    promo_bar_position:    (['above-navbar', 'below-navbar', 'footer'].includes(raw.promo_bar_position as string) ? raw.promo_bar_position : 'above-navbar') as 'above-navbar' | 'below-navbar' | 'footer',
-    free_shipping_min_amount: typeof raw.free_shipping_min_amount === 'number' ? raw.free_shipping_min_amount : null,
-    installments_count:    typeof raw.installments_count === 'number' ? raw.installments_count : null,
-    interest_free:         raw.interest_free === true,
-    ratings_enabled:       raw.ratings_enabled === true,
-    reviews_enabled:       raw.reviews_enabled === true,
-    // EC-559: default true (tienda completa) si todavia no llego la
-    // respuesta fresca de ecom-page -- mismo default que aplica el backend.
-    hasCatalog:            raw.hasCatalog !== false,
-    hasPurchases:          raw.hasPurchases !== false,
-    hasMetrics:            raw.hasMetrics === true,
+    theme:       raw.theme       as string | undefined,
+    hasCatalog:   raw.hasCatalog !== false,
+    hasPurchases: raw.hasPurchases !== false,
+    hasMetrics:   raw.hasMetrics === true,
+    store: store && {
+      currency:              store.currency === 'USD' ? 'USD' : 'ARS',
+      mp_public_key:         store.mp_public_key ?? null,
+      product_detail_layout: store.product_detail_layout,
+      cart_layout:           store.cart_layout,
+      search_preset:         store.search_preset,
+      promo_bar_enabled:     store.promo_bar_enabled === true,
+      promo_bar_position:    (['above-navbar', 'below-navbar', 'footer'].includes(store.promo_bar_position as string) ? store.promo_bar_position : 'above-navbar') as 'above-navbar' | 'below-navbar' | 'footer',
+      free_shipping_min_amount: typeof store.free_shipping_min_amount === 'number' ? store.free_shipping_min_amount : null,
+      installments_count:    typeof store.installments_count === 'number' ? store.installments_count : null,
+      interest_free:         store.interest_free === true,
+      ratings_enabled:       store.ratings_enabled === true,
+      reviews_enabled:       store.reviews_enabled === true,
+    },
   };
 }
 
@@ -99,7 +94,7 @@ export function DynamicStoreTheme({
   initialConfig: Record<string, unknown>;
   children: React.ReactNode;
 }) {
-  const [config, setConfig] = useState<StoreConfig>(() => toStoreConfig(initialConfig));
+  const [config, setConfig] = useState<PageConfig>(() => toPageConfig(initialConfig));
 
   function apply(raw: Record<string, unknown>) {
     if (typeof raw.brand_hue === 'number') {
@@ -109,14 +104,14 @@ export function DynamicStoreTheme({
     }
     if (typeof raw.font_family === 'string') applyFont(raw.font_family);
     if (typeof raw.theme === 'string') applyStoreTheme(raw.theme);
-    setConfig(toStoreConfig(raw));
+    setConfig(toPageConfig(raw));
   }
 
   useEffect(() => {
     const cached = readSession();
     if (cached) apply(cached);
 
-    fetchConfig().then((fresh) => {
+    fetchPageInfo().then((fresh) => {
       if (fresh) {
         writeSession(fresh);
         apply(fresh);
@@ -125,15 +120,17 @@ export function DynamicStoreTheme({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const backgroundVariant = (config.background ?? 'default') as SurfaceVariant;
+  // EC-628: el fondo de la tienda publica es siempre el del theme elegido --
+  // ya no es una seleccion independiente (background eliminado, ver EC-627/630).
+  const backgroundVariant = (config.theme ?? 'outlined') as SurfaceVariant;
 
   return (
-    <StoreConfigContext.Provider value={config}>
+    <PageConfigContext.Provider value={config}>
       <ZouiThemeProvider variant={config.theme}>
         <div className="zoui-surface" data-variant={backgroundVariant}>
           {children}
         </div>
       </ZouiThemeProvider>
-    </StoreConfigContext.Provider>
+    </PageConfigContext.Provider>
   );
 }

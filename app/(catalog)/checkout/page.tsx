@@ -10,11 +10,11 @@ import { PaymentMethodSection }   from '@/components/checkout/PaymentMethodSecti
 import { NotesSection }           from '@/components/checkout/NotesSection';
 import { OrderSummary }           from '@/components/checkout/OrderSummary';
 import { useCheckoutForm }        from '@/hooks/useCheckoutForm';
-import { useStoreConfig }         from '@/context/StoreConfigContext';
+import { usePageConfig }          from '@/context/PageConfigContext';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { hasPurchases } = useStoreConfig();
+  const { hasPurchases } = usePageConfig();
   const {
     ready, submitting, error,
     savedAddresses, selectedAddressId,

@@ -1,12 +1,13 @@
 'use client';
 import { MoneyInput } from 'zoui';
 import type { ComponentProps } from 'react';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 
 type Props = ComponentProps<typeof MoneyInput>;
 
 export function StoreMoneyInput({ currency, ...props }: Props) {
-  const { currency: storeCurrency } = useStoreConfig();
+  const { store } = usePageConfig();
+  const storeCurrency = store?.currency;
   return (
     <MoneyInput
       currency={currency ?? storeCurrency ?? 'ARS'}

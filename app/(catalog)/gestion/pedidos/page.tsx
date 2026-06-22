@@ -8,7 +8,7 @@ import { Badge, Table, Text, Pagination } from 'zoui';
 import { StoreSelect } from '@/components/ui/StoreSelect';
 import { StoreButton } from '@/components/ui/StoreButton';
 import type { BadgeTone } from 'zoui';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -47,7 +47,8 @@ const LIMIT = 20;
 
 export default function AdminPedidosPage() {
   const router = useRouter();
-  const { currency } = useStoreConfig();
+  const { store } = usePageConfig();
+  const currency = store?.currency;
 
   const [orderList, setOrderList] = useState<Order[]>([]);
   const [total, setTotal] = useState(0);

@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { Sidebar } from 'zoui';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import type React from 'react';
 
 const ELEVATED_ROLES = ['Admin', 'Manager'];
@@ -105,7 +105,7 @@ interface Props {
 export function GestionSidebar({ role }: Props) {
   const pathname = usePathname();
   const isElevated = ELEVATED_ROLES.includes(role);
-  const { hasCatalog, hasPurchases } = useStoreConfig();
+  const { hasCatalog, hasPurchases } = usePageConfig();
 
   function itemVisible(item: NavItem): boolean {
     if (item.requires === 'catalog') return hasCatalog !== false;

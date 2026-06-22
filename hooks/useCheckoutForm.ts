@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { getAccessTokenRole } from '@/utils/helpers';
 import { orders } from '@/utils/api/orders';
 import type { PaymentMethod, ShippingMethod } from '@/utils/api/orders';
@@ -36,9 +36,10 @@ const INITIAL_FORM: CheckoutForm = {
 export function useCheckoutForm() {
   const router = useRouter();
   const { items, itemCount, clearCart } = useCart();
-  const { currency, mp_public_key } = useStoreConfig();
+  const { store } = usePageConfig();
+  const currency = store?.currency;
 
-  const mpAvailable = !!mp_public_key && currency === 'ARS';
+  const mpAvailable = !!store?.mp_public_key && currency === 'ARS';
   const subtotal     = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const [ready,             setReady]             = useState(false);

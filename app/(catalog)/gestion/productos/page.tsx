@@ -11,7 +11,7 @@ import { StoreMoneyInput } from '@/components/ui/StoreMoneyInput';
 import { StoreNumberInput } from '@/components/ui/StoreNumberInput';
 import { StoreSelect } from '@/components/ui/StoreSelect';
 import { StoreTextarea } from '@/components/ui/StoreTextarea';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -680,7 +680,8 @@ function ProductDrawer({ product, categories, onClose, onSaved, onCreated }: Pro
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function GestionProductosPage() {
-  const { currency } = useStoreConfig();
+  const { store } = usePageConfig();
+  const currency = store?.currency;
   const [productList, setProductList] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);

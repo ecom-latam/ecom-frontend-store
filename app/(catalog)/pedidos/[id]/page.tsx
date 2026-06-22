@@ -9,7 +9,7 @@ import { orders } from '@/utils/api/orders';
 import type { Order } from '@/utils/api/orders';
 import { apiClient } from '@/utils/api';
 import { Button, Badge, Text, Modal } from 'zoui';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 import { StoreButton } from '@/components/ui/StoreButton';
 import type { BadgeTone } from 'zoui';
@@ -43,7 +43,7 @@ const PAYMENT_NOTE: Record<string, string | null> = {
   failed:      null,
 };
 
-interface StorePublic {
+interface TransferData {
   transfer_info?: string;
   transfer_cbu?: string;
   transfer_alias?: string;
@@ -52,7 +52,7 @@ interface StorePublic {
   transfer_cuit?: string;
 }
 
-function TransferInfo({ store }: { store: StorePublic }) {
+function TransferInfo({ store }: { store: TransferData }) {
   const fields = [
     { label: 'CBU',     value: store.transfer_cbu },
     { label: 'Alias',   value: store.transfer_alias },
@@ -94,11 +94,12 @@ function TransferInfo({ store }: { store: StorePublic }) {
 export default function OrderDetailPage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
-  const { currency, hasPurchases } = useStoreConfig();
+  const { hasPurchases, store: pageStore } = usePageConfig();
+  const currency = pageStore?.currency;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [order, setOrder]           = useState<Order | null>(null);
-  const [storeInfo, setStoreInfo]   = useState<StorePublic | null>(null);
+  const [storeInfo, setStoreInfo]   = useState<TransferData | null>(null);
   const [loading, setLoading]       = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [confirmModal, setConfirmModal]   = useState<'notify' | 'cancel' | null>(null);
@@ -116,12 +117,12 @@ export default function OrderDetailPage() {
     async function load() {
       setLoading(true);
       try {
-        const [orderRes, storeRes] = await Promise.all([
+        const [orderRes, pageRes] = await Promise.all([
           orders.getById(id),
-          apiClient.get<StorePublic>('/api/store/public').catch(() => ({ data: null })),
+          apiClient.get<{ store?: TransferData }>('/api/page/public').catch(() => ({ data: null })),
         ]);
         setOrder(orderRes.data);
-        setStoreInfo(storeRes.data);
+        setStoreInfo(pageRes.data?.store ?? null);
       } catch {
         setOrder(null);
       } finally {

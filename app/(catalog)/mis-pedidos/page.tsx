@@ -9,7 +9,7 @@ import type { Order } from '@/utils/api/orders';
 import { Badge, Text } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import type { BadgeTone } from 'zoui';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -32,7 +32,8 @@ const STATUS_TONE: Record<string, BadgeTone> = {
 
 export default function MisPedidosPage() {
   const router = useRouter();
-  const { currency, hasPurchases } = useStoreConfig();
+  const { hasPurchases, store } = usePageConfig();
+  const currency = store?.currency;
   const [orderList, setOrderList] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
