@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import type { PageRowData } from 'zoui';
 
 import { BFF_BASE_URL, client } from './client';
 
@@ -175,8 +176,8 @@ export interface PageInfo {
   brand2_lightness?: number | null;
   font_family?: string;
   theme?: string;
-  // ── De ecom-page (EC-553) ──
-  content?: { type: string; data: Record<string, unknown> }[];
+  // ── De ecom-page (EC-553, EC-582: content -> rows) ──
+  rows?: PageRowData[];
   hasCatalog?: boolean;
   hasPurchases?: boolean;
   // EC-568: solo tipado por consistencia -- EC-14 (analiticas) no existe
