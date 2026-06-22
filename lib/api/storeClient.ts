@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
@@ -133,20 +134,11 @@ export interface StorePolicies {
   warranty_months?: number;
 }
 
-export interface StoreInfo {
-  name: string;
-  description?: string;
-  logo_url?: string | null;
-  brand_hue?: number;
-  brand_saturation?: number;
-  brand_lightness?: number;
-  brand2_hue?: number | null;
-  brand2_saturation?: number | null;
-  brand2_lightness?: number | null;
-  font_family?: string;
+// EC-633: config comercial de ecom-store -- solo existe cuando la tienda
+// tiene catalogo (ver ecom-page EC-632, que es quien la embebe acá adentro).
+export interface StoreCommerceConfig {
   currency?: 'ARS' | 'USD';
-  theme?: string;
-  background?: string;
+  mp_public_key?: string | null;
   product_detail_layout?: string;
   cart_layout?: string;
   search_preset?: string;
@@ -163,6 +155,26 @@ export interface StoreInfo {
   reviews_enabled?: boolean;
   hide_out_of_stock_products?: boolean;
   store_policies?: StorePolicies;
+  transfer_info?: string;
+  transfer_cbu?: string;
+  transfer_alias?: string;
+  transfer_bank?: string;
+  transfer_owner?: string;
+  transfer_cuit?: string;
+}
+
+export interface PageInfo {
+  name: string;
+  description?: string;
+  logo_url?: string | null;
+  brand_hue?: number;
+  brand_saturation?: number;
+  brand_lightness?: number;
+  brand2_hue?: number | null;
+  brand2_saturation?: number | null;
+  brand2_lightness?: number | null;
+  font_family?: string;
+  theme?: string;
   // ── De ecom-page (EC-553) ──
   content?: { type: string; data: Record<string, unknown> }[];
   hasCatalog?: boolean;
@@ -170,6 +182,9 @@ export interface StoreInfo {
   // EC-568: solo tipado por consistencia -- EC-14 (analiticas) no existe
   // todavia, nada lee este campo en el storefront.
   hasMetrics?: boolean;
+  // EC-632/633: config comercial de ecom-store, embebida por ecom-page --
+  // ausente del todo en tiendas sin catalogo.
+  store?: StoreCommerceConfig;
 }
 
 export interface ProductReview {
@@ -199,33 +214,28 @@ export interface ProductReviewsResponse {
   distribution: ReviewDistribution;
 }
 
-// EC-553: branding (name, logo, colores, tipografia, theme, background) vive
-// en ecom-page; la config comercial publica (currency, mp_public_key, toggles
-// de catalogo) sigue en ecom-store. Se piden en paralelo y se mergean en un
-// solo objeto para no tener que tocar cada consumidor de StoreInfo.
-export async function getStoreInfo(): Promise<StoreInfo | null> {
+// EC-632/633: page es el concepto principal -- ecom-page embebe la config
+// comercial de ecom-store bajo `store` cuando la tienda tiene catalogo, asi
+// que el front pide un solo endpoint en vez de combinar dos por su cuenta.
+//
+// root layout, (catalog) layout y (catalog)/page.tsx llaman esto por separado
+// en el mismo render -- cache: 'no-store' rompe la memoizacion automatica de
+// fetch de Next, asi que sin el wrap de React.cache() cada llamada dispara su
+// propio request (visto en vivo: 4 requests a /api/page/public por una sola
+// carga de pagina, antes de este wrap).
+export const getPageInfo = cache(async (): Promise<PageInfo | null> => {
   const slug = await getSlug();
   try {
-    const [pageRes, storeRes] = await Promise.all([
-      fetch(`${BFF_BASE_URL}/api/page/public?_store=${slug}`, {
-        headers: { 'X-Tenant-Slug': slug },
-        cache: 'no-store',
-      }),
-      fetch(`${BFF_BASE_URL}/api/store/public?_store=${slug}`, {
-        headers: { 'X-Tenant-Slug': slug },
-        cache: 'no-store',
-      }),
-    ]);
-
-    if (!pageRes.ok && !storeRes.ok) return null;
-
-    const page = pageRes.ok ? await pageRes.json().catch(() => ({})) : {};
-    const store = storeRes.ok ? await storeRes.json().catch(() => ({})) : {};
-    return { ...page, ...store } as StoreInfo;
+    const res = await fetch(`${BFF_BASE_URL}/api/page/public?_store=${slug}`, {
+      headers: { 'X-Tenant-Slug': slug },
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    return (await res.json().catch(() => null)) as PageInfo | null;
   } catch {
     return null;
   }
-}
+});
 
 export async function getProductReviews(
   productId: string,

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Text } from 'zoui';
 import type { PaymentMethod } from '@/utils/api/orders';
-import type { Currency } from '@/context/StoreConfigContext';
+import type { Currency } from '@/context/PageConfigContext';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { formatPrice } from '@/lib/format';
 

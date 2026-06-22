@@ -9,7 +9,7 @@ import type { Order, OrderStatus } from '@/utils/api/orders';
 import { getNextAdminStatuses, getStepLabel } from '@/utils/workflows';
 import { Badge, Button, Text, Modal } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 import type { BadgeTone } from 'zoui';
 
@@ -61,7 +61,8 @@ const STATUS_ACTION_LABEL: Record<string, string> = {
 export default function AdminPedidoDetailPage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
-  const { currency } = useStoreConfig();
+  const { store } = usePageConfig();
+  const currency = store?.currency;
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);

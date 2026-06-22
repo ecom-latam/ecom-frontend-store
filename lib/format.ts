@@ -1,4 +1,4 @@
-import type { Currency } from '@/context/StoreConfigContext';
+import type { Currency } from '@/context/PageConfigContext';
 
 const SYMBOL: Record<Currency, string> = {
   ARS: '$',

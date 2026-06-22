@@ -6,7 +6,7 @@ import { Breadcrumbs } from 'zoui';
 import { ProductDetailSection } from '@/components/catalog/ProductDetailSection';
 import { RelatedProducts } from '@/components/catalog/RelatedProducts';
 import { RatingsBlock } from '@/components/catalog/RatingsBlock';
-import { getCategories, getProduct, getProductReviews, getStoreInfo } from '@/lib/api/storeClient';
+import { getCategories, getProduct, getProductReviews, getPageInfo } from '@/lib/api/storeClient';
 
 interface Props {
   searchParams: { id?: string };
@@ -43,7 +43,7 @@ export default async function ProductoPage({ searchParams }: Props) {
   const [product, categories, storeInfo] = await Promise.all([
     getProduct(id),
     getCategories(),
-    getStoreInfo(),
+    getPageInfo(),
   ]);
 
   // EC-559: tiendas tipo "informativa" no tienen catalogo.
@@ -51,7 +51,9 @@ export default async function ProductoPage({ searchParams }: Props) {
     redirect('/');
   }
 
-  const ratingsActive = storeInfo?.ratings_enabled || storeInfo?.reviews_enabled;
+  const store = storeInfo?.store;
+
+  const ratingsActive = store?.ratings_enabled || store?.reviews_enabled;
   const reviewsData = ratingsActive ? await getProductReviews(id, 3) : null;
 
   const category = categories.find((c) => c._id === String(product.categoryId));
@@ -67,15 +69,15 @@ export default async function ProductoPage({ searchParams }: Props) {
       )
     : (product.availableStock ?? product.stock);
 
-  const storeRatingsEnabled = storeInfo?.ratings_enabled ?? false;
-  const storeReviewsEnabled = storeInfo?.reviews_enabled ?? false;
+  const storeRatingsEnabled = store?.ratings_enabled ?? false;
+  const storeReviewsEnabled = store?.reviews_enabled ?? false;
 
   const discountPercent = hasDiscount && product.salePrice
     ? Math.round((1 - product.salePrice / product.price) * 100)
     : null;
 
-  const installmentsCount = storeInfo?.installments_count ?? null;
-  const interestFree = storeInfo?.interest_free ?? false;
+  const installmentsCount = store?.installments_count ?? null;
+  const interestFree = store?.interest_free ?? false;
   const showInstallments = installmentsCount !== null && installmentsCount > 1;
 
   const breadcrumbItems = [
@@ -102,23 +104,23 @@ export default async function ProductoPage({ searchParams }: Props) {
           showInstallments={showInstallments}
           installmentsCount={installmentsCount}
           interestFree={interestFree}
-          freeShippingMin={storeInfo?.free_shipping_min_amount}
-          lowStockThreshold={storeInfo?.low_stock_threshold ?? 0}
-          shareEnabled={storeInfo?.share_button_enabled ?? false}
-          buyNowEnabled={storeInfo?.buy_now_enabled ?? false}
-          returnsEnabled={storeInfo?.store_policies?.returns_enabled}
-          returnDays={storeInfo?.store_policies?.return_days}
-          warrantyEnabled={storeInfo?.store_policies?.warranty_enabled}
-          warrantyMonths={storeInfo?.store_policies?.warranty_months}
+          freeShippingMin={store?.free_shipping_min_amount}
+          lowStockThreshold={store?.low_stock_threshold ?? 0}
+          shareEnabled={store?.share_button_enabled ?? false}
+          buyNowEnabled={store?.buy_now_enabled ?? false}
+          returnsEnabled={store?.store_policies?.returns_enabled}
+          returnDays={store?.store_policies?.return_days}
+          warrantyEnabled={store?.store_policies?.warranty_enabled}
+          warrantyMonths={store?.store_policies?.warranty_months}
           categoryName={category?.name}
           categoryId={category?._id}
         />
 
-        {storeInfo?.related_products_enabled && category && (
+        {store?.related_products_enabled && category && (
           <RelatedProducts
             categoryId={String(category._id)}
             excludeId={id}
-            currency={storeInfo.currency ?? 'ARS'}
+            currency={store.currency ?? 'ARS'}
           />
         )}
 

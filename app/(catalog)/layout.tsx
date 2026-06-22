@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import { CatalogNavbar } from '@/components/catalog/CatalogNavbar';
 import { CartDrawer } from '@/components/catalog/CartDrawer';
 import { PromoBar } from '@/components/catalog/PromoBar';
-import { getStoreInfo } from '@/lib/api/storeClient';
+import { getPageInfo } from '@/lib/api/storeClient';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const info = await getStoreInfo();
+  const info = await getPageInfo();
   const name = info?.name ?? 'Tienda';
   return {
     title: {

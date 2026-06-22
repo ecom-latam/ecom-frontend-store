@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getAccessTokenRole } from '@/utils/helpers';
 import { GestionSidebar } from '@/components/gestion/GestionSidebar';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 
 const MANAGEMENT_ROLES = ['Admin', 'Manager', 'Seller'];
 
@@ -15,7 +15,7 @@ const PURCHASES_PATHS = ['/gestion/pedidos', '/gestion/clientes', '/gestion/repo
 export default function GestionLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { hasCatalog, hasPurchases } = useStoreConfig();
+  const { hasCatalog, hasPurchases } = usePageConfig();
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {

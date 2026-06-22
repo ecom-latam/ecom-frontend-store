@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 
 const BAR_STYLE: React.CSSProperties = {
   background: 'var(--color-brand-500)',
@@ -41,7 +41,8 @@ function buildMessages(
 }
 
 export function PromoBar({ position }: { position: 'above-navbar' | 'below-navbar' | 'footer' }) {
-  const { promo_bar_enabled, promo_bar_position, free_shipping_min_amount, installments_count, interest_free } = useStoreConfig();
+  const { store } = usePageConfig();
+  const { promo_bar_enabled, promo_bar_position, free_shipping_min_amount, installments_count, interest_free } = store ?? {};
   const [activeIndex, setActiveIndex] = useState(0);
 
   const messages = buildMessages(free_shipping_min_amount, installments_count, interest_free ?? false);

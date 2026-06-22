@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/context/CartContext';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { getAccessTokenRole } from '@/utils/helpers';
 import { Navbar } from 'zoui';
 
@@ -13,7 +13,7 @@ const MANAGEMENT_ROLES = ['Admin', 'Manager', 'Seller'];
 export function CatalogNavbar() {
   const router = useRouter();
   const { itemCount, openDrawer } = useCart();
-  const { hasCatalog, hasPurchases } = useStoreConfig();
+  const { hasCatalog, hasPurchases } = usePageConfig();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [canManage,  setCanManage]  = useState(false);

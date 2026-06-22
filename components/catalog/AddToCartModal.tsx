@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import type { Product, ProductVariant } from '@/lib/api/storeClient';
 import { Modal, Button, Text } from 'zoui';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 
 interface Props {
@@ -48,7 +48,8 @@ function isValueAvailable(
 
 export function AddToCartModal({ product, open, onClose, initialQuantity = 1 }: Props) {
   const { addItem, openDrawer } = useCart();
-  const { currency } = useStoreConfig();
+  const { store } = usePageConfig();
+  const currency = store?.currency;
 
   const optionNames = useMemo(
     () => product.linkedOptions.map((o) => o.storeOptionName),

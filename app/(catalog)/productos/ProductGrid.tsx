@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import type { Category, Product } from '@/lib/api/storeClient';
 import { ProductCard, ProductGrid as ProductGridUI, Pagination, EmptyState, Icon, Badge, Text } from 'zoui';
 import { StoreCatalogBar } from '@/components/catalog/StoreCatalogBar';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 
 interface Props {
@@ -52,7 +52,9 @@ export function ProductGrid({
   currentView,
 }: Props) {
   const router = useRouter();
-  const { currency, ratings_enabled } = useStoreConfig();
+  const { store } = usePageConfig();
+  const currency = store?.currency;
+  const ratings_enabled = store?.ratings_enabled;
 
   // Reconstruimos los params desde los props (server-passed) en vez de useSearchParams:
   // así esta vista no fuerza el client-render bailout del Suspense (evita los warnings de hidratación).
@@ -148,7 +150,8 @@ export function ProductGrid({
 }
 
 function ProductListItem({ product }: { product: Product }) {
-  const { currency } = useStoreConfig();
+  const { store } = usePageConfig();
+  const currency = store?.currency;
   const mainImage = getMainImage(product);
   const displayPrice = getDisplayPrice(product);
   const hasDiscount = product.salePrice !== null && product.salePrice < product.price;

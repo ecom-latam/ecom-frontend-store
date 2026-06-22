@@ -6,13 +6,14 @@ import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/context/CartContext';
 import { Drawer, Button, Text, Modal } from 'zoui';
-import { useStoreConfig } from '@/context/StoreConfigContext';
+import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 
 export function CartDrawer() {
   const router = useRouter();
   const { items, isLoading, drawerOpen, closeDrawer, updateItem, removeItem } = useCart();
-  const { currency } = useStoreConfig();
+  const { store } = usePageConfig();
+  const currency = store?.currency;
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
   const [stockLimits, setStockLimits] = useState<Record<string, number>>({});
 

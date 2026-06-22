@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Text } from 'zoui';
-import type { StoreInfo } from '@/lib/api/storeClient';
+import type { PageInfo } from '@/lib/api/storeClient';
 
 type ContentBlock = { type: string; data: Record<string, unknown> };
 
@@ -36,7 +36,7 @@ function ContentBlockView({ block }: { block: ContentBlock }) {
 // EC-559: home de tiendas tipo "informativa" (sin catalogo) -- renderiza el
 // branding y los bloques de contenido generico de ecom-page (EC-548). No
 // existia ningun render de `content` en este storefront todavia.
-export function InformationalHome({ storeInfo }: { storeInfo: StoreInfo }) {
+export function InformationalHome({ storeInfo }: { storeInfo: PageInfo }) {
   const content = storeInfo.content ?? [];
 
   return (
