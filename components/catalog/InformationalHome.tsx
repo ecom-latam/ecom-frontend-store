@@ -1,10 +1,15 @@
+'use client';
+
 import Image from 'next/image';
 import { Text, PageRow, PageBlockRenderer } from 'zoui';
 import type { PageInfo } from '@/lib/api/storeClient';
 
 // EC-559/EC-589: home de tiendas tipo "informativa" (sin catalogo) --
 // renderiza el branding + las rows de contenido generico de ecom-page
-// (EC-582/583, DynamicPageRenderer de zoui).
+// (EC-582/583, DynamicPageRenderer de zoui). 'use client' es necesario --
+// PageRow recibe `renderBlock`, una funcion, y los Server Components no
+// pueden pasar funciones como prop a un Client Component (PageRow es
+// 'use client' en zoui).
 export function InformationalHome({ storeInfo }: { storeInfo: PageInfo }) {
   const rows = storeInfo.rows ?? [];
 
