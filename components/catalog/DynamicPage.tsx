@@ -9,7 +9,7 @@ import type { PageContent } from '@/lib/api/storeClient';
 export function DynamicPage({ page }: { page: PageContent }) {
   return (
     <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="p-4">
         {page.title && (
           <Text variant="heading-1" tag="h1" style={{ marginBottom: '24px' }}>{page.title}</Text>
         )}

@@ -16,7 +16,7 @@ export function InformationalHome({ storeInfo }: { storeInfo: PageInfo }) {
 
   return (
     <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="p-4">
         {storeInfo.logo_url && (
           <div style={{ position: 'relative', width: 96, height: 96, marginBottom: '24px', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
             <Image src={storeInfo.logo_url} alt={storeInfo.name} fill sizes="96px" className="object-cover" />
