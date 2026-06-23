@@ -35,13 +35,21 @@ export function CatalogNavbar() {
     document.cookie = `ui-theme=${next}; path=/; max-age=31536000`;
   }, [isDark]);
 
-  // EC-559: "Inicio" solo tiene sentido como link separado en tiendas con
-  // catalogo (la home es informativa por default y el logo ya apunta ahi).
-  // EC-588: las paginas del page builder (sin 'home', que ya tiene su link
-  // de "Inicio" arriba) van despues, en el orden en que se crearon.
+  const homePage = pages?.find((p) => p.slug === 'home');
+  const otherPages = pages?.filter((p) => p.slug !== 'home') ?? [];
+
+  // EC-559/646: en tiendas con catalogo, "Inicio" -> '/' siempre redirige a
+  // /productos (el logo ya apunta ahi, pero se deja el link explicito como
+  // siempre). En tiendas sin catalogo, '/' es justo donde se renderiza el
+  // contenido real de 'home' -- ahi el link sale de esa misma pagina (su
+  // titulo, o "Inicio" si no le pusieron uno) en vez de omitirse.
+  // EC-588: las demas paginas del page builder van despues, en el orden en
+  // que se crearon.
   const links = [
-    ...(hasCatalog !== false ? [{ label: 'Inicio', onClick: () => router.push('/') }] : []),
-    ...(pages ?? []).map((p) => ({ label: p.title || p.slug, onClick: () => router.push(`/${p.slug}`) })),
+    ...(hasCatalog !== false
+      ? [{ label: 'Inicio', onClick: () => router.push('/') }]
+      : homePage ? [{ label: homePage.title || 'Inicio', onClick: () => router.push('/') }] : []),
+    ...otherPages.map((p) => ({ label: p.title || p.slug, onClick: () => router.push(`/${p.slug}`) })),
     ...(canManage ? [{ label: 'Gestión', onClick: () => router.push('/gestion') }] : []),
   ];
 

@@ -71,15 +71,15 @@ function toPageConfig(raw: Record<string, unknown>): PageConfig {
       ratings_enabled:       store.ratings_enabled === true,
       reviews_enabled:       store.reviews_enabled === true,
     },
-    // EC-645: `pages` del backend ya incluye 'home' (siempre primera, con
-    // rows) -- el navbar sigue sin mostrarla por separado (el logo y el link
-    // "Inicio" ya cubren ese caso), asi que se filtra aca antes de exponerla
-    // por context. El context tampoco necesita las rows de las otras
-    // paginas -- esas se piden por slug puntual (getPageBySlug) al navegar.
+    // EC-645/646: `pages` del backend incluye 'home' (siempre primera, con
+    // rows) -- se expone tal cual por context, sin filtrar. El navbar
+    // (CatalogNavbar) decide si home necesita su propio link aparte segun
+    // hasCatalog. El context no necesita las rows de ninguna pagina -- las
+    // de home se leen directo del fetch SSR (ver InformationalHome), las de
+    // las demas se piden por slug puntual (getPageBySlug) al navegar.
     pages: Array.isArray(raw.pages)
       ? raw.pages
           .filter((p): p is { slug: string; title: string } => typeof p?.slug === 'string')
-          .filter((p) => p.slug !== 'home')
           .map((p) => ({ slug: p.slug, title: typeof p.title === 'string' ? p.title : '' }))
       : undefined,
   };
