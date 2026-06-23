@@ -11,7 +11,8 @@ import type { PageInfo } from '@/lib/api/storeClient';
 // pueden pasar funciones como prop a un Client Component (PageRow es
 // 'use client' en zoui).
 export function InformationalHome({ storeInfo }: { storeInfo: PageInfo }) {
-  const rows = storeInfo.rows ?? [];
+  // EC-645: 'home' es una entrada mas de `pages` (siempre la primera).
+  const rows = storeInfo.pages?.find((p) => p.slug === 'home')?.rows ?? [];
 
   return (
     <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>

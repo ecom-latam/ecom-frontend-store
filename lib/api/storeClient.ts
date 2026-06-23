@@ -176,8 +176,6 @@ export interface PageInfo {
   brand2_lightness?: number | null;
   font_family?: string;
   theme?: string;
-  // ── De ecom-page (EC-553, EC-582: content -> rows) ──
-  rows?: PageRowData[];
   hasCatalog?: boolean;
   hasPurchases?: boolean;
   // EC-568: solo tipado por consistencia -- EC-14 (analiticas) no existe
@@ -186,9 +184,9 @@ export interface PageInfo {
   // EC-632/633: config comercial de ecom-store, embebida por ecom-page --
   // ausente del todo en tiendas sin catalogo.
   store?: StoreCommerceConfig;
-  // EC-588: paginas visibles del page builder, sin 'home' (ya tiene su
-  // propio link de "Inicio") -- el navbar arma sus links desde esto.
-  pages?: { slug: string; title: string }[];
+  // EC-645: listado unico de paginas visibles, 'home' siempre primera --
+  // cada una con sus rows. Ya no hay un campo `rows` suelto a nivel raiz.
+  pages?: { slug: string; title: string; rows: PageRowData[] }[];
 }
 
 // EC-587: una pagina puntual del page builder, servida por
