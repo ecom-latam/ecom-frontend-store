@@ -53,6 +53,11 @@ export function CatalogNavbar() {
       cartCount={Math.min(itemCount, 99)}
       onCartClick={isCustomer && hasPurchases !== false ? openDrawer : undefined}
       isLoggedIn={isLoggedIn}
+      // EC-640: en "Pagina informativa" y "Pagina + catalogo" (hasPurchases=false)
+      // no hay cuenta de comprador -- ocultar Ingresar/Registrarse del navbar.
+      // No afecta /iniciar-sesion en si: Admin/Manager/Seller siguen entrando
+      // por url directa para llegar a /gestion.
+      showAuth={hasPurchases !== false}
       isDark={isDark}
       onThemeToggle={toggleTheme}
       onLogin={() => router.push('/iniciar-sesion')}
