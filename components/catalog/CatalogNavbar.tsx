@@ -35,8 +35,8 @@ export function CatalogNavbar() {
     document.cookie = `ui-theme=${next}; path=/; max-age=31536000`;
   }, [isDark]);
 
-  const homePage = pages?.find((p) => p.slug === 'home');
-  const otherPages = pages?.filter((p) => p.slug !== 'home') ?? [];
+  const homePage = pages?.find((p) => p.isHome);
+  const otherPages = pages?.filter((p) => !p.isHome) ?? [];
 
   // EC-559/646: en tiendas con catalogo, "Inicio" -> '/' siempre redirige a
   // /productos (el logo ya apunta ahi, pero se deja el link explicito como

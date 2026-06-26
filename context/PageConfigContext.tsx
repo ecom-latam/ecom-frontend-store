@@ -23,8 +23,9 @@ export interface PageStoreConfig {
 }
 
 export interface PageConfigPage {
-  slug:  string;
-  title: string;
+  slug:   string;
+  title:  string;
+  isHome: boolean;
 }
 
 export interface PageConfig {

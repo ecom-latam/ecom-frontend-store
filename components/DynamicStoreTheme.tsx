@@ -79,8 +79,8 @@ function toPageConfig(raw: Record<string, unknown>): PageConfig {
     // las demas se piden por slug puntual (getPageBySlug) al navegar.
     pages: Array.isArray(raw.pages)
       ? raw.pages
-          .filter((p): p is { slug: string; title: string } => typeof p?.slug === 'string')
-          .map((p) => ({ slug: p.slug, title: typeof p.title === 'string' ? p.title : '' }))
+          .filter((p): p is { slug: string; title: string; isHome: boolean } => typeof p?.slug === 'string')
+          .map((p) => ({ slug: p.slug, title: typeof p.title === 'string' ? p.title : '', isHome: Boolean(p.isHome) }))
       : undefined,
   };
 }

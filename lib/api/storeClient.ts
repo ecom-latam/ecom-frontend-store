@@ -186,7 +186,7 @@ export interface PageInfo {
   store?: StoreCommerceConfig;
   // EC-645: listado unico de paginas visibles, 'home' siempre primera --
   // cada una con sus rows. Ya no hay un campo `rows` suelto a nivel raiz.
-  pages?: { slug: string; title: string; rows: PageRowData[] }[];
+  pages?: { slug: string; title: string; isHome: boolean; rows: PageRowData[] }[];
 }
 
 // EC-587: una pagina puntual del page builder, servida por
