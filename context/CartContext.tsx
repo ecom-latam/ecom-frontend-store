@@ -4,6 +4,8 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 
 import { apiClient } from '@/utils/api/client';
 import type { Cart, CartItem } from '@/lib/cart/types';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchCartRequest, fetchCartSuccess } from '@/store/cart/cartSlice';
 
 interface CartContextValue {
   items: CartItem[];
@@ -12,7 +14,7 @@ interface CartContextValue {
   drawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
-  refreshCart: () => Promise<void>;
+  refreshCart: () => void;
   addItem: (payload: {
     productId: string;
     selectedOptions?: Record<string, string>;
@@ -37,30 +39,28 @@ interface CartProviderProps {
 }
 
 export function CartProvider({ children, hasSession }: CartProviderProps) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const { items, loading: cartLoading } = useAppSelector((s) => s.cart);
+  const [mutationLoading, setMutationLoading] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const refreshCart = useCallback(async () => {
-    if (!hasSession) return;
-    try {
-      const { data } = await apiClient.get<Cart>('/api/cart');
-      setItems(data.items ?? []);
-    } catch {
-      setItems([]);
-    }
-  }, [hasSession]);
+  const isLoading = cartLoading || mutationLoading;
 
   useEffect(() => {
-    refreshCart();
-  }, [refreshCart]);
+    if (hasSession) dispatch(fetchCartRequest());
+  }, [hasSession, dispatch]);
+
+  const refreshCart = useCallback(() => {
+    if (!hasSession) return;
+    dispatch(fetchCartRequest());
+  }, [hasSession, dispatch]);
 
   const addItem = useCallback(
     async (payload: { productId: string; selectedOptions?: Record<string, string>; quantity?: number }) => {
-      setIsLoading(true);
+      setMutationLoading(true);
       try {
         const { data } = await apiClient.post<Cart>('/api/cart/items', { quantity: 1, ...payload });
-        setItems(data.items ?? []);
+        dispatch(fetchCartSuccess(data.items ?? []));
         return { ok: true };
       } catch (err: unknown) {
         const axiosErr = err as { response?: { data?: { error?: string; available?: number } } };
@@ -70,47 +70,47 @@ export function CartProvider({ children, hasSession }: CartProviderProps) {
           available: axiosErr?.response?.data?.available,
         };
       } finally {
-        setIsLoading(false);
+        setMutationLoading(false);
       }
     },
-    []
+    [dispatch]
   );
 
   const updateItem = useCallback(async (itemId: string, quantity: number) => {
-    setIsLoading(true);
+    setMutationLoading(true);
     try {
       const { data } = await apiClient.put<Cart>(`/api/cart/items/${itemId}`, { quantity });
-      setItems(data.items ?? []);
+      dispatch(fetchCartSuccess(data.items ?? []));
       return { ok: true };
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { error?: string; available?: number } } };
       return { ok: false, error: axiosErr?.response?.data?.error, available: axiosErr?.response?.data?.available };
     } finally {
-      setIsLoading(false);
+      setMutationLoading(false);
     }
-  }, []);
+  }, [dispatch]);
 
   const removeItem = useCallback(async (itemId: string) => {
-    setIsLoading(true);
+    setMutationLoading(true);
     try {
       const { data } = await apiClient.delete<Cart>(`/api/cart/items/${itemId}`);
-      setItems(data.items ?? []);
+      dispatch(fetchCartSuccess(data.items ?? []));
     } catch {
       // item already gone
     } finally {
-      setIsLoading(false);
+      setMutationLoading(false);
     }
-  }, []);
+  }, [dispatch]);
 
   const clearCart = useCallback(async () => {
-    setIsLoading(true);
+    setMutationLoading(true);
     try {
       await apiClient.delete('/api/cart');
-      setItems([]);
+      dispatch(fetchCartSuccess([]));
     } finally {
-      setIsLoading(false);
+      setMutationLoading(false);
     }
-  }, []);
+  }, [dispatch]);
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 

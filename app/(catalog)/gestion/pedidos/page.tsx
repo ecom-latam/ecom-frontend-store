@@ -1,13 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { orders } from '@/utils/api/orders';
 import type { Order, OrderStatus, PaymentStatus, PaymentMethod } from '@/utils/api/orders';
 import { Badge, Table, Text, Pagination } from 'zoui';
 import { StoreSelect } from '@/components/ui/StoreSelect';
 import { StoreButton } from '@/components/ui/StoreButton';
 import type { BadgeTone } from 'zoui';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchAdminOrdersRequest } from '@/store/orders/ordersSlice';
 import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
 
@@ -49,45 +50,28 @@ export default function AdminPedidosPage() {
   const router = useRouter();
   const { store } = usePageConfig();
   const currency = store?.currency;
+  const dispatch = useAppDispatch();
+  const { list: orderList, total, listLoading: loading } = useAppSelector((s) => s.orders);
 
-  const [orderList, setOrderList] = useState<Order[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-
   const [filterStatus, setFilterStatus] = useState<OrderStatus | ''>('');
   const [filterPayment, setFilterPayment] = useState<PaymentStatus | ''>('');
   const [filterMethod, setFilterMethod] = useState<PaymentMethod | ''>('');
 
-  const fetchOrders = useCallback(async (p = page) => {
-    setLoading(true);
-    try {
-      const { data } = await orders.admin.list({
-        page: p,
-        limit: LIMIT,
-        status: filterStatus || undefined,
-        paymentStatus: filterPayment || undefined,
-        paymentMethod: filterMethod || undefined,
-      });
-      setOrderList(data.data ?? []);
-      setTotal(data.total ?? 0);
-    } catch {
-      setOrderList([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [page, filterStatus, filterPayment, filterMethod]);
-
   useEffect(() => {
+    dispatch(fetchAdminOrdersRequest({
+      page,
+      limit: LIMIT,
+      status: filterStatus || undefined,
+      paymentStatus: filterPayment || undefined,
+      paymentMethod: filterMethod || undefined,
+    }));
+  }, [page, filterStatus, filterPayment, filterMethod, dispatch]);
+
+  function changeFilter<T>(setter: (v: T) => void, val: T) {
+    setter(val);
     setPage(1);
-    fetchOrders(1);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterStatus, filterPayment, filterMethod]);
-
-  useEffect(() => {
-    fetchOrders(page);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }
 
   const totalPages = Math.max(1, Math.ceil(total / LIMIT));
 
@@ -104,7 +88,7 @@ export default function AdminPedidosPage() {
           <StoreSelect
             label="Estado de orden"
             value={filterStatus || '__all__'}
-            onValueChange={(val) => setFilterStatus(val === '__all__' ? '' : val as OrderStatus)}
+            onValueChange={(val) => changeFilter(setFilterStatus, val === '__all__' ? '' : val as OrderStatus)}
             size="md"
             options={[
               { value: '__all__', label: 'Todos los estados' },
@@ -122,7 +106,7 @@ export default function AdminPedidosPage() {
           <StoreSelect
             label="Estado de pago"
             value={filterPayment || '__all__'}
-            onValueChange={(val) => setFilterPayment(val === '__all__' ? '' : val as PaymentStatus)}
+            onValueChange={(val) => changeFilter(setFilterPayment, val === '__all__' ? '' : val as PaymentStatus)}
             size="md"
             options={[
               { value: '__all__', label: 'Todos los pagos' },
@@ -138,7 +122,7 @@ export default function AdminPedidosPage() {
           <StoreSelect
             label="Método de pago"
             value={filterMethod || '__all__'}
-            onValueChange={(val) => setFilterMethod(val === '__all__' ? '' : val as PaymentMethod)}
+            onValueChange={(val) => changeFilter(setFilterMethod, val === '__all__' ? '' : val as PaymentMethod)}
             size="md"
             options={[
               { value: '__all__', label: 'Todos los métodos' },

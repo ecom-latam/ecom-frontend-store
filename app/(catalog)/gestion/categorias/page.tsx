@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { categories as categoriesApi } from '@/utils/api';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchCategoriesRequest } from '@/store/categories/categoriesSlice';
 import { triggerErrorModal } from '@/lib/errorModal';
 import type { Category, CategoryPayload } from '@/utils/api';
 import { Modal, Drawer, Table, Badge, Button, Text } from 'zoui';
@@ -170,6 +172,10 @@ function CategoryDrawer({ category, allCategories, depthMap, onClose, onSaved }:
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function GestionCategoriasPage() {
+  const dispatch = useAppDispatch();
+  const { list: reduxCategories, loading: reduxLoading } = useAppSelector((s) => s.categories);
+  const initialized = useRef(false);
+
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -189,6 +195,19 @@ export default function GestionCategoriasPage() {
     danger?: boolean;
     onConfirm: () => void;
   } | null>(null);
+
+  useEffect(() => {
+    dispatch(fetchCategoriesRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (reduxLoading || initialized.current) return;
+    initialized.current = true;
+    setCategoryList(reduxCategories);
+    const parentIds = new Set(reduxCategories.map(c => c.parentId).filter(Boolean) as string[]);
+    setCollapsed(parentIds);
+    setLoading(false);
+  }, [reduxCategories, reduxLoading]);
 
   async function load() {
     setLoading(true);
@@ -212,8 +231,6 @@ export default function GestionCategoriasPage() {
       // silent
     }
   }
-
-  useEffect(() => { load(); }, []);
 
   const parentMap = Object.fromEntries(categoryList.map(c => [c._id, c.name]));
 

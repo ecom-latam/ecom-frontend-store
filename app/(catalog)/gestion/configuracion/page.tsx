@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Text, ColorPicker, useToast } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { StoreTextarea } from '@/components/ui/StoreTextarea';
 import { apiClient } from '@/utils/api/client';
 import { storeConfig } from '@/utils/api/storeConfig';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchStoreConfigRequest } from '@/store/storeConfig/storeConfigSlice';
 
 function getInitialHue(): number {
   if (typeof document === 'undefined') return 262;
@@ -36,6 +38,10 @@ function applyHueLive(hue: number) {
 
 export default function ConfiguracionPage() {
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
+  const { data: reduxConfig, loading: configLoading } = useAppSelector((s) => s.storeConfig);
+  const initialized = useRef(false);
+
   const [hue, setHue] = useState<number>(getInitialHue);
   const [savingColor, setSavingColor] = useState(false);
 
@@ -44,13 +50,15 @@ export default function ConfiguracionPage() {
   const [loadingTransfer, setLoadingTransfer] = useState(true);
 
   useEffect(() => {
-    storeConfig.get()
-      .then(({ data }) => {
-        setTransferInfo(data.transfer_info ?? '');
-      })
-      .catch((err) => console.error('[ConfiguracionPage]', err))
-      .finally(() => setLoadingTransfer(false));
-  }, []);
+    dispatch(fetchStoreConfigRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (initialized.current || configLoading || reduxConfig === null) return;
+    initialized.current = true;
+    setTransferInfo(reduxConfig.transfer_info ?? '');
+    setLoadingTransfer(false);
+  }, [reduxConfig, configLoading]);
 
   function handleHueChange(newHue: number) {
     setHue(newHue);

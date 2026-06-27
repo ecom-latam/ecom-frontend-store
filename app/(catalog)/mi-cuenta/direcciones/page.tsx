@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Text, Modal, Icon } from 'zoui';
 import { StoreButton }       from '@/components/ui/StoreButton';
 import { StoreInput }        from '@/components/ui/StoreInput';
@@ -8,6 +8,8 @@ import { StoreSelect }       from '@/components/ui/StoreSelect';
 import { AddressCard }            from '@/components/direcciones/AddressCard';
 import { AddressSlotsIndicator }  from '@/components/direcciones/AddressSlotsIndicator';
 import { PROVINCES, ADDRESS_MAX } from '@/lib/constants';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchAddressesRequest } from '@/store/addresses/addressesSlice';
 import { addresses } from '@/utils/api/addresses';
 import type { Address, AddressPayload } from '@/utils/api/addresses';
 
@@ -30,6 +32,10 @@ const EMPTY_FORM: AddressPayload = {
 };
 
 export default function DireccionesPage() {
+  const dispatch = useAppDispatch();
+  const { list: reduxAddresses, loading: reduxLoading } = useAppSelector((s) => s.addresses);
+  const initialized = useRef(false);
+
   const [list, setList]               = useState<Address[]>([]);
   const [loading, setLoading]         = useState(true);
   const [modalOpen, setModalOpen]     = useState(false);
@@ -42,11 +48,15 @@ export default function DireccionesPage() {
   const [touched, setTouched]         = useState<Partial<Record<keyof AddressPayload, boolean>>>({});
 
   useEffect(() => {
-    addresses.list()
-      .then((r) => setList(r.data))
-      .catch((err) => console.error('[DireccionesPage]', err))
-      .finally(() => setLoading(false));
-  }, []);
+    dispatch(fetchAddressesRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (reduxLoading || initialized.current) return;
+    initialized.current = true;
+    setList(reduxAddresses);
+    setLoading(false);
+  }, [reduxAddresses, reduxLoading]);
 
   function openCreate() {
     setEditing(null);

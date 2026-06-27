@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { storeOptions as storeOptionsApi } from '@/utils/api';
 import { triggerErrorModal } from '@/lib/errorModal';
 import type { StoreOption, StoreOptionPayload } from '@/utils/api';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchStoreOptionsRequest } from '@/store/storeOptions/storeOptionsSlice';
 import { Modal, Drawer, Table, Text, Icon } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { StoreInput } from '@/components/ui/StoreInput';
@@ -155,6 +157,10 @@ function OptionDrawer({ option, onClose, onSaved }: OptionDrawerProps) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function GestionOpcionesPage() {
+  const dispatch = useAppDispatch();
+  const { list: reduxOptions, loading: reduxLoading } = useAppSelector((s) => s.storeOptions);
+  const initialized = useRef(false);
+
   const [optionList, setOptionList] = useState<StoreOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -162,6 +168,17 @@ export default function GestionOpcionesPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editing, setEditing] = useState<StoreOption | null>(null);
   const [confirm, setConfirm] = useState<{ title: string; message: string; confirmLabel: string; onConfirm: () => void } | null>(null);
+
+  useEffect(() => {
+    dispatch(fetchStoreOptionsRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (reduxLoading || initialized.current) return;
+    initialized.current = true;
+    setOptionList(reduxOptions);
+    setLoading(false);
+  }, [reduxOptions, reduxLoading]);
 
   async function load() {
     setLoading(true);
@@ -174,8 +191,6 @@ export default function GestionOpcionesPage() {
       setLoading(false);
     }
   }
-
-  useEffect(() => { load(); }, []);
 
   const filtered = optionList.filter(o => !search || o.name.toLowerCase().includes(search.toLowerCase()));
 
