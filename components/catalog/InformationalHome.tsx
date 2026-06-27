@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { Text, DynamicPageRenderer } from 'zoui';
 import type { PageInfo } from '@/lib/api/storeClient';
 
@@ -11,6 +12,7 @@ import type { PageInfo } from '@/lib/api/storeClient';
 export function InformationalHome({ storeInfo }: { storeInfo: PageInfo }) {
   // EC-658: la home se identifica por isHome: true, no por slug === 'home'.
   const blocks = storeInfo.pages?.find((p) => p.isHome)?.blocks ?? [];
+  const showGrid = useSearchParams().has('showGrid');
 
   // Si hay bloques, el page builder controla 100% del home — sin branding
   // hardcodeado arriba (nombre/logo/descripción ya están en la navbar y el
@@ -20,7 +22,7 @@ export function InformationalHome({ storeInfo }: { storeInfo: PageInfo }) {
     return (
       <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
         <div className="p-4">
-          <DynamicPageRenderer blocks={blocks} />
+          <DynamicPageRenderer blocks={blocks} showGrid={showGrid} />
         </div>
       </main>
     );
