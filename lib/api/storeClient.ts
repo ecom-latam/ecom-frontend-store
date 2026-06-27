@@ -186,15 +186,16 @@ export interface PageInfo {
   store?: StoreCommerceConfig;
   // EC-645: listado unico de paginas visibles, 'home' siempre primera --
   // EC-695: cada una con sus blocks (grilla plana, reemplaza rows[]).
-  pages?: { slug: string; title: string; isHome: boolean; blocks: PageBlock[] }[];
+  pages?: { slug: string; title: string; isHome: boolean; workInProgress: boolean; blocks: PageBlock[] }[];
 }
 
 // EC-587: una pagina puntual del page builder, servida por
 // app/(catalog)/[pageSlug]/page.tsx.
 export interface PageContent {
-  slug:   string;
-  title:  string;
-  blocks: PageBlock[];
+  slug:           string;
+  title:          string;
+  workInProgress: boolean;
+  blocks:         PageBlock[];
 }
 
 export interface ProductReview {
