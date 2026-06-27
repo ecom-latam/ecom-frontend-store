@@ -2,6 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { products as productsApi, categories as categoriesApi, storeOptions as storeOptionsApi } from '@/utils/api';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchProductsRequest } from '@/store/products/productsSlice';
+import { fetchCategoriesRequest } from '@/store/categories/categoriesSlice';
+import { fetchStoreOptionsRequest } from '@/store/storeOptions/storeOptionsSlice';
 import { triggerErrorModal } from '@/lib/errorModal';
 import type { Product, ProductPayload, ProductStatus, ProductImage, ProductVariant, StoreOption, Category } from '@/utils/api';
 import { Modal, Drawer, Table, Badge, Pagination, Text, Tabs, Tooltip, Icon, Switch } from 'zoui';
@@ -378,6 +382,8 @@ interface VariantsTabProps {
 }
 
 function VariantsTab({ productId, product, onChange }: VariantsTabProps) {
+  const dispatch = useAppDispatch();
+  const { list: reduxOptions } = useAppSelector((s) => s.storeOptions);
   const [allOptions, setAllOptions] = useState<StoreOption[]>([]);
   const [selected, setSelected] = useState<Set<string>>(
     new Set(product.linkedOptions.map(o => o.storeOptionId))
@@ -385,8 +391,12 @@ function VariantsTab({ productId, product, onChange }: VariantsTabProps) {
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
-    storeOptionsApi.list().then(({ data }) => setAllOptions(data)).catch((err) => console.error('[VariantsTab]', err));
-  }, []);
+    dispatch(fetchStoreOptionsRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (reduxOptions.length > 0) setAllOptions(reduxOptions);
+  }, [reduxOptions]);
 
   function toggleOption(id: string) {
     setSelected(prev => {
@@ -682,6 +692,12 @@ function ProductDrawer({ product, categories, onClose, onSaved, onCreated }: Pro
 export default function GestionProductosPage() {
   const { store } = usePageConfig();
   const currency = store?.currency;
+  const dispatch = useAppDispatch();
+  const { list: reduxProducts, total: reduxTotal, loading: reduxLoading } = useAppSelector((s) => s.products);
+  const { list: reduxCategories } = useAppSelector((s) => s.categories);
+  const catInitialized = useRef(false);
+  const prodInitialized = useRef(false);
+
   const [productList, setProductList] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -702,19 +718,13 @@ export default function GestionProductosPage() {
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const totalPages = Math.ceil(total / LIMIT);
 
-  const load = useCallback(async (p: number, q: string, status: ProductStatus | '') => {
-    setLoading(true);
-    try {
-      const params = { page: p, limit: LIMIT, ...(q ? { q } : {}), ...(status ? { status } : {}) };
-      const { data } = await productsApi.list(params);
-      setProductList(data.data);
-      setTotal(data.total);
-    } catch {
-      // silent — table shows empty state
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const load = useCallback((p: number, q: string, status: ProductStatus | '') => {
+    dispatch(fetchProductsRequest({
+      page: p, limit: LIMIT,
+      ...(q ? { q } : {}),
+      ...(status ? { status } : {}),
+    }));
+  }, [dispatch]);
 
   const loadCounts = useCallback(async () => {
     try {
@@ -732,12 +742,27 @@ export default function GestionProductosPage() {
   useEffect(() => { load(page, search, statusFilter); }, [load, page, statusFilter]);
 
   useEffect(() => {
-    categoriesApi.list().then(({ data }) => {
-      setCategoryList(data);
-      setCategoryMap(Object.fromEntries(data.map(c => [c._id, c.name])));
-    }).catch((err) => console.error('[GestionProductosPage]', err));
+    if (!reduxLoading && !prodInitialized.current) {
+      prodInitialized.current = true;
+    }
+    if (reduxProducts !== undefined) {
+      setProductList(reduxProducts);
+      setTotal(reduxTotal);
+      setLoading(reduxLoading);
+    }
+  }, [reduxProducts, reduxTotal, reduxLoading]);
+
+  useEffect(() => {
+    dispatch(fetchCategoriesRequest());
     loadCounts();
-  }, [loadCounts]);
+  }, [dispatch, loadCounts]);
+
+  useEffect(() => {
+    if (catInitialized.current || reduxCategories.length === 0) return;
+    catInitialized.current = true;
+    setCategoryList(reduxCategories);
+    setCategoryMap(Object.fromEntries(reduxCategories.map(c => [c._id, c.name])));
+  }, [reduxCategories]);
 
   function handleSearch(value: string) {
     setSearch(value);

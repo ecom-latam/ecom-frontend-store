@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 
 import { orders } from '@/utils/api/orders';
 import type { Order, OrderStatus } from '@/utils/api/orders';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchAdminOrderRequest, clearCurrentOrder } from '@/store/orders/ordersSlice';
 import { getNextAdminStatuses, getStepLabel } from '@/utils/workflows';
 import { Badge, Button, Text, Modal } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
@@ -63,6 +65,9 @@ export default function AdminPedidoDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { store } = usePageConfig();
   const currency = store?.currency;
+  const dispatch = useAppDispatch();
+  const { current: reduxOrder, currentLoading } = useAppSelector((s) => s.orders);
+  const initialized = useRef(false);
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -71,10 +76,17 @@ export default function AdminPedidoDetailPage() {
   const [confirmModal, setConfirmModal] = useState<{ type: 'confirmPayment' | 'status' | 'cancel'; status?: OrderStatus } | null>(null);
 
   useEffect(() => {
-    orders.admin.getById(id).then(({ data }) => {
-      setOrder(data);
-    }).catch(() => setOrder(null)).finally(() => setLoading(false));
-  }, [id]);
+    initialized.current = false;
+    dispatch(clearCurrentOrder());
+    dispatch(fetchAdminOrderRequest(id));
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (initialized.current || currentLoading || reduxOrder === null) return;
+    initialized.current = true;
+    setOrder(reduxOrder);
+    setLoading(false);
+  }, [reduxOrder, currentLoading]);
 
   async function handleConfirmPayment() {
     setActionLoading(true);

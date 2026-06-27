@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { getAccessTokenRole } from '@/utils/helpers';
-import { orders } from '@/utils/api/orders';
-import type { Order } from '@/utils/api/orders';
 import { Badge, Text } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import type { BadgeTone } from 'zoui';
 import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchMyOrdersRequest } from '@/store/orders/ordersSlice';
 
 const STATUS_LABEL: Record<string, string> = {
   new: 'Nuevo',
@@ -34,8 +34,8 @@ export default function MisPedidosPage() {
   const router = useRouter();
   const { hasPurchases, store } = usePageConfig();
   const currency = store?.currency;
-  const [orderList, setOrderList] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { list: orderList, listLoading: loading } = useAppSelector((s) => s.orders);
 
   useEffect(() => {
     const role = getAccessTokenRole();
@@ -47,20 +47,12 @@ export default function MisPedidosPage() {
       router.replace('/productos');
       return;
     }
-    // EC-559: tiendas sin el modulo de compras no tienen pedidos.
     if (hasPurchases === false) {
       router.replace('/productos');
       return;
     }
-
-    orders.getMy().then(({ data }) => {
-      setOrderList(data.data ?? []);
-    }).catch(() => {
-      setOrderList([]);
-    }).finally(() => {
-      setLoading(false);
-    });
-  }, [router, hasPurchases]);
+    dispatch(fetchMyOrdersRequest());
+  }, [router, hasPurchases, dispatch]);
 
   if (loading) {
     return (

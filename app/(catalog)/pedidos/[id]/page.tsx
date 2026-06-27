@@ -8,6 +8,8 @@ import { getAccessTokenRole } from '@/utils/helpers';
 import { orders } from '@/utils/api/orders';
 import type { Order } from '@/utils/api/orders';
 import { pageInfo } from '@/utils/api/pageInfo';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchCurrentOrderRequest, clearCurrentOrder } from '@/store/orders/ordersSlice';
 import { Button, Badge, Text, Modal } from 'zoui';
 import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
@@ -97,6 +99,9 @@ export default function OrderDetailPage() {
   const { hasPurchases, store: pageStore } = usePageConfig();
   const currency = pageStore?.currency;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useAppDispatch();
+  const { current: reduxOrder, currentLoading } = useAppSelector((s) => s.orders);
+  const initialized = useRef(false);
 
   const [order, setOrder]           = useState<Order | null>(null);
   const [storeInfo, setStoreInfo]   = useState<TransferData | null>(null);
@@ -114,23 +119,21 @@ export default function OrderDetailPage() {
     // EC-559: tiendas sin el modulo de compras no tienen pedidos.
     if (hasPurchases === false) { router.replace('/productos'); return; }
 
-    async function load() {
-      setLoading(true);
-      try {
-        const [orderRes, pageRes] = await Promise.all([
-          orders.getById(id),
-          pageInfo.getPublic<{ store?: TransferData }>().catch(() => ({ data: null })),
-        ]);
-        setOrder(orderRes.data);
-        setStoreInfo(pageRes.data?.store ?? null);
-      } catch {
-        setOrder(null);
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, [id, router, hasPurchases]);
+    initialized.current = false;
+    dispatch(clearCurrentOrder());
+    dispatch(fetchCurrentOrderRequest(id));
+
+    pageInfo.getPublic<{ store?: TransferData }>()
+      .then((res) => setStoreInfo(res.data?.store ?? null))
+      .catch(() => setStoreInfo(null));
+  }, [id, router, hasPurchases, dispatch]);
+
+  useEffect(() => {
+    if (initialized.current || currentLoading || reduxOrder === null) return;
+    initialized.current = true;
+    setOrder(reduxOrder);
+    setLoading(false);
+  }, [reduxOrder, currentLoading]);
 
   function handleVoucherChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;

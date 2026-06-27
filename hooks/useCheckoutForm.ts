@@ -1,16 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { usePageConfig } from '@/context/PageConfigContext';
 import { getAccessTokenRole } from '@/utils/helpers';
 import { orders } from '@/utils/api/orders';
 import type { PaymentMethod, ShippingMethod } from '@/utils/api/orders';
-import { addresses as addressesApi } from '@/utils/api/addresses';
 import type { Address } from '@/utils/api/addresses';
 import { payment as paymentApi } from '@/utils/api/payment';
 import { splitAddress } from '@/lib/checkout';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchAddressesRequest } from '@/store/addresses/addressesSlice';
 
 export interface CheckoutForm {
   fullName:       string;
@@ -38,6 +39,9 @@ export function useCheckoutForm() {
   const { items, itemCount, clearCart } = useCart();
   const { store } = usePageConfig();
   const currency = store?.currency;
+  const dispatch = useAppDispatch();
+  const { list: reduxAddresses, loading: addressesLoading } = useAppSelector((s) => s.addresses);
+  const addressInitialized = useRef(false);
 
   const mpAvailable = !!store?.mp_public_key && currency === 'ARS';
   const subtotal     = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -54,15 +58,19 @@ export function useCheckoutForm() {
     if (!role) { router.replace('/iniciar-sesion?redirect=/checkout'); return; }
     if (role !== 'Customer') { router.replace('/productos'); return; }
     setReady(true);
-    addressesApi.list().then(({ data }) => {
-      setSavedAddresses(data);
-      const def = data.find((a) => a.isDefault) ?? data[0];
-      if (def) {
-        setSelectedAddressId(def._id);
-        setForm((prev) => ({ ...prev, ...splitAddress(def) }));
-      }
-    }).catch((err) => console.error('[useCheckoutForm]', err));
+    dispatch(fetchAddressesRequest());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps — router is stable in practice but not guaranteed; auth check runs once on mount
+
+  useEffect(() => {
+    if (addressInitialized.current || addressesLoading) return;
+    addressInitialized.current = true;
+    setSavedAddresses(reduxAddresses);
+    const def = reduxAddresses.find((a) => a.isDefault) ?? reduxAddresses[0];
+    if (def) {
+      setSelectedAddressId(def._id);
+      setForm((prev) => ({ ...prev, ...splitAddress(def) }));
+    }
+  }, [reduxAddresses, addressesLoading]);
 
   function set(field: keyof CheckoutForm, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
