@@ -187,10 +187,11 @@ export interface PageInfo {
 // Pagina puntual del page builder, servida por
 // app/(catalog)/[pageSlug]/page.tsx.
 export interface PageContent {
-  slug:           string;
-  title:          string;
-  workInProgress: boolean;
-  blocks:         PageBlock[];
+  slug:             string;
+  title:            string;
+  workInProgress:   boolean;
+  backgroundColor?: string | null;
+  blocks:           PageBlock[];
 }
 
 export interface ProductReview {
