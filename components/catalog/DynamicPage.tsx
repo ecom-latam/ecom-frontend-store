@@ -8,7 +8,7 @@ import { PageUnderConstruction } from './PageUnderConstruction';
 // 'home'). EC-695: migrado a DynamicPageRenderer (grilla plana).
 export function DynamicPage({ page }: { page: PageContent }) {
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
+    <main className="min-h-screen" style={{ background: page.backgroundColor ?? 'var(--color-bg-surface)' }}>
       <div className="p-4">
         {page.blocks.length === 0
           ? <PageUnderConstruction />
