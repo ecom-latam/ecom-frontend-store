@@ -15,7 +15,7 @@ const MANAGEMENT_ROLES = ['Admin', 'Manager', 'Seller'];
 export function CatalogNavbar() {
   const router = useRouter();
   const { itemCount, openDrawer } = useCart();
-  const { hasCatalog, hasPurchases, pages } = usePageConfig();
+  const { hasCatalog, catalog_label, hasPurchases, pages } = usePageConfig();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [canManage,  setCanManage]  = useState(false);
@@ -49,7 +49,7 @@ export function CatalogNavbar() {
   // que se crearon.
   const links = [
     ...(hasCatalog !== false
-      ? [{ label: 'Inicio', onClick: () => router.push('/') }]
+      ? [{ label: catalog_label ?? 'Productos', onClick: () => router.push('/productos') }]
       : homePage ? [{ label: homePage.title || 'Inicio', onClick: () => router.push('/') }] : []),
     ...otherPages.map((p) => ({ label: p.title || p.slug, onClick: () => router.push(`/${p.slug}`) })),
     ...(canManage ? [{ label: 'Gestión', onClick: () => router.push('/gestion') }] : []),

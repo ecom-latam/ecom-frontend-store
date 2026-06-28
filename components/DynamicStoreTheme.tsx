@@ -54,9 +54,10 @@ function toPageConfig(raw: Record<string, unknown>): PageConfig {
   const store = (raw.store ?? undefined) as PageConfig['store'];
   return {
     theme:       raw.theme       as string | undefined,
-    hasCatalog:   raw.hasCatalog !== false,
-    hasPurchases: raw.hasPurchases !== false,
-    hasMetrics:   raw.hasMetrics === true,
+    hasCatalog:    raw.hasCatalog !== false,
+    catalog_label: typeof raw.catalog_label === 'string' && raw.catalog_label ? raw.catalog_label : 'Productos',
+    hasPurchases:  raw.hasPurchases !== false,
+    hasMetrics:    raw.hasMetrics === true,
     store: store && {
       currency:              store.currency === 'USD' ? 'USD' : 'ARS',
       mp_public_key:         store.mp_public_key ?? null,

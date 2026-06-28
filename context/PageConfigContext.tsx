@@ -31,6 +31,7 @@ export interface PageConfigPage {
 export interface PageConfig {
   theme?: string;
   hasCatalog?: boolean;
+  catalog_label?: string;
   hasPurchases?: boolean;
   // Solo tipado por consistencia -- el modulo de analiticas no existe
   // todavia, nada lee este campo en el storefront.

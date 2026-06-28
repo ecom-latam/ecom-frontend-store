@@ -33,10 +33,12 @@ export default async function ProductosPage({ searchParams }: Props) {
 
   const totalPages = Math.ceil(productsRes.total / limit);
 
+  const catalogLabel = storeInfo?.catalog_label ?? 'Productos';
+
   return (
     <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <Text variant="heading-2" as="h1" style={{ marginBottom: '24px' }}>Productos</Text>
+        <Text variant="heading-2" as="h1" style={{ marginBottom: '24px' }}>{catalogLabel}</Text>
 
         <Suspense>
           <ProductGrid
