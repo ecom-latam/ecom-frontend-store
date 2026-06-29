@@ -11,6 +11,7 @@ import { NotesSection }           from '@/components/checkout/NotesSection';
 import { OrderSummary }           from '@/components/checkout/OrderSummary';
 import { useCheckoutForm }        from '@/hooks/useCheckoutForm';
 import { usePageConfig }          from '@/context/PageConfigContext';
+import styles from './page.module.scss';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -32,8 +33,8 @@ export default function CheckoutPage() {
 
   if (itemCount === 0) {
     return (
-      <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-        <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+        <div className={styles.containerEmpty}>
           <Text variant="body" color="muted" style={{ marginBottom: '16px' }}>
             Tu carrito está vacío.
           </Text>
@@ -46,8 +47,8 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-5xl mx-auto px-4 py-8">
+    <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+      <div className={styles.containerMain}>
         <Text variant="heading-2" as="h1" style={{ marginBottom: '32px' }}>Checkout</Text>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', alignItems: 'start' }}>

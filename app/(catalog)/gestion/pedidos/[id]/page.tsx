@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import styles from './page.module.scss';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 
@@ -133,9 +134,9 @@ export default function AdminPedidoDetailPage() {
   if (loading) {
     return (
       <main style={{ padding: '32px' }}>
-        <div className="animate-pulse space-y-4">
+        <div className={styles.skeleton}>
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 rounded-lg" style={{ background: 'var(--color-bg-subtle)' }} />
+            <div key={i} className={styles.skeletonItem} style={{ background: 'var(--color-bg-subtle)' }} />
           ))}
         </div>
       </main>

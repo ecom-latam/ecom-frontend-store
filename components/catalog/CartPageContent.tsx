@@ -8,6 +8,7 @@ import { useCart } from '@/context/CartContext';
 import { Button, Text, Modal } from 'zoui';
 import { usePageConfig } from '@/context/PageConfigContext';
 import { formatPrice } from '@/lib/format';
+import styles from './CartPageContent.module.scss';
 
 export function CartPageContent() {
   const router = useRouter();
@@ -26,11 +27,11 @@ export function CartPageContent() {
 
   if (isLoading && items.length === 0) {
     return (
-      <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="animate-pulse space-y-4">
+      <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+        <div className={styles.container}>
+          <div className={styles.skeleton}>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 rounded-lg" style={{ background: 'var(--color-bg-subtle)' }} />
+              <div key={i} className={styles.skeletonItem} style={{ background: 'var(--color-bg-subtle)' }} />
             ))}
           </div>
         </div>
@@ -40,8 +41,8 @@ export function CartPageContent() {
 
   if (items.length === 0) {
     return (
-      <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+      <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+        <div className={styles.containerCenter}>
           <Text variant="body" color="muted" style={{ marginBottom: '16px' }}>Tu carrito está vacío.</Text>
           <Button size="md" onClick={() => router.push('/productos')}>
             Ver productos
@@ -53,40 +54,40 @@ export function CartPageContent() {
 
   return (
     <>
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
+    <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+      <div className={styles.container}>
+        <div className={styles.header}>
           <Text variant="heading-2" as="h1">Mi carrito</Text>
           <Button emphasis="ghost" size="md" onClick={clearCart} disabled={isLoading} style={{ color: 'var(--color-fg-muted)' }}>
             Vaciar carrito
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-3">
+        <div className={styles.grid}>
+          <div className={styles.itemsList}>
             {items.map((item) => (
               <div
                 key={item._id}
-                className="flex gap-4 rounded-xl p-4"
+                className={styles.item}
                 style={{ border: '1px solid var(--color-border-default)' }}
               >
-                <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
+                <div className={styles.itemImage} style={{ background: 'var(--color-bg-subtle)' }}>
                   {item.image ? (
                     <Image
                       src={item.image}
                       alt={item.name}
                       width={96}
                       height={96}
-                      className="object-cover w-full h-full"
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-3xl" style={{ color: 'var(--color-fg-disabled)' }}>
+                    <div className={styles.itemImageEmpty} style={{ color: 'var(--color-fg-disabled)' }}>
                       □
                     </div>
                   )}
                 </div>
 
-                <div className="flex-1 min-w-0">
+                <div className={styles.itemContent}>
                   <Button emphasis="ghost" size="md" onClick={() => router.push(`/producto?id=${item.productId}`)} style={{ fontWeight: 500, padding: 0, height: 'auto', justifyContent: 'flex-start' }}>
                     {item.name}
                   </Button>
@@ -103,7 +104,7 @@ export function CartPageContent() {
                     {formatPrice(item.price, currency)}
                   </Text>
 
-                  <div className="flex items-center gap-2 mt-3">
+                  <div className={styles.itemActions}>
                     <Button
                       emphasis="outlined"
                       size="md"
@@ -144,18 +145,18 @@ export function CartPageContent() {
             ))}
           </div>
 
-          <div className="lg:col-span-1">
-            <div className="rounded-xl p-5 sticky top-20 space-y-4" style={{ border: '1px solid var(--color-border-default)' }}>
+          <div className={styles.summary}>
+            <div className={styles.summaryInner} style={{ border: '1px solid var(--color-border-default)' }}>
               <Text variant="body" weight="semibold" as="h2">Resumen</Text>
 
-              <div className="space-y-2">
-                <div className="flex justify-between">
+              <div className={styles.summaryItems}>
+                <div className={styles.summaryRow}>
                   <Text variant="body-sm" color="secondary" as="span">Productos ({items.reduce((s, i) => s + i.quantity, 0)})</Text>
                   <Text variant="body-sm" color="secondary" as="span">{formatPrice(subtotal, currency)}</Text>
                 </div>
               </div>
 
-              <div className="pt-3 flex justify-between" style={{ borderTop: '1px solid var(--color-border-default)' }}>
+              <div className={styles.summaryTotal} style={{ borderTop: '1px solid var(--color-border-default)' }}>
                 <Text variant="body-sm" weight="semibold" as="span">Subtotal</Text>
                 <Text variant="body-sm" weight="semibold" as="span">{formatPrice(subtotal, currency)}</Text>
               </div>

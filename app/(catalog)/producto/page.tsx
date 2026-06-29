@@ -7,6 +7,7 @@ import { ProductDetailSection } from '@/components/catalog/ProductDetailSection'
 import { RelatedProducts } from '@/components/catalog/RelatedProducts';
 import { RatingsBlock } from '@/components/catalog/RatingsBlock';
 import { getCategories, getProduct, getProductReviews, getPageInfo } from '@/lib/api/storeClient';
+import styles from './page.module.scss';
 
 interface Props {
   searchParams: { id?: string };
@@ -88,8 +89,8 @@ export default async function ProductoPage({ searchParams }: Props) {
   ];
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-5xl mx-auto px-4 py-8">
+    <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+      <div className={styles.container}>
 
         <div style={{ marginBottom: '24px' }}>
           <Breadcrumbs items={breadcrumbItems} />

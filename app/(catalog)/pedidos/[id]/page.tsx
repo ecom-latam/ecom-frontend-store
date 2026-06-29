@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import styles from './page.module.scss';
 import Image from 'next/image';
 
 import { getAccessTokenRole } from '@/utils/helpers';
@@ -180,11 +181,11 @@ export default function OrderDetailPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-        <div className="max-w-3xl mx-auto px-4 py-8">
-          <div className="animate-pulse space-y-4">
+      <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+        <div className={styles.container}>
+          <div className={styles.skeleton}>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 rounded-lg" style={{ background: 'var(--color-bg-subtle)' }} />
+              <div key={i} className={styles.skeletonItem} style={{ background: 'var(--color-bg-subtle)' }} />
             ))}
           </div>
         </div>
@@ -194,8 +195,8 @@ export default function OrderDetailPage() {
 
   if (!order) {
     return (
-      <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-        <div className="max-w-3xl mx-auto px-4 py-16 text-center">
+      <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+        <div className={styles.containerCenter}>
           <Text variant="body" color="muted">Pedido no encontrado.</Text>
           <StoreButton size="md" style={{ marginTop: '16px' }} onClick={() => router.push('/mis-pedidos')}>
             Mis pedidos
@@ -214,8 +215,8 @@ export default function OrderDetailPage() {
   );
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-3xl mx-auto px-4 py-8">
+    <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+      <div className={styles.container}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
           <button onClick={() => router.push('/mis-pedidos')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-fg-muted)', fontSize: 'var(--font-size-sm)' }}>
             ← Mis pedidos

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import "./globals.css";
+import styles from "./layout.module.scss";
 import "./zoui.css";
 import NextLink from "next/link";
 import NextImage from "next/image";
@@ -64,7 +65,7 @@ export default async function RootLayout({
 
   return (
     <html lang="es" data-theme={theme} data-store-theme={storeTheme}>
-      <body className="antialiased flex flex-col min-h-screen">
+      <body className={styles.body}>
         <style dangerouslySetInnerHTML={{ __html: brandStyles }} />
         <StoreProvider>
           <DynamicStoreTheme initialConfig={(storeInfo ?? {}) as Record<string, unknown>}>

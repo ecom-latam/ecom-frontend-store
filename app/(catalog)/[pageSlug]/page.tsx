@@ -5,6 +5,7 @@ import { getPageBySlug, getPageInfo, getCategories, getProducts } from '@/lib/ap
 import { DynamicPage } from '@/components/catalog/DynamicPage';
 import { Text } from 'zoui';
 import { ProductGrid } from '../productos/ProductGrid';
+import styles from './page.module.scss';
 
 interface Props {
   params: { pageSlug: string };
@@ -51,8 +52,8 @@ export default async function DynamicPageRoute({ params, searchParams }: Props) 
     const catalogLabel = storeInfo?.catalog_label ?? 'Productos';
 
     return (
-      <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-        <div className="max-w-7xl mx-auto px-4 py-8">
+      <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+        <div className={styles.container}>
           <Text variant="heading-2" as="h1" style={{ marginBottom: '24px' }}>{catalogLabel}</Text>
           <Suspense>
             <ProductGrid

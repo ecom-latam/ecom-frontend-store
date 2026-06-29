@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import styles from './page.module.scss';
 import { Text, ColorPicker, useToast } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
 import { StoreTextarea } from '@/components/ui/StoreTextarea';
@@ -143,7 +144,7 @@ export default function ConfiguracionPage() {
           Se muestran al comprador en la página del pedido cuando elige pagar por transferencia.
         </Text>
         {loadingTransfer ? (
-          <div className="animate-pulse h-20 rounded" style={{ background: 'var(--color-bg-subtle)' }} />
+          <div className={styles.skeleton} style={{ background: 'var(--color-bg-subtle)' }} />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <StoreTextarea

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import styles from './ProductGallery.module.scss';
 
 interface GalleryImage {
   url: string;
@@ -18,9 +19,9 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   const secondaryImages = images.filter((img) => img !== mainImage);
 
   return (
-    <div className="flex flex-col gap-3" data-testid="product-gallery">
+    <div className={styles.root} data-testid="product-gallery">
       <div
-        className="rounded-lg overflow-hidden"
+        className={styles.mainImage}
         style={{
           background: 'var(--color-bg-subtle)',
           aspectRatio: '4 / 5',
@@ -34,23 +35,23 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             alt={productName}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover"
+            style={{ objectFit: 'cover' }}
             priority
             data-testid="product-gallery-main-image"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-6xl" style={{ color: 'var(--color-fg-disabled)' }}>
+          <div className={styles.emptyPlaceholder} style={{ color: 'var(--color-fg-disabled)' }}>
             □
           </div>
         )}
       </div>
 
       {secondaryImages.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto">
+        <div className={styles.thumbnails}>
           {secondaryImages.map((img, i) => (
             <div
               key={img.publicId}
-              className="flex-shrink-0 rounded-md overflow-hidden"
+              className={styles.thumbnail}
               style={{
                 width: '72px',
                 height: '90px',
@@ -63,7 +64,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 alt={`${productName} ${i + 2}`}
                 fill
                 sizes="72px"
-                className="object-cover"
+                style={{ objectFit: 'cover' }}
               />
             </div>
           ))}

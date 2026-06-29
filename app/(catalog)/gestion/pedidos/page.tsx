@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import styles from './page.module.scss';
 import { useRouter } from 'next/navigation';
 import type { Order, OrderStatus, PaymentStatus, PaymentMethod } from '@/utils/api/orders';
 import { Badge, Table, Text, Pagination } from 'zoui';
@@ -134,9 +135,9 @@ export default function AdminPedidosPage() {
       </div>
 
       {loading ? (
-        <div className="animate-pulse space-y-2">
+        <div className={styles.skeleton}>
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-12 rounded" style={{ background: 'var(--color-bg-subtle)' }} />
+            <div key={i} className={styles.skeletonItem} style={{ background: 'var(--color-bg-subtle)' }} />
           ))}
         </div>
       ) : orderList.length === 0 ? (

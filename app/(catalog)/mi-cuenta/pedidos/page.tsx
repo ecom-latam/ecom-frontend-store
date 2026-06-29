@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Badge, Text } from 'zoui';
+import styles from './page.module.scss';
 import { StoreButton } from '@/components/ui/StoreButton';
 import type { BadgeTone } from 'zoui';
 import { usePageConfig } from '@/context/PageConfigContext';
@@ -43,11 +44,11 @@ export default function MiCuentaPedidosPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-        <div className="max-w-3xl mx-auto px-4 py-8">
-          <div className="animate-pulse space-y-4">
+      <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+        <div className={styles.container}>
+          <div className={styles.skeleton}>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 rounded-lg" style={{ background: 'var(--color-bg-subtle)' }} />
+              <div key={i} className={styles.skeletonItem} style={{ background: 'var(--color-bg-subtle)' }} />
             ))}
           </div>
         </div>
@@ -56,8 +57,8 @@ export default function MiCuentaPedidosPage() {
   }
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-3xl mx-auto px-4 py-8">
+    <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+      <div className={styles.container}>
         <Text variant="heading-2" as="h1" style={{ marginBottom: '24px' }}>Mis pedidos</Text>
 
         {orderList.length === 0 ? (

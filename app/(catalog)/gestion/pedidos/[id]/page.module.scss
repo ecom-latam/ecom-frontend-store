@@ -1,0 +1,11 @@
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonItem {
+  height: 96px;
+  border-radius: var(--radius-lg);
+}

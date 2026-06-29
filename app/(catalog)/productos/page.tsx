@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { getCategories, getProducts, getPageInfo } from '@/lib/api/storeClient';
 import { Text } from 'zoui';
 import { ProductGrid } from './ProductGrid';
+import styles from './page.module.scss';
 
 interface Props {
   searchParams: { page?: string; categoryId?: string; q?: string; view?: string };
@@ -42,8 +43,8 @@ export default async function ProductosPage({ searchParams }: Props) {
   const catalogLabel = storeInfo?.catalog_label ?? 'Productos';
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+      <div className={styles.container}>
         <Text variant="heading-2" as="h1" style={{ marginBottom: '24px' }}>{catalogLabel}</Text>
 
         <Suspense>

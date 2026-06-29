@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, Suspense } from 'react';
+import styles from './MpResult.module.scss';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Text } from 'zoui';
 import { StoreButton } from '@/components/ui/StoreButton';
@@ -45,8 +46,8 @@ function MpResultInner({ variant }: { variant: Variant }) {
   }, [variant, clearCart]);
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-surface)' }}>
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+    <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
+      <div className={styles.container}>
         <div
           style={{
             width: 64, height: 64, borderRadius: '50%', margin: '0 auto 20px',
