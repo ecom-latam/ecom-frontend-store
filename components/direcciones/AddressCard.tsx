@@ -23,13 +23,13 @@ export function AddressCard({ addr, deleting, settingDefault, onEdit, onDelete, 
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-        <Text variant="body-sm" weight="semibold" as="span">{addr.label}</Text>
+        <Text variant="body-sm" weight="semibold">{addr.label}</Text>
         {addr.isDefault && <Badge tone="info" variant="pill" size="sm">Predeterminada</Badge>}
       </div>
 
-      <Text variant="body-sm" color="muted" as="p">{addr.fullName} · {addr.phone}</Text>
-      <Text variant="body-sm" color="muted" as="p">{addr.address}{addr.floor ? `, ${addr.floor}` : ''}</Text>
-      <Text variant="body-sm" color="muted" as="p">{addr.city}, {addr.province}{addr.zip ? ` (${addr.zip})` : ''}</Text>
+      <Text variant="body-sm" color="muted">{addr.fullName} · {addr.phone}</Text>
+      <Text variant="body-sm" color="muted">{addr.address}{addr.floor ? `, ${addr.floor}` : ''}</Text>
+      <Text variant="body-sm" color="muted">{addr.city}, {addr.province}{addr.zip ? ` (${addr.zip})` : ''}</Text>
 
       <div style={{ display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
         <StoreButton emphasis="ghost" size="sm" onClick={onEdit} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>

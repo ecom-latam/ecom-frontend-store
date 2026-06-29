@@ -79,8 +79,8 @@ export default function AdminPedidosPage() {
   return (
     <main style={{ padding: '32px', overflowY: 'auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
-        <Text variant="heading-2" as="h1">Pedidos</Text>
-        <Text variant="body-sm" color="muted" as="span">{total} en total</Text>
+        <Text variant="heading-2">Pedidos</Text>
+        <Text variant="body-sm" color="muted">{total} en total</Text>
       </div>
 
       {/* Filters */}
@@ -167,7 +167,7 @@ export default function AdminPedidosPage() {
                     {new Date(order.createdAt).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </Table.Td>
                   <Table.Td>
-                    <Text variant="body-sm" as="span" truncate style={{ maxWidth: '160px', display: 'block' }}>
+                    <Text variant="body-sm" truncate style={{ maxWidth: '160px', display: 'block' }}>
                       {order.shippingAddress.fullName}
                     </Text>
                   </Table.Td>

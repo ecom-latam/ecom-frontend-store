@@ -49,7 +49,7 @@ export default function CheckoutPage() {
   return (
     <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
       <div className={styles.containerMain}>
-        <Text variant="heading-2" as="h1" style={{ marginBottom: '32px' }}>Checkout</Text>
+        <Text variant="heading-2" style={{ marginBottom: '32px' }}>Checkout</Text>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', alignItems: 'start' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

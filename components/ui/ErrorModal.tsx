@@ -76,7 +76,7 @@ export function ErrorModalProvider({ children }: { children: React.ReactNode }) 
         </Modal.Header>
         <Modal.Body>
           {error.detail && (
-            <Text variant="body" as="p" color="secondary">
+            <Text variant="body" color="secondary">
               {error.detail}
             </Text>
           )}

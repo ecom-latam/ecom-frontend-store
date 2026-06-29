@@ -75,13 +75,13 @@ export default function SeguridadPage() {
 
   return (
     <main style={{ padding: '32px 24px', maxWidth: 560 }}>
-      <Text variant="heading-2" as="h1" style={{ marginBottom: '32px' }}>Seguridad</Text>
+      <Text variant="heading-2" style={{ marginBottom: '32px' }}>Seguridad</Text>
 
       {/* ── Cambiar contraseña ── */}
       <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '24px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
           <div style={{ color: 'var(--color-fg-muted)' }}><ShieldIcon /></div>
-          <Text variant="heading-3" as="h2">Cambiar contraseña</Text>
+          <Text variant="heading-3">Cambiar contraseña</Text>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -117,13 +117,13 @@ export default function SeguridadPage() {
 
         {apiError && (
           <div style={{ marginTop: '16px', padding: '10px 14px', background: 'var(--color-error-50)', border: '1px solid var(--color-error-200)', borderRadius: 'var(--radius-md)' }}>
-            <Text variant="body-sm" style={{ color: 'var(--color-error-700)' }} as="p">{apiError}</Text>
+            <Text variant="body-sm" style={{ color: 'var(--color-error-700)' }}>{apiError}</Text>
           </div>
         )}
 
         {success && (
           <div style={{ marginTop: '16px', padding: '10px 14px', background: 'var(--color-success-50)', border: '1px solid var(--color-success-200)', borderRadius: 'var(--radius-md)' }}>
-            <Text variant="body-sm" style={{ color: 'var(--color-success-700)' }} as="p">Contraseña actualizada correctamente.</Text>
+            <Text variant="body-sm" style={{ color: 'var(--color-success-700)' }}>Contraseña actualizada correctamente.</Text>
           </div>
         )}
 
@@ -143,7 +143,7 @@ export default function SeguridadPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ color: 'var(--color-fg-muted)' }}><ShieldIcon /></div>
-            <Text variant="heading-3" as="h2">Autenticación de dos factores</Text>
+            <Text variant="heading-3">Autenticación de dos factores</Text>
           </div>
           <span style={{
             fontSize: 'var(--font-size-xs)',
@@ -165,19 +165,19 @@ export default function SeguridadPage() {
             <PhoneIcon />
           </div>
           <div style={{ flex: 1 }}>
-            <Text variant="body-sm" weight="medium" as="p" style={{ marginBottom: '6px' }}>
+            <Text variant="body-sm" weight="medium" style={{ marginBottom: '6px' }}>
               Aplicación de autenticación (TOTP)
             </Text>
-            <Text variant="body-sm" color="muted" as="p" style={{ lineHeight: 1.6 }}>
+            <Text variant="body-sm" color="muted" style={{ lineHeight: 1.6 }}>
               Usá una app como Google Authenticator o Authy para generar códigos temporales al iniciar sesión. Agrega una capa extra de seguridad a tu cuenta.
             </Text>
 
             <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <Text variant="caption" color="muted" as="p">Estado</Text>
+                <Text variant="caption" color="muted">Estado</Text>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--color-fg-disabled)' }} />
-                  <Text variant="body-sm" as="span">No activado</Text>
+                  <Text variant="body-sm">No activado</Text>
                 </div>
               </div>
 

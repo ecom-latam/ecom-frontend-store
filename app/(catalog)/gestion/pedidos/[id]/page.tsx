@@ -168,14 +168,14 @@ export default function AdminPedidoDetailPage() {
       </button>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
-        <Text variant="heading-2" as="h1">Pedido #{order.orderNumber}</Text>
+        <Text variant="heading-2">Pedido #{order.orderNumber}</Text>
         <Badge tone={STATUS_TONE[order.status]} variant="pill" data-testid="order-status-badge">{STATUS_LABEL[order.status]}</Badge>
         <Badge tone={PAYMENT_TONE[order.paymentStatus]} variant="pill" data-testid="order-payment-badge">{PAYMENT_LABEL[order.paymentStatus]}</Badge>
       </div>
 
       {error && (
         <div style={{ marginBottom: '16px', padding: '12px', background: 'var(--color-error-50)', border: '1px solid var(--color-error-200)', borderRadius: 'var(--radius-md)' }}>
-          <Text variant="body-sm" style={{ color: 'var(--color-error-700)' }} as="p">{error}</Text>
+          <Text variant="body-sm" style={{ color: 'var(--color-error-700)' }}>{error}</Text>
         </div>
       )}
 
@@ -186,7 +186,7 @@ export default function AdminPedidoDetailPage() {
 
           {/* Items */}
           <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-            <Text variant="heading-3" as="h2" style={{ marginBottom: '16px' }}>Productos</Text>
+            <Text variant="heading-3" style={{ marginBottom: '16px' }}>Productos</Text>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {order.items.map((item, idx) => (
                 <li key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -198,31 +198,31 @@ export default function AdminPedidoDetailPage() {
                     )}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <Text variant="body-sm" weight="medium" as="p">{item.name}</Text>
+                    <Text variant="body-sm" weight="medium">{item.name}</Text>
                     {Object.keys(item.selectedOptions).length > 0 && (
-                      <Text variant="caption" color="muted" as="p">
+                      <Text variant="caption" color="muted">
                         {Object.entries(item.selectedOptions).map(([k, v]) => `${k}: ${v}`).join(' · ')}
                       </Text>
                     )}
-                    <Text variant="caption" color="muted" as="p">x{item.quantity} · {formatPrice(item.price, currency)}</Text>
+                    <Text variant="caption" color="muted">x{item.quantity} · {formatPrice(item.price, currency)}</Text>
                   </div>
-                  <Text variant="body-sm" weight="semibold" as="span">{formatPrice(item.subtotal, currency)}</Text>
+                  <Text variant="body-sm" weight="semibold">{formatPrice(item.subtotal, currency)}</Text>
                 </li>
               ))}
             </ul>
             <div style={{ borderTop: '1px solid var(--color-border-default)', marginTop: '16px', paddingTop: '16px', display: 'flex', justifyContent: 'space-between' }}>
-              <Text variant="body" weight="semibold" as="span">Total</Text>
-              <Text variant="body" weight="semibold" as="span">{formatPrice(order.total, currency)}</Text>
+              <Text variant="body" weight="semibold">Total</Text>
+              <Text variant="body" weight="semibold">{formatPrice(order.total, currency)}</Text>
             </div>
           </section>
 
           {/* Shipping */}
           <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-            <Text variant="heading-3" as="h2" style={{ marginBottom: '12px' }}>Datos de envío</Text>
-            <Text variant="body-sm" as="p">{order.shippingAddress.fullName}</Text>
-            <Text variant="body-sm" as="p">{order.shippingAddress.phone}</Text>
-            <Text variant="body-sm" as="p">{order.shippingAddress.address}</Text>
-            <Text variant="body-sm" as="p">
+            <Text variant="heading-3" style={{ marginBottom: '12px' }}>Datos de envío</Text>
+            <Text variant="body-sm">{order.shippingAddress.fullName}</Text>
+            <Text variant="body-sm">{order.shippingAddress.phone}</Text>
+            <Text variant="body-sm">{order.shippingAddress.address}</Text>
+            <Text variant="body-sm">
               {order.shippingAddress.city}, {order.shippingAddress.province}
               {order.shippingAddress.zip ? ` (${order.shippingAddress.zip})` : ''}
             </Text>
@@ -231,8 +231,8 @@ export default function AdminPedidoDetailPage() {
           {/* Notes */}
           {order.notes && (
             <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-              <Text variant="heading-3" as="h2" style={{ marginBottom: '8px' }}>Notas del cliente</Text>
-              <Text variant="body-sm" color="muted" as="p">{order.notes}</Text>
+              <Text variant="heading-3" style={{ marginBottom: '8px' }}>Notas del cliente</Text>
+              <Text variant="body-sm" color="muted">{order.notes}</Text>
             </section>
           )}
         </div>
@@ -242,8 +242,8 @@ export default function AdminPedidoDetailPage() {
 
           {/* Payment actions */}
           <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-            <Text variant="heading-3" as="h2" style={{ marginBottom: '12px' }}>Pago</Text>
-            <Text variant="body-sm" as="p" style={{ marginBottom: '12px' }}>
+            <Text variant="heading-3" style={{ marginBottom: '12px' }}>Pago</Text>
+            <Text variant="body-sm" style={{ marginBottom: '12px' }}>
               {order.paymentMethod === 'transfer' ? 'Transferencia bancaria' : 'Efectivo en mano'}
             </Text>
             {canConfirmPayment && (
@@ -262,7 +262,7 @@ export default function AdminPedidoDetailPage() {
           {/* Status actions */}
           {(nonCancelNext.length > 0 || canCancel) && (
             <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-              <Text variant="heading-3" as="h2" style={{ marginBottom: '12px' }}>Estado del pedido</Text>
+              <Text variant="heading-3" style={{ marginBottom: '12px' }}>Estado del pedido</Text>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {nonCancelNext.map((status) => (
                   <StoreButton
@@ -295,11 +295,11 @@ export default function AdminPedidoDetailPage() {
 
           {/* Metadata */}
           <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-            <Text variant="heading-3" as="h2" style={{ marginBottom: '12px' }}>Info</Text>
-            <Text variant="caption" color="muted" as="p">
+            <Text variant="heading-3" style={{ marginBottom: '12px' }}>Info</Text>
+            <Text variant="caption" color="muted">
               Creado: {new Date(order.createdAt).toLocaleString('es-AR')}
             </Text>
-            <Text variant="caption" color="muted" as="p">
+            <Text variant="caption" color="muted">
               ID: {order._id}
             </Text>
           </section>
@@ -310,7 +310,7 @@ export default function AdminPedidoDetailPage() {
       <Modal open={confirmModal?.type === 'confirmPayment'} size="sm" onClose={() => setConfirmModal(null)}>
         <Modal.Header>Confirmar pago</Modal.Header>
         <Modal.Body>
-          <Text variant="body-sm" as="p">
+          <Text variant="body-sm">
             ¿Confirmás que recibiste el pago? El pedido pasará a estado "Confirmado".
           </Text>
         </Modal.Body>
@@ -326,7 +326,7 @@ export default function AdminPedidoDetailPage() {
       <Modal open={!!(confirmModal?.type === 'status' && confirmModal.status)} size="sm" onClose={() => setConfirmModal(null)}>
         <Modal.Header>Actualizar estado</Modal.Header>
         <Modal.Body>
-          <Text variant="body-sm" as="p">
+          <Text variant="body-sm">
             ¿Confirmás cambiar el estado a &ldquo;{confirmModal?.type === 'status' && confirmModal.status ? getStepLabel(order.paymentMethod, order.shippingMethod, confirmModal.status) : ''}&rdquo;?
           </Text>
         </Modal.Body>
@@ -342,7 +342,7 @@ export default function AdminPedidoDetailPage() {
       <Modal open={confirmModal?.type === 'cancel'} size="sm" onClose={() => setConfirmModal(null)}>
           <Modal.Header>Cancelar pedido</Modal.Header>
           <Modal.Body>
-            <Text variant="body-sm" as="p">
+            <Text variant="body-sm">
               ¿Estás seguro de que querés cancelar este pedido? Esta acción no se puede deshacer.
             </Text>
           </Modal.Body>

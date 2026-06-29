@@ -90,7 +90,7 @@ function ConfirmModal({ title, message, confirmLabel, danger = false, onConfirm,
     <Modal open size="sm" onClose={onCancel}>
       <Modal.Header>{title}</Modal.Header>
       <Modal.Body>
-        <Text variant="body" color="secondary" as="p">{message}</Text>
+        <Text variant="body" color="secondary">{message}</Text>
       </Modal.Body>
       <Modal.Footer>
         <StoreButton
@@ -196,7 +196,7 @@ function ImagesTab({ productId, images, onChange }: ImagesTabProps) {
       </div>
 
       {images.length === 0 ? (
-        <Text variant="body-sm" color="muted" tag="p">Todavía no hay imágenes para este producto.</Text>
+        <Text variant="body-sm" color="muted">Todavía no hay imágenes para este producto.</Text>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }} data-testid="prod-images-grid">
           {images.map((img, index) => (
@@ -433,9 +433,9 @@ function VariantsTab({ productId, product, onChange }: VariantsTabProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <Text variant="label" tag="p" style={{ marginBottom: 8 }}>Opciones que definen las variantes</Text>
+        <Text variant="label" style={{ marginBottom: 8 }}>Opciones que definen las variantes</Text>
         {allOptions.length === 0 ? (
-          <Text variant="body-sm" color="muted" tag="p">
+          <Text variant="body-sm" color="muted">
             Todavía no creaste ninguna opción. Creálas desde Catálogo → Opciones.
           </Text>
         ) : (
@@ -810,7 +810,7 @@ export default function GestionProductosPage() {
   return (
     <main style={{ padding: '32px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <Text variant="heading-2" as="h1">Productos</Text>
+        <Text variant="heading-2">Productos</Text>
         <StoreButton size="md" onClick={openCreate} data-testid="prod-new-btn">
           + Nuevo producto
         </StoreButton>
@@ -867,7 +867,7 @@ export default function GestionProductosPage() {
                 <Table.Td style={{ maxWidth: 240 }}>
                   <Text variant="body-sm" weight="medium" truncate>{product.name}</Text>
                   {product.salePrice !== null && (
-                    <Text variant="caption" color="muted" as="p" style={{ marginTop: 2 }}>Oferta: {formatPrice(product.salePrice, currency)}</Text>
+                    <Text variant="caption" color="muted" style={{ marginTop: 2 }}>Oferta: {formatPrice(product.salePrice, currency)}</Text>
                   )}
                 </Table.Td>
                 <Table.Td style={{ textAlign: 'center' }}>
@@ -900,7 +900,7 @@ export default function GestionProductosPage() {
 
       {!loading && (counts.active + counts.draft + counts.paused) > 0 && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
-          <Text variant="caption" color="muted" as="p">
+          <Text variant="caption" color="muted">
             {counts.active + counts.draft + counts.paused} producto{counts.active + counts.draft + counts.paused !== 1 ? 's' : ''} · {counts.active} activo{counts.active !== 1 ? 's' : ''} · {counts.draft} borrador{counts.draft !== 1 ? 'es' : ''} · {counts.paused} inactivo{counts.paused !== 1 ? 's' : ''}
           </Text>
           {totalPages > 1 && <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />}

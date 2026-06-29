@@ -45,7 +45,7 @@ export default async function ProductosPage({ searchParams }: Props) {
   return (
     <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
       <div className={styles.container}>
-        <Text variant="heading-2" as="h1" style={{ marginBottom: '24px' }}>{catalogLabel}</Text>
+        <Text variant="heading-2" style={{ marginBottom: '24px' }}>{catalogLabel}</Text>
 
         <Suspense>
           <ProductGrid

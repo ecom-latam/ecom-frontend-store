@@ -204,13 +204,13 @@ function ProductListItem({ product }: { product: Product }) {
         )}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Text variant="body-sm" weight="medium" as="p">{product.name}</Text>
+        <Text variant="body-sm" weight="medium">{product.name}</Text>
         <div style={{ marginTop: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Text variant="body-sm" weight="semibold" as="span">
+          <Text variant="body-sm" weight="semibold">
             {formatPrice(displayPrice, currency)}
           </Text>
           {hasDiscount && (
-            <Text variant="caption" color="muted" as="span" style={{ textDecoration: 'line-through' }}>
+            <Text variant="caption" color="muted" style={{ textDecoration: 'line-through' }}>
               {formatPrice(product.price, currency)}
             </Text>
           )}
