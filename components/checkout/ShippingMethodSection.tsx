@@ -9,7 +9,7 @@ interface ShippingMethodSectionProps {
 export function ShippingMethodSection({ value, onChange }: ShippingMethodSectionProps) {
   return (
     <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '24px' }}>
-      <Text variant="heading-3" as="h2" style={{ marginBottom: '20px' }}>Método de entrega</Text>
+      <Text variant="heading-3" style={{ marginBottom: '20px' }}>Método de entrega</Text>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {(['delivery', 'pickup'] as const).map((method) => (
           <OptionCard

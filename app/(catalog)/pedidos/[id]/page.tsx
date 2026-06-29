@@ -67,7 +67,7 @@ function TransferInfo({ store }: { store: TransferData }) {
   if (fields.length > 0) {
     return (
       <div style={{ marginTop: '16px', padding: '16px', background: 'var(--color-brand-50)', border: '1px solid var(--color-brand-200)', borderRadius: 'var(--radius-md)' }}>
-        <Text variant="body-sm" weight="semibold" as="p" style={{ marginBottom: '12px' }}>
+        <Text variant="body-sm" weight="semibold" style={{ marginBottom: '12px' }}>
           Datos para transferir:
         </Text>
         <dl style={{ margin: 0, display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '6px 16px' }}>
@@ -85,8 +85,8 @@ function TransferInfo({ store }: { store: TransferData }) {
   if (store.transfer_info) {
     return (
       <div style={{ marginTop: '16px', padding: '16px', background: 'var(--color-brand-50)', border: '1px solid var(--color-brand-200)', borderRadius: 'var(--radius-md)' }}>
-        <Text variant="body-sm" weight="semibold" as="p" style={{ marginBottom: '8px' }}>Datos para transferir:</Text>
-        <Text variant="body-sm" as="p" style={{ whiteSpace: 'pre-wrap' }}>{store.transfer_info}</Text>
+        <Text variant="body-sm" weight="semibold" style={{ marginBottom: '8px' }}>Datos para transferir:</Text>
+        <Text variant="body-sm" style={{ whiteSpace: 'pre-wrap' }}>{store.transfer_info}</Text>
       </div>
     );
   }
@@ -224,13 +224,13 @@ export default function OrderDetailPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
-          <Text variant="heading-2" as="h1">Pedido #{order.orderNumber}</Text>
+          <Text variant="heading-2">Pedido #{order.orderNumber}</Text>
           <Badge tone={STATUS_TONE[order.status]} variant="pill">{STATUS_LABEL[order.status]}</Badge>
         </div>
 
         {error && (
           <div style={{ marginBottom: '16px', padding: '12px', background: 'var(--color-error-50)', border: '1px solid var(--color-error-200)', borderRadius: 'var(--radius-md)' }}>
-            <Text variant="body-sm" style={{ color: 'var(--color-error-700)' }} as="p">{error}</Text>
+            <Text variant="body-sm" style={{ color: 'var(--color-error-700)' }}>{error}</Text>
           </div>
         )}
 
@@ -238,7 +238,7 @@ export default function OrderDetailPage() {
 
           {/* Items */}
           <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-            <Text variant="heading-3" as="h2" style={{ marginBottom: '16px' }}>Productos</Text>
+            <Text variant="heading-3" style={{ marginBottom: '16px' }}>Productos</Text>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {order.items.map((item, idx) => (
                 <li key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -250,45 +250,45 @@ export default function OrderDetailPage() {
                     )}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <Text variant="body-sm" weight="medium" as="p">{item.name}</Text>
+                    <Text variant="body-sm" weight="medium">{item.name}</Text>
                     {Object.keys(item.selectedOptions).length > 0 && (
-                      <Text variant="caption" color="muted" as="p">
+                      <Text variant="caption" color="muted">
                         {Object.entries(item.selectedOptions).map(([k, v]) => `${k}: ${v}`).join(' · ')}
                       </Text>
                     )}
-                    <Text variant="caption" color="muted" as="p">x{item.quantity} · {formatPrice(item.price, currency)} c/u</Text>
+                    <Text variant="caption" color="muted">x{item.quantity} · {formatPrice(item.price, currency)} c/u</Text>
                   </div>
-                  <Text variant="body-sm" weight="semibold" as="span">{formatPrice(item.subtotal, currency)}</Text>
+                  <Text variant="body-sm" weight="semibold">{formatPrice(item.subtotal, currency)}</Text>
                 </li>
               ))}
             </ul>
             <div style={{ borderTop: '1px solid var(--color-border-default)', marginTop: '16px', paddingTop: '16px', display: 'flex', justifyContent: 'space-between' }}>
-              <Text variant="body" weight="semibold" as="span">Total</Text>
-              <Text variant="body" weight="semibold" as="span">{formatPrice(order.total, currency)}</Text>
+              <Text variant="body" weight="semibold">Total</Text>
+              <Text variant="body" weight="semibold">{formatPrice(order.total, currency)}</Text>
             </div>
           </section>
 
           {/* Shipping */}
           <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-            <Text variant="heading-3" as="h2" style={{ marginBottom: '12px' }}>Envío</Text>
-            <Text variant="body-sm" as="p">{order.shippingAddress.fullName}</Text>
-            <Text variant="body-sm" as="p">{order.shippingAddress.phone}</Text>
-            <Text variant="body-sm" as="p">{order.shippingAddress.address}</Text>
-            <Text variant="body-sm" as="p">{order.shippingAddress.city}, {order.shippingAddress.province}{order.shippingAddress.zip ? ` (${order.shippingAddress.zip})` : ''}</Text>
+            <Text variant="heading-3" style={{ marginBottom: '12px' }}>Envío</Text>
+            <Text variant="body-sm">{order.shippingAddress.fullName}</Text>
+            <Text variant="body-sm">{order.shippingAddress.phone}</Text>
+            <Text variant="body-sm">{order.shippingAddress.address}</Text>
+            <Text variant="body-sm">{order.shippingAddress.city}, {order.shippingAddress.province}{order.shippingAddress.zip ? ` (${order.shippingAddress.zip})` : ''}</Text>
           </section>
 
           {/* Payment */}
           <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-            <Text variant="heading-3" as="h2" style={{ marginBottom: '12px' }}>Pago</Text>
-            <Text variant="body-sm" as="p">Método: Transferencia bancaria</Text>
+            <Text variant="heading-3" style={{ marginBottom: '12px' }}>Pago</Text>
+            <Text variant="body-sm">Método: Transferencia bancaria</Text>
 
             {paymentNote && (
-              <Text variant="body-sm" color="muted" as="p" style={{ marginTop: '8px' }}>{paymentNote}</Text>
+              <Text variant="body-sm" color="muted" style={{ marginTop: '8px' }}>{paymentNote}</Text>
             )}
 
             {order.paymentProofUrl && order.paymentStatus !== 'pending' && (
               <div style={{ marginTop: '12px' }}>
-                <Text variant="body-sm" color="muted" as="p" style={{ marginBottom: '6px' }}>Comprobante adjunto:</Text>
+                <Text variant="body-sm" color="muted" style={{ marginBottom: '6px' }}>Comprobante adjunto:</Text>
                 <a href={order.paymentProofUrl} target="_blank" rel="noopener noreferrer">
                   <Image src={order.paymentProofUrl} alt="Comprobante de transferencia" width={120} height={80} style={{ objectFit: 'cover', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border-default)' }} />
                 </a>
@@ -303,8 +303,8 @@ export default function OrderDetailPage() {
           {/* Notes */}
           {order.notes && (
             <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-              <Text variant="heading-3" as="h2" style={{ marginBottom: '8px' }}>Notas</Text>
-              <Text variant="body-sm" color="muted" as="p">{order.notes}</Text>
+              <Text variant="heading-3" style={{ marginBottom: '8px' }}>Notas</Text>
+              <Text variant="body-sm" color="muted">{order.notes}</Text>
             </section>
           )}
 
@@ -337,7 +337,7 @@ export default function OrderDetailPage() {
       <Modal open={confirmModal === 'notify'} size="sm" onClose={() => !actionLoading && setConfirmModal(null)}>
         <Modal.Header>Confirmar pago</Modal.Header>
         <Modal.Body>
-          <Text variant="body-sm" as="p" style={{ marginBottom: '16px' }}>
+          <Text variant="body-sm" style={{ marginBottom: '16px' }}>
             ¿Confirmás que ya realizaste la transferencia? El vendedor la verificará y confirmará tu pedido.
           </Text>
 
@@ -353,7 +353,7 @@ export default function OrderDetailPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Image src={voucherPreview} alt="Comprobante" width={72} height={72} style={{ objectFit: 'cover', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border-default)', flexShrink: 0 }} />
               <div>
-                <Text variant="caption" color="muted" as="p">{voucher?.name}</Text>
+                <Text variant="caption" color="muted">{voucher?.name}</Text>
                 <button
                   onClick={() => { setVoucher(null); setVoucherPreview(null); if (fileInputRef.current) fileInputRef.current.value = ''; }}
                   style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-error-600)', fontSize: 'var(--font-size-sm)', padding: 0 }}
@@ -385,7 +385,7 @@ export default function OrderDetailPage() {
       <Modal open={confirmModal === 'cancel'} size="sm" onClose={() => setConfirmModal(null)}>
         <Modal.Header>Cancelar pedido</Modal.Header>
         <Modal.Body>
-          <Text variant="body-sm" as="p">
+          <Text variant="body-sm">
             ¿Estás seguro de que querés cancelar este pedido? Esta acción no se puede deshacer.
           </Text>
         </Modal.Body>

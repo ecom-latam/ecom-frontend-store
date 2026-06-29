@@ -72,7 +72,7 @@ export default function MisPedidosPage() {
   return (
     <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
       <div className={styles.container}>
-        <Text variant="heading-2" as="h1" style={{ marginBottom: '24px' }}>Mis pedidos</Text>
+        <Text variant="heading-2" style={{ marginBottom: '24px' }}>Mis pedidos</Text>
 
         {orderList.length === 0 ? (
           <div style={{ textAlign: 'center', paddingTop: '48px' }}>
@@ -103,10 +103,10 @@ export default function MisPedidosPage() {
                 }}
               >
                 <div style={{ flex: 1 }}>
-                  <Text variant="body-sm" weight="semibold" as="p">
+                  <Text variant="body-sm" weight="semibold">
                     Pedido #{order.orderNumber}
                   </Text>
-                  <Text variant="caption" color="muted" as="p">
+                  <Text variant="caption" color="muted">
                     {new Date(order.createdAt).toLocaleDateString('es-AR', {
                       day: '2-digit',
                       month: 'short',

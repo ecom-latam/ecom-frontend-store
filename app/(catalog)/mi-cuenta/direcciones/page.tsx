@@ -156,8 +156,8 @@ export default function DireccionesPage() {
 
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '28px' }}>
         <div>
-          <Text variant="heading-2" as="h1">Mis direcciones</Text>
-          <Text variant="body-sm" color="muted" as="p" style={{ marginTop: '4px' }}>
+          <Text variant="heading-2">Mis direcciones</Text>
+          <Text variant="body-sm" color="muted" style={{ marginTop: '4px' }}>
             Guardá hasta 5 direcciones de envío
           </Text>
         </div>
@@ -186,8 +186,8 @@ export default function DireccionesPage() {
           <div style={{ color: 'var(--color-fg-disabled)', marginBottom: '12px' }}>
             <LocationIcon />
           </div>
-          <Text variant="body" color="muted" as="p">Todavía no tenés direcciones guardadas.</Text>
-          <Text variant="body-sm" color="muted" as="p" style={{ marginTop: '6px' }}>
+          <Text variant="body" color="muted">Todavía no tenés direcciones guardadas.</Text>
+          <Text variant="body-sm" color="muted" style={{ marginTop: '6px' }}>
             Usá el botón "Agregar" para guardar tu primera dirección de envío.
           </Text>
         </div>
@@ -209,7 +209,7 @@ export default function DireccionesPage() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="md">
         <Modal.Header>
-          <Text variant="heading-3" as="h2">
+          <Text variant="heading-3">
             {editing ? 'Editar dirección' : 'Nueva dirección'}
           </Text>
         </Modal.Header>
@@ -314,7 +314,7 @@ export default function DireccionesPage() {
 
             {error && (
               <div style={{ padding: '10px 14px', background: 'var(--color-error-50)', border: '1px solid var(--color-error-200)', borderRadius: 'var(--radius-md)' }}>
-                <Text variant="body-sm" style={{ color: 'var(--color-error-700)' }} as="p">{error}</Text>
+                <Text variant="body-sm" style={{ color: 'var(--color-error-700)' }}>{error}</Text>
               </div>
             )}
           </div>

@@ -94,12 +94,12 @@ export function PDPInfoPanel({
         </Link>
       )}
 
-      <Text variant="heading-2" as="h1">{product.name}</Text>
+      <Text variant="heading-2">{product.name}</Text>
 
       <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-        <Text variant="heading-1" as="span"><Price value={displayPrice} /></Text>
+        <Text variant="heading-1"><Price value={displayPrice} /></Text>
         {hasDiscount && (
-          <Text variant="body" color="muted" as="span" style={{ textDecoration: 'line-through' }}>
+          <Text variant="body" color="muted" style={{ textDecoration: 'line-through' }}>
             <Price value={product.price} />
           </Text>
         )}
@@ -109,7 +109,7 @@ export function PDPInfoPanel({
       </div>
 
       {showInstallments && (
-        <Text variant="body-sm" color="secondary" as="p" style={{ marginTop: '6px' }}>
+        <Text variant="body-sm" color="secondary" style={{ marginTop: '6px' }}>
           {interestFree
             ? `${installmentsCount} cuotas sin interés`
             : `Hasta ${installmentsCount} cuotas`}
@@ -117,7 +117,7 @@ export function PDPInfoPanel({
       )}
 
       {product.description && (
-        <Text variant="body-sm" color="secondary" as="p" style={{ marginTop: '16px', whiteSpace: 'pre-line' }}>
+        <Text variant="body-sm" color="secondary" style={{ marginTop: '16px', whiteSpace: 'pre-line' }}>
           {product.description}
         </Text>
       )}

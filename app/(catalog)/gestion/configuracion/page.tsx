@@ -101,12 +101,12 @@ export default function ConfiguracionPage() {
 
   return (
     <main style={{ padding: '32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <Text variant="heading-2" as="h1">Configuración</Text>
+      <Text variant="heading-2">Configuración</Text>
 
       {/* Color de marca */}
       <div style={sectionStyle}>
-        <Text variant="heading-3" as="h2" style={{ marginBottom: '4px' }}>Color de marca</Text>
-        <Text variant="body-sm" color="secondary" as="p" style={{ marginBottom: '28px' }}>
+        <Text variant="heading-3" style={{ marginBottom: '4px' }}>Color de marca</Text>
+        <Text variant="body-sm" color="secondary" style={{ marginBottom: '28px' }}>
           El color elegido se aplica en toda la tienda para todos los visitantes.
         </Text>
         <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flexWrap: 'wrap' }}>
@@ -139,8 +139,8 @@ export default function ConfiguracionPage() {
 
       {/* Datos de transferencia */}
       <div style={sectionStyle}>
-        <Text variant="heading-3" as="h2" style={{ marginBottom: '4px' }}>Datos para transferencia</Text>
-        <Text variant="body-sm" color="secondary" as="p" style={{ marginBottom: '20px' }}>
+        <Text variant="heading-3" style={{ marginBottom: '4px' }}>Datos para transferencia</Text>
+        <Text variant="body-sm" color="secondary" style={{ marginBottom: '20px' }}>
           Se muestran al comprador en la página del pedido cuando elige pagar por transferencia.
         </Text>
         {loadingTransfer ? (

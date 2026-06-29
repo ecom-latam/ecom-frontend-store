@@ -70,7 +70,7 @@ function LoginForm() {
         <Text variant="body-sm" color="muted">← Volver a la tienda</Text>
       </Link>
 
-      <Text variant="heading-2" as="h1" style={{ marginBottom: '4px' }}>Iniciar sesión</Text>
+      <Text variant="heading-2" style={{ marginBottom: '4px' }}>Iniciar sesión</Text>
       <Text variant="body-sm" color="muted" style={{ marginBottom: '24px' }}>Accedé a tu cuenta.</Text>
 
       {registered && (
@@ -84,7 +84,7 @@ function LoginForm() {
         <StorePasswordInput id="password" autoComplete="current-password" label="Contraseña" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} data-testid="store-login-password" />
 
         {error && (
-          <Text variant="body-sm" as="p" style={{ color: 'var(--color-error-500)' }} data-testid="store-login-error">{error}</Text>
+          <Text variant="body-sm" style={{ color: 'var(--color-error-500)' }} data-testid="store-login-error">{error}</Text>
         )}
 
         <StoreButton loading={loading} disabled={!isValid || loading} size="md" style={{ width: '100%' }} onClick={handleSubmit} data-testid="store-login-submit">
@@ -92,7 +92,7 @@ function LoginForm() {
         </StoreButton>
       </div>
 
-      <Text variant="body-sm" color="muted" as="p" style={{ textAlign: 'center', marginTop: '24px' }}>
+      <Text variant="body-sm" color="muted" style={{ textAlign: 'center', marginTop: '24px' }}>
         ¿No tenés cuenta?{' '}
         <Link href="/registro" style={{ color: 'var(--color-fg-primary)', fontWeight: 500, textDecoration: 'underline' }}>
           Registrate

@@ -57,7 +57,7 @@ export function CartPageContent() {
     <main className={styles.root} style={{ background: 'var(--color-bg-surface)' }}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <Text variant="heading-2" as="h1">Mi carrito</Text>
+          <Text variant="heading-2">Mi carrito</Text>
           <Button emphasis="ghost" size="md" onClick={clearCart} disabled={isLoading} style={{ color: 'var(--color-fg-muted)' }}>
             Vaciar carrito
           </Button>
@@ -93,14 +93,14 @@ export function CartPageContent() {
                   </Button>
 
                   {Object.keys(item.selectedOptions).length > 0 && (
-                    <Text variant="body-sm" color="muted" as="p" style={{ marginTop: '2px' }}>
+                    <Text variant="body-sm" color="muted" style={{ marginTop: '2px' }}>
                       {Object.entries(item.selectedOptions)
                         .map(([k, v]) => `${k}: ${v}`)
                         .join(' · ')}
                     </Text>
                   )}
 
-                  <Text variant="body-sm" weight="semibold" as="p" style={{ marginTop: '4px' }}>
+                  <Text variant="body-sm" weight="semibold" style={{ marginTop: '4px' }}>
                     {formatPrice(item.price, currency)}
                   </Text>
 
@@ -113,7 +113,7 @@ export function CartPageContent() {
                     >
                       −
                     </Button>
-                    <Text variant="body-sm" weight="medium" as="span" style={{ width: '24px', textAlign: 'center' }}>{item.quantity}</Text>
+                    <Text variant="body-sm" weight="medium" style={{ width: '24px', textAlign: 'center' }}>{item.quantity}</Text>
                     <Button
                       emphasis="outlined"
                       size="md"
@@ -132,7 +132,7 @@ export function CartPageContent() {
                       +
                     </Button>
 
-                    <Text variant="body-sm" color="secondary" as="span" style={{ marginLeft: '16px' }}>
+                    <Text variant="body-sm" color="secondary" style={{ marginLeft: '16px' }}>
                       Total: {formatPrice(item.price * item.quantity, currency)}
                     </Text>
 
@@ -147,18 +147,18 @@ export function CartPageContent() {
 
           <div className={styles.summary}>
             <div className={styles.summaryInner} style={{ border: '1px solid var(--color-border-default)' }}>
-              <Text variant="body" weight="semibold" as="h2">Resumen</Text>
+              <Text variant="body" weight="semibold">Resumen</Text>
 
               <div className={styles.summaryItems}>
                 <div className={styles.summaryRow}>
-                  <Text variant="body-sm" color="secondary" as="span">Productos ({items.reduce((s, i) => s + i.quantity, 0)})</Text>
-                  <Text variant="body-sm" color="secondary" as="span">{formatPrice(subtotal, currency)}</Text>
+                  <Text variant="body-sm" color="secondary">Productos ({items.reduce((s, i) => s + i.quantity, 0)})</Text>
+                  <Text variant="body-sm" color="secondary">{formatPrice(subtotal, currency)}</Text>
                 </div>
               </div>
 
               <div className={styles.summaryTotal} style={{ borderTop: '1px solid var(--color-border-default)' }}>
-                <Text variant="body-sm" weight="semibold" as="span">Subtotal</Text>
-                <Text variant="body-sm" weight="semibold" as="span">{formatPrice(subtotal, currency)}</Text>
+                <Text variant="body-sm" weight="semibold">Subtotal</Text>
+                <Text variant="body-sm" weight="semibold">{formatPrice(subtotal, currency)}</Text>
               </div>
 
               <Button

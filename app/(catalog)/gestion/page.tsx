@@ -27,7 +27,7 @@ const STATUS_BADGE: Record<string, 'warning' | 'info' | 'success' | 'danger'> = 
 export default function GestionPage() {
   return (
     <main style={{ padding: '32px', overflowY: 'auto' }}>
-      <Text variant="heading-2" as="h1" style={{ marginBottom: '24px' }}>Resumen</Text>
+      <Text variant="heading-2" style={{ marginBottom: '24px' }}>Resumen</Text>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '32px' }}>
         {STATS_MOCK.map((stat) => (
@@ -37,9 +37,9 @@ export default function GestionPage() {
             borderRadius: 'var(--radius-lg)',
             padding: '20px',
           }}>
-            <Text variant="body-sm" color="secondary" as="p" style={{ marginBottom: '6px' }}>{stat.label}</Text>
-            <Text variant="heading-2" as="p" style={{ marginBottom: '4px' }}>{stat.value}</Text>
-            <Text variant="caption" as="p" style={{ color: stat.change.startsWith('+') ? 'var(--color-success-700)' : 'var(--color-fg-muted)' }}>
+            <Text variant="body-sm" color="secondary" style={{ marginBottom: '6px' }}>{stat.label}</Text>
+            <Text variant="heading-2" style={{ marginBottom: '4px' }}>{stat.value}</Text>
+            <Text variant="caption" style={{ color: stat.change.startsWith('+') ? 'var(--color-success-700)' : 'var(--color-fg-muted)' }}>
               {stat.change} vs mes anterior
             </Text>
           </div>
@@ -48,7 +48,7 @@ export default function GestionPage() {
 
       <div style={{ background: 'var(--color-bg-surface)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
         <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--color-border-default)' }}>
-          <Text variant="heading-3" as="h2">Últimos pedidos</Text>
+          <Text variant="heading-3">Últimos pedidos</Text>
         </div>
         <Table style={{ border: 'none', borderRadius: 0 }}>
           <Table.Root>

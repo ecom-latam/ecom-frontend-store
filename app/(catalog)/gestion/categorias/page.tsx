@@ -39,7 +39,7 @@ function ConfirmModal({ title, message, confirmLabel, danger = false, onConfirm,
     <Modal open size="sm" onClose={onCancel}>
       <Modal.Header>{title}</Modal.Header>
       <Modal.Body>
-        <Text variant="body-sm" color="secondary" as="p" style={{ lineHeight: 1.6 }}>{message}</Text>
+        <Text variant="body-sm" color="secondary" style={{ lineHeight: 1.6 }}>{message}</Text>
       </Modal.Body>
       <Modal.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
         <StoreButton emphasis="outlined" size="md" onClick={onCancel}>Cancelar</StoreButton>
@@ -370,7 +370,7 @@ export default function GestionCategoriasPage() {
   return (
     <main style={{ padding: '32px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <Text variant="heading-2" as="h1">Categorías</Text>
+        <Text variant="heading-2">Categorías</Text>
         <StoreButton size="md" onClick={openCreate} data-testid="cat-new-btn">
           + Nueva categoría
         </StoreButton>
@@ -487,7 +487,7 @@ export default function GestionCategoriasPage() {
       </Table>
 
       {!loading && categoryList.length > 0 && (
-        <Text variant="caption" color="muted" as="p" style={{ marginTop: '12px' }}>
+        <Text variant="caption" color="muted" style={{ marginTop: '12px' }}>
           {sorted.length} categoría{sorted.length !== 1 ? 's' : ''} · {categoryList.filter(c => c.status === 'active').length} activa{categoryList.filter(c => c.status === 'active').length !== 1 ? 's' : ''} · {categoryList.filter(c => c.status === 'inactive').length} inactiva{categoryList.filter(c => c.status === 'inactive').length !== 1 ? 's' : ''}
         </Text>
       )}
@@ -516,7 +516,7 @@ export default function GestionCategoriasPage() {
       <Modal open={!!errorMsg} size="sm" onClose={() => setErrorMsg(null)}>
         <Modal.Header>Error</Modal.Header>
         <Modal.Body>
-          <Text variant="body" color="secondary" as="p">{errorMsg}</Text>
+          <Text variant="body" color="secondary">{errorMsg}</Text>
         </Modal.Body>
         <Modal.Footer>
           <StoreButton size="md" onClick={() => setErrorMsg(null)}>Entendido</StoreButton>

@@ -102,8 +102,8 @@ export default function InvitacionPage() {
     return (
       <main style={centeredLayout}>
         <div style={{ textAlign: 'center' }}>
-          <Text variant="body-sm" as="p" style={{ color: 'var(--color-error-500)' }}>{tokenError}</Text>
-          <Text variant="body-sm" color="muted" as="p" style={{ marginTop: '8px' }}>
+          <Text variant="body-sm" style={{ color: 'var(--color-error-500)' }}>{tokenError}</Text>
+          <Text variant="body-sm" color="muted" style={{ marginTop: '8px' }}>
             El link puede haber expirado o ya fue utilizado.
           </Text>
         </div>
@@ -115,8 +115,8 @@ export default function InvitacionPage() {
     return (
       <main style={centeredLayout}>
         <div style={{ textAlign: 'center' }}>
-          <Text variant="body-sm" weight="medium" as="p">¡Listo! Tu cuenta fue creada.</Text>
-          <Text variant="body-sm" color="secondary" as="p" style={{ marginTop: '4px' }}>
+          <Text variant="body-sm" weight="medium">¡Listo! Tu cuenta fue creada.</Text>
+          <Text variant="body-sm" color="secondary" style={{ marginTop: '4px' }}>
             Podés{' '}
             <StoreButton emphasis="ghost" size="md" onClick={() => router.push('/iniciar-sesion')} style={{ padding: 0, height: 'auto', textDecoration: 'underline', fontWeight: 500 }}>
               iniciar sesión
@@ -138,8 +138,8 @@ export default function InvitacionPage() {
         width: '100%',
         maxWidth: '380px',
       }}>
-        <Text variant="heading-2" as="h1" style={{ marginBottom: '4px' }}>Aceptar invitación</Text>
-        <Text variant="body-sm" color="secondary" as="p" style={{ marginBottom: '24px' }}>
+        <Text variant="heading-2" style={{ marginBottom: '4px' }}>Aceptar invitación</Text>
+        <Text variant="body-sm" color="secondary" style={{ marginBottom: '24px' }}>
           Vas a unirte como <strong>{ROLE_LABELS[info!.role] ?? info!.role}</strong>.
         </Text>
 
@@ -164,7 +164,7 @@ export default function InvitacionPage() {
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           />
 
-          {error && <Text variant="body-sm" as="p" style={{ color: 'var(--color-error-500)' }}>{error}</Text>}
+          {error && <Text variant="body-sm" style={{ color: 'var(--color-error-500)' }}>{error}</Text>}
 
           <StoreButton
             disabled={!formValid || submitting}

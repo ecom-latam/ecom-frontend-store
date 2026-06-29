@@ -25,7 +25,7 @@ function ConfirmModal({ title, message, confirmLabel, onConfirm, onCancel }: Con
     <Modal open size="sm" onClose={onCancel}>
       <Modal.Header>{title}</Modal.Header>
       <Modal.Body>
-        <Text variant="body-sm" color="secondary" tag="p" style={{ lineHeight: 1.6 }}>{message}</Text>
+        <Text variant="body-sm" color="secondary" style={{ lineHeight: 1.6 }}>{message}</Text>
       </Modal.Body>
       <Modal.Footer style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
         <StoreButton emphasis="outlined" size="md" onClick={onCancel}>Cancelar</StoreButton>
@@ -218,7 +218,7 @@ export default function GestionOpcionesPage() {
   return (
     <main style={{ padding: '32px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <Text variant="heading-2" tag="h1">Opciones</Text>
+        <Text variant="heading-2">Opciones</Text>
         <StoreButton size="md" onClick={openCreate} data-testid="opt-new-btn">
           + Nueva opción
         </StoreButton>
@@ -271,7 +271,7 @@ export default function GestionOpcionesPage() {
       </Table>
 
       {!loading && optionList.length > 0 && (
-        <Text variant="caption" color="muted" tag="p" style={{ marginTop: '12px' }}>
+        <Text variant="caption" color="muted" style={{ marginTop: '12px' }}>
           {optionList.length} opción{optionList.length !== 1 ? 'es' : ''}
         </Text>
       )}

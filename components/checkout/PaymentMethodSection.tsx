@@ -11,7 +11,7 @@ interface PaymentMethodSectionProps {
 export function PaymentMethodSection({ value, mpAvailable, onChange }: PaymentMethodSectionProps) {
   return (
     <section style={{ background: 'var(--color-bg-default)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', padding: '24px' }}>
-      <Text variant="heading-3" as="h2" style={{ marginBottom: '20px' }}>Método de pago</Text>
+      <Text variant="heading-3" style={{ marginBottom: '20px' }}>Método de pago</Text>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <OptionCard
           name="paymentMethod"

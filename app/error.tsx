@@ -13,7 +13,7 @@ export default function GlobalError({
   return (
     <main className={styles.root}>
       <Text variant="heading-1" color="muted" style={{ fontSize: '60px', marginBottom: '16px' }}>!</Text>
-      <Text variant="heading-2" as="h1" style={{ marginBottom: '12px' }}>Algo salió mal</Text>
+      <Text variant="heading-2" style={{ marginBottom: '12px' }}>Algo salió mal</Text>
       <Text variant="body" color="secondary" style={{ marginBottom: '32px', maxWidth: '360px' }}>
         Ocurrió un error inesperado. Podés intentar de nuevo o volver al inicio.
       </Text>

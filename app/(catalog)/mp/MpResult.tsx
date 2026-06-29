@@ -57,8 +57,8 @@ function MpResultInner({ variant }: { variant: Variant }) {
         >
           {copy.icon}
         </div>
-        <Text variant="heading-2" as="h1" style={{ marginBottom: '12px' }} data-testid="mp-result-title">{copy.title}</Text>
-        <Text variant="body" color="muted" as="p" style={{ marginBottom: '28px' }}>{copy.body}</Text>
+        <Text variant="heading-2" style={{ marginBottom: '12px' }} data-testid="mp-result-title">{copy.title}</Text>
+        <Text variant="body" color="muted" style={{ marginBottom: '28px' }}>{copy.body}</Text>
 
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
           {orderId && (variant === 'success' || variant === 'pending') && (

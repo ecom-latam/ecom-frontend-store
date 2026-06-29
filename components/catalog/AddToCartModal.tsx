@@ -143,7 +143,7 @@ export function AddToCartModal({ product, open, onClose, initialQuantity = 1 }: 
     <Modal open={open} size="md" onClose={onClose}>
       <Modal.Header>{product.name}</Modal.Header>
       <Modal.Body>
-        <Text variant="body-sm" color="secondary" as="p" style={{ marginBottom: '16px' }}>
+        <Text variant="body-sm" color="secondary" style={{ marginBottom: '16px' }}>
           {formatPrice(product.salePrice ?? product.price, currency)}
         </Text>
 
@@ -151,7 +151,7 @@ export function AddToCartModal({ product, open, onClose, initialQuantity = 1 }: 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
             {optionNames.map((name) => (
               <div key={name}>
-                <Text variant="body-sm" weight="medium" as="p" style={{ marginBottom: '8px' }}>
+                <Text variant="body-sm" weight="medium" style={{ marginBottom: '8px' }}>
                   {name}
                 </Text>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -178,13 +178,13 @@ export function AddToCartModal({ product, open, onClose, initialQuantity = 1 }: 
         )}
 
         {!product.hasVariants && (
-          <Text variant="body-sm" color="secondary" as="p" style={{ marginBottom: '24px' }}>
+          <Text variant="body-sm" color="secondary" style={{ marginBottom: '24px' }}>
             ¿Confirmás que querés agregar este producto?
           </Text>
         )}
 
         {error && (
-          <Text variant="body-sm" as="p" style={{ color: 'var(--color-error-500)', marginTop: '8px' }}>
+          <Text variant="body-sm" style={{ color: 'var(--color-error-500)', marginTop: '8px' }}>
             {error}
           </Text>
         )}

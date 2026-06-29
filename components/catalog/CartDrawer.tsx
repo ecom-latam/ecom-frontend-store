@@ -47,15 +47,15 @@ export function CartDrawer() {
                   </div>
 
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <Text variant="body-sm" weight="medium" as="p" truncate>{item.name}</Text>
+                    <Text variant="body-sm" weight="medium" truncate>{item.name}</Text>
 
                     {Object.keys(item.selectedOptions).length > 0 && (
-                      <Text variant="caption" color="muted" as="p" style={{ marginTop: '2px' }}>
+                      <Text variant="caption" color="muted" style={{ marginTop: '2px' }}>
                         {Object.entries(item.selectedOptions).map(([k, v]) => `${k}: ${v}`).join(' · ')}
                       </Text>
                     )}
 
-                    <Text variant="body-sm" weight="semibold" as="p" style={{ marginTop: '4px' }}>
+                    <Text variant="body-sm" weight="semibold" style={{ marginTop: '4px' }}>
                       {formatPrice(item.price, currency)}
                     </Text>
 
@@ -69,7 +69,7 @@ export function CartDrawer() {
                       >
                         −
                       </Button>
-                      <Text variant="body-sm" as="span" style={{ width: 20, textAlign: 'center' }}>{item.quantity}</Text>
+                      <Text variant="body-sm" style={{ width: 20, textAlign: 'center' }}>{item.quantity}</Text>
                       <Button
                         emphasis="outlined"
                         size="md"
@@ -106,8 +106,8 @@ export function CartDrawer() {
 
           <Drawer.Footer>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Text variant="body-sm" weight="semibold" as="span">Subtotal</Text>
-              <Text variant="body-sm" weight="semibold" as="span">{formatPrice(subtotal, currency)}</Text>
+              <Text variant="body-sm" weight="semibold">Subtotal</Text>
+              <Text variant="body-sm" weight="semibold">{formatPrice(subtotal, currency)}</Text>
             </div>
             <Button
               emphasis="outlined"

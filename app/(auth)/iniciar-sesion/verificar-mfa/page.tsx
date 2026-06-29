@@ -60,7 +60,7 @@ function MfaVerifyForm() {
       border: '1px solid var(--color-border-default)',
       padding: '40px 32px',
     }}>
-      <Text variant="heading-2" as="h1" style={{ marginBottom: '8px' }}>Verificación en dos pasos</Text>
+      <Text variant="heading-2" style={{ marginBottom: '8px' }}>Verificación en dos pasos</Text>
       <Text variant="body-sm" color="secondary" style={{ marginBottom: '24px' }}>
         Ingresá el código de 6 dígitos de tu app de autenticación.
       </Text>
