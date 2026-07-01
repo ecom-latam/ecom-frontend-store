@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { brandScale, BRAND_STEPS, ZouiThemeProvider } from 'zoui';
+import { brandScale, BRAND_STEPS, ZouiThemeProvider, getFontOption, loadFont } from 'zoui';
 import type { SurfaceVariant } from 'zoui';
 import { PageConfigContext } from '@/context/PageConfigContext';
 import type { PageConfig } from '@/context/PageConfigContext';
@@ -18,8 +18,10 @@ function applyBrandColor(hue: number, sat: number, lit: number) {
   root.style.setProperty('--color-brand-contrast', contrast);
 }
 
-function applyFont(fontFamily: string) {
-  document.documentElement.style.setProperty('--font-ui', `'${fontFamily}', sans-serif`);
+function applyFont(fontId: string) {
+  const opt = getFontOption(fontId);
+  loadFont(opt);
+  document.documentElement.style.setProperty('--font-ui', opt.stack);
 }
 
 function applyStoreTheme(theme: string) {
@@ -110,7 +112,7 @@ export function DynamicStoreTheme({
         const lit = typeof fresh.brand_lightness === 'number' ? fresh.brand_lightness : 50;
         applyBrandColor(fresh.brand_hue, sat, lit);
       }
-      if (typeof fresh.font_family === 'string') applyFont(fresh.font_family);
+      if (typeof fresh.font_id === 'string') applyFont(fresh.font_id);
       if (typeof fresh.theme === 'string') applyStoreTheme(fresh.theme);
       setConfig(toPageConfig(fresh));
     });

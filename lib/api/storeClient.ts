@@ -167,7 +167,7 @@ export interface PageInfo {
   brand2_hue?: number | null;
   brand2_saturation?: number | null;
   brand2_lightness?: number | null;
-  font_family?: string;
+  font_id?: string;
   theme?: string;
   hasCatalog?: boolean;
   catalog_label?: string;
@@ -187,11 +187,10 @@ export interface PageInfo {
 // Pagina puntual del page builder, servida por
 // app/(catalog)/[pageSlug]/page.tsx.
 export interface PageContent {
-  slug:             string;
-  title:            string;
-  workInProgress:   boolean;
-  backgroundColor?: string | null;
-  blocks:           PageBlock[];
+  slug:           string;
+  title:          string;
+  workInProgress: boolean;
+  blocks:         PageBlock[];
 }
 
 export interface ProductReview {
