@@ -24,8 +24,9 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const hasSession = !!cookieStore.get('_auth');
-  const theme = (cookieStore.get('ui-theme')?.value ?? 'light') as 'light' | 'dark';
   const storeInfo = await getPageInfo();
+  const defaultColorScheme = storeInfo?.defaultColorScheme ?? 'dark';
+  const theme = (cookieStore.get('ui-theme')?.value ?? defaultColorScheme) as 'light' | 'dark';
   const hue = Math.round(Math.max(0, Math.min(360, storeInfo?.brand_hue ?? 262)));
   const sat = Math.round(Math.max(0, Math.min(100, storeInfo?.brand_saturation ?? 72)));
   const lit = Math.round(Math.max(0, Math.min(100, storeInfo?.brand_lightness ?? 50)));

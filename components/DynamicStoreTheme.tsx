@@ -56,7 +56,8 @@ function toPageConfig(raw: Record<string, unknown>): PageConfig {
   const store = (raw.store ?? undefined) as PageConfig['store'];
   return {
     theme:       raw.theme       as string | undefined,
-    hasCatalog:    raw.hasCatalog !== false,
+    hasCatalog:      raw.hasCatalog !== false,
+    maintenanceMode: raw.maintenanceMode === true,
     catalog_label: typeof raw.catalog_label === 'string' && raw.catalog_label ? raw.catalog_label : 'Productos',
     catalog_slug:  typeof raw.catalog_slug === 'string' && raw.catalog_slug ? raw.catalog_slug : 'productos',
     hasPurchases:  raw.hasPurchases !== false,
@@ -97,6 +98,16 @@ export function DynamicStoreTheme({
   children: React.ReactNode;
 }) {
   const [config, setConfig] = useState<PageConfig>(() => toPageConfig(initialConfig));
+
+  useEffect(() => {
+    // Si el visitante no tiene cookie ui-theme, bloqueamos el theme que el
+    // servidor ya aplicó (defaultColorScheme de la tienda). Así cambios futuros
+    // al default no pisan la experiencia de visitas anteriores.
+    if (!document.cookie.split(';').some(c => c.trim().startsWith('ui-theme='))) {
+      const current = document.documentElement.getAttribute('data-theme') ?? 'dark';
+      document.cookie = `ui-theme=${current}; path=/; max-age=31536000`;
+    }
+  }, []);
 
   // Si initialConfig vino de la SSR (caso normal), el theme y la
   // config ya estan aplicados -- ver el <style> + data-store-theme que
