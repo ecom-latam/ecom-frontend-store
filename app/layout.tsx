@@ -5,7 +5,7 @@ import styles from "./layout.module.scss";
 import "./zoui.css";
 import NextLink from "next/link";
 import NextImage from "next/image";
-import { ToastProvider, ZouiProvider, brandScale } from "zoui";
+import { ToastProvider, ZouiProvider, brandScale, getGoogleFontUrl } from "zoui";
 import { CartProvider } from "@/context/CartContext";
 import { DynamicStoreTheme } from "@/components/DynamicStoreTheme";
 import { getPageInfo } from "@/lib/api/storeClient";
@@ -64,6 +64,11 @@ export default async function RootLayout({
 
   return (
     <html lang="es" data-theme={theme} data-store-theme={storeTheme}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="stylesheet" href={getGoogleFontUrl(fontId ?? 'geist')} />
+      </head>
       <body className={styles.body}>
         <style dangerouslySetInnerHTML={{ __html: brandStyles }} />
         <StoreProvider>
