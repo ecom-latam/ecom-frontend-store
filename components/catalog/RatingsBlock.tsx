@@ -1,4 +1,4 @@
-import { StarRating } from 'zoui';
+import { StarRating, Text } from 'zoui';
 import type { ProductReview, ReviewDistribution } from '@/lib/api/storeClient';
 
 interface RatingsBlockProps {
@@ -191,37 +191,15 @@ export function RatingsBlock({
     if (!reviewsEnabled) return null;
     return (
       <section style={{ marginTop: '48px' }}>
-        <h2
-          style={{
-            fontFamily: 'var(--font-ui)',
-            fontSize: '18px',
-            fontWeight: 600,
-            color: 'var(--color-fg-primary)',
-            marginBottom: '16px',
-          }}
-        >
-          Reseñas
-        </h2>
-        <p style={{ fontFamily: 'var(--font-ui)', fontSize: '14px', color: 'var(--color-fg-secondary)' }}>
-          Todavía no hay reseñas para este producto.
-        </p>
+        <Text variant="heading-3" tag="h2" style={{ marginBottom: '16px' }}>Reseñas</Text>
+        <Text variant="body-sm" color="secondary">Todavía no hay reseñas para este producto.</Text>
       </section>
     );
   }
 
   return (
     <section style={{ marginTop: '48px' }}>
-      <h2
-        style={{
-          fontFamily: 'var(--font-ui)',
-          fontSize: '18px',
-          fontWeight: 600,
-          color: 'var(--color-fg-primary)',
-          marginBottom: '24px',
-        }}
-      >
-        Reseñas
-      </h2>
+      <Text variant="heading-3" tag="h2" style={{ marginBottom: '24px' }}>Reseñas</Text>
 
       {/* Summary: big score + distribution bars */}
       {hasRatings && (

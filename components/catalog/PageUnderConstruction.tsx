@@ -1,3 +1,5 @@
+import { Text } from 'zoui';
+
 export function PageUnderConstruction() {
   return (
     <div style={{
@@ -18,23 +20,8 @@ export function PageUnderConstruction() {
       />
 
       <div style={{ maxWidth: 320 }}>
-        <p style={{
-          fontSize:   20,
-          fontWeight: 700,
-          color:      'var(--color-fg-primary)',
-          margin:     '0 0 8px',
-          lineHeight: 1.3,
-        }}>
-          Estamos armando esta página
-        </p>
-        <p style={{
-          fontSize:   14,
-          color:      'var(--color-fg-muted)',
-          margin:     0,
-          lineHeight: 1.5,
-        }}>
-          Volvé pronto, viene algo bueno.
-        </p>
+        <Text variant="heading-3" style={{ margin: '0 0 8px' }}>Estamos armando esta página</Text>
+        <Text variant="body-sm" color="muted" style={{ margin: 0 }}>Volvé pronto, viene algo bueno.</Text>
       </div>
     </div>
   );

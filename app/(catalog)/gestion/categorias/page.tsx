@@ -446,7 +446,7 @@ export default function GestionCategoriasPage() {
                       <span style={{ width: '20px', flexShrink: 0, display: 'inline-block' }} />
                     )}
                     {depth > 0 && (
-                      <span style={{ color: 'var(--color-fg-muted)', fontSize: '15px', lineHeight: 1, flexShrink: 0 }}>↳</span>
+                      <Text tag="span" variant="caption" color="muted" style={{ lineHeight: 1, flexShrink: 0 }}>↳</Text>
                     )}
                     {category.name}
                   </div>

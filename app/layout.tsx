@@ -37,7 +37,7 @@ export default async function RootLayout({
   const lit2 = Math.round(Math.max(0, Math.min(100, storeInfo?.brand2_lightness ?? lit)));
   const storeTheme = storeInfo?.theme ?? 'outlined';
   const brandContrast = (lit >= 62 || (hue >= 45 && hue <= 75)) ? '#000000' : '#ffffff';
-  const fontFamily = storeInfo?.font_family ?? 'Geist';
+  const fontId = (storeInfo as Record<string, unknown>)?.font_id as string | undefined;
   const scale = brandScale(hue, sat, lit);
   const scale2 = brandScale(hue2, sat2, lit2);
   const brandStyles = `
@@ -59,7 +59,6 @@ export default async function RootLayout({
       --color-brand2-500:     ${scale2[500]};
       --color-brand2-600:     ${scale2[600]};
       --color-brand2-700:     ${scale2[700]};
-      --font-ui:              '${fontFamily}', sans-serif;
     }
   `.trim();
 
@@ -69,7 +68,7 @@ export default async function RootLayout({
         <style dangerouslySetInnerHTML={{ __html: brandStyles }} />
         <StoreProvider>
           <DynamicStoreTheme initialConfig={(storeInfo ?? {}) as Record<string, unknown>}>
-            <ZouiProvider linkComponent={NextLink} imageComponent={NextImage}>
+            <ZouiProvider linkComponent={NextLink} imageComponent={NextImage} font={fontId ?? 'geist'}>
               <ToastProvider>
                 <ErrorModalProvider>
                   <CartProvider hasSession={hasSession}>

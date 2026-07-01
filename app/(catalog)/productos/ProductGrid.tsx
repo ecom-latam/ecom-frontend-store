@@ -110,12 +110,8 @@ export function ProductGrid({
             style={{ width: '50vw', height: 'auto', maxWidth: 560, objectFit: 'contain' }}
           />
           <div style={{ maxWidth: 320 }}>
-            <p style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-fg-primary)', margin: '0 0 8px', lineHeight: 1.3 }}>
-              Estamos cargando los productos
-            </p>
-            <p style={{ fontSize: 14, color: 'var(--color-fg-muted)', margin: 0, lineHeight: 1.5 }}>
-              Volvé pronto, viene algo bueno.
-            </p>
+            <Text variant="heading-3" style={{ margin: '0 0 8px' }}>Estamos cargando los productos</Text>
+            <Text variant="body-sm" color="muted" style={{ margin: 0 }}>Volvé pronto, viene algo bueno.</Text>
           </div>
         </div>
       ) : products.length === 0 ? (

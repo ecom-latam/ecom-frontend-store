@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChipGroup } from 'zoui';
+import { ChipGroup, Text } from 'zoui';
 import { Price } from './Price';
 import type { Product, ProductVariant } from '@/lib/api/storeClient';
 
@@ -84,22 +84,14 @@ export function VariantSelector({ product, onVariantChange }: VariantSelectorPro
         }));
         return (
           <div key={option.storeOptionId}>
-            <p style={{
-              fontFamily: 'var(--font-ui)',
-              fontSize: '12px',
-              fontWeight: 600,
-              color: 'var(--color-fg-secondary)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              marginBottom: '8px',
-            }}>
+            <Text tag="p" variant="overline" color="secondary" style={{ marginBottom: '8px' }}>
               {option.storeOptionName}
               {selection[option.storeOptionId] && (
-                <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, marginLeft: '8px', color: 'var(--color-fg-primary)' }}>
+                <Text tag="span" variant="label" color="primary" style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, marginLeft: '8px' }}>
                   {selection[option.storeOptionId]}
-                </span>
+                </Text>
               )}
-            </p>
+            </Text>
             <ChipGroup
               name={option.storeOptionName}
               options={options}
